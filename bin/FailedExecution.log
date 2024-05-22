@@ -1,0 +1,3 @@
+SET NOCOUNT ON
+Insert Into TMerk(Kode,Nama) values('','');
+Select Scope_Identity() as ID

@@ -1,0 +1,163 @@
+
+insert into MOTOROLI_01.dbo.TITEMGROUP
+select top 245 kdjenis, NamJenis from Motoroli.dbo.TblJenis
+
+
+insert into AUTOPART.dbo.TMerk
+select kdmerk, NamaMerk from MOTOROLI2017.dbo.tblmerk
+
+
+alter table TITEM add kdmerk varchar(30)
+alter table TITEM add kdjenis varchar(30)
+alter table TITEMUOM add kdBar varchar(30)
+
+
+--OLD
+insert into AUTOPART.dbo.TItem(KODE, NAMA, RAK, PPN, ISACTIVE, KDMERK, KDJENIS, STOCKUOM)
+select KDBAR, NamaBarang, RAK, 0, 1, KdMerk, KdJenis, 1
+from MOTOROLI2017.dbo.TblStok
+
+-- update
+insert into MOTOROLI_01.dbo.TItem(KODE, NAMA, RAK, PPN, ISACTIVE, KDMERK, KDJENIS, STOCKUOM_ID, LEADTIME)
+SELECT DISTINCT
+c.KDBAR, c.NamaBarang, c.RAK, 0, 1, c.KdMerk, c.KdJenis, 1,2
+FROM Motoroli.dbo.TblMJual A
+INNER JOIN Motoroli.dbo.TblDJual B ON A.NoPenjualan = B.NoPenjualan
+INNER JOIN Motoroli.dbo.TblStok C ON B.KdBarang = C.KdBar
+WHERE A.Tgl >= '2018-01-01'
+
+
+--OLD
+insert into AUTOPART.dbo.TITEMUOM(UOM_ID, KONVERSI, HARGABELI, HARGAJUAL1, HARGAJUAL2, HARGAJUAL3, HARGAJUAL4, KDBAR)
+select 1, 1, HargaPokok, HargaUmum, HargaBengkel, HargaGrosir, HargaKeliling, KdBar
+from MOTOROLI2017.dbo.TblStok
+
+--UPDATE
+insert into MOTOROLI_01.dbo.TITEMUOM(UOM_ID, KONVERSI, HARGABELI, HARGAJUAL1, HARGAJUAL2, HARGAJUAL3, HARGAJUAL4, KDBAR)
+select distinct 1, 1, C.HargaPokok, C.HargaUmum, C.HargaBengkel, C.HargaGrosir, C.HargaKeliling, C.KdBar
+FROM Motoroli.dbo.TblMJual A
+INNER JOIN Motoroli.dbo.TblDJual B ON A.NoPenjualan = B.NoPenjualan
+INNER JOIN Motoroli.dbo.TblStok C ON B.KdBarang = C.KdBar
+WHERE A.Tgl >= '2018-01-01'
+
+
+
+UPDATE A SET GROUP_ID = B.ID
+FROM TITEM A
+INNER JOIN TITEMGROUP B ON A.KDJENIS = B.KODE
+
+UPDATE A SET MERK_ID = B.ID
+FROM TITEM A
+INNER JOIN TMERK B ON A.KDMERK = B.KODE
+
+UPDATE A SET ITEM_ID = B.ID
+FROM TITEMUOM A
+INNER JOIN TITEM B ON A.KDBAR = B.KODE
+
+
+
+alter table TITEM DROP COLUMN kdmerk
+alter table TITEM DROP COLUMN kdjenis
+alter table TITEMUOM DROP COLUMN kdBar
+
+
+
+insert into MOTOROLI_01.dbo.TSERVICE(UOM_ID, kode, nama, biaya, ppn, modifieddate, isactive )
+select 1, KdService, NamaService, Biaya, 0, getdate(), 1
+from Motoroli.dbo.tblservice
+
+
+insert into MOTOROLI_01.dbo.TSUPPLIER(kode, nama, ALAMAT, TELP, TEMPO,  MODIFIEDDATE )
+select KdSupplier, NamaSupplier, Alamat,'', 0, getdate()
+from Motoroli.dbo.TblSupplier
+
+insert into MOTOROLI_01.dbo.TCUSTOMER(kode, nama, ALAMAT, TELP, TEMPO,  MODIFIEDDATE, CREDITLIMIT )
+select a.KdPel, a.NamaPelanggan, a.Alamat,'', 0, getdate(), a.maxhutang
+from Motoroli.dbo.TblPelanggan a
+left join MOTOROLI_01.dbo.TCUSTOMER b on a.KdPel = b.KODE
+where b.KODE is null
+
+
+delete from TACCOUNT
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('1000','Asset',NULL,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('1100','Aktiva Lancar',1,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('1110','Kas / Bank',2,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('1120','Piutang Dagang',2,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('1150','Persediaan Barang Dagang',2,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('1200','Aktiva Tetap',1,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('1210','Bangunan',6,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('1220','Tanah',6,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('1230','Kendaraan',6,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('1240','Perlengkapan',6,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('2000','Kewajiban',NULL,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('2100','Hutang Usaha',11,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('2200','Hutang Pihak Ketiga',11,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('3000','Ekuitas',NULL,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('3100','Modal',14,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('3200','Prive',14,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('3300','Laba Tahun Berjalan',14,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('4000','Pendapatan',NULL,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('4100','Penjualan',18,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('4200','Potongan Penjualan',18,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('5000','Harga Penjualan Pokok / COGS',NULL,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('5100','Harga Pokok Penjualan',21,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('5200','Harga Pokok Adjustment',21,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('6000','Biaya / Expense',NULL,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('6100','Biaya Pemasaran',24,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('6101','Komisi Salesman',25,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('6200','Biaya Operasional',24,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('6201','Gaji Karyawan',27,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('6202','Uang Lembur',27,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('6203','Uang Makan',27,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('6204','Uang Transport',27,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('6205','Perawatan Kendaraan',27,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('6206','Alat dan Bahan',27,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('6207','Pajak',27,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('6208','BBM',27,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('6299','Biaya Lain-lain',27,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('7000','Pendapatan Lain',NULL,1,0);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('7001','Pendapatan Bunga',37,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('7002','Penghasilan Sewa',37,1,1);
+insert into taccount(kode,nama, parent_id, isactive, isdetail) values('7099','Penghasilan Lain',37,1,0);
+
+
+
+
+
+
+
+
+
+
+insert into Motoroli_01.dbo.TPURCHASEINVOICE(
+INVOICENO, REFERENSI, TRANSDATE, SUPPLIER_ID, DUEDATE, PAYMENTFLAG, NOTES, SUBTOTAL, AMOUNT)
+select a.NoHutang, a.NoPembelian, a.Tanggal, b.ID, a.Tempo, 1, 'SALDO AWAL HUTANG', 
+a.SisaHutang, a.SisaHutang
+from MOTOROLI2017.dbo.TblHutang a
+left join Motoroli_01.dbo.TSUPPLIER b on a.KdSupplier = b.KODE
+where isnull(a.Lunas,0) = 0
+and a.SisaHutang > 1000
+
+
+
+insert into Motoroli_01.dbo.TSALESINVOICE(
+INVOICENO, NOTES, TRANSDATE, CUSTOMER_ID, DUEDATE, PAYMENTFLAG,  SUBTOTAL, AMOUNT, SALESMAN_ID)
+select a.NoPiutang, a.NoPenjualan, a.Tanggal, b.ID, a.Tempo, 1, a.SisaHutang, a.SisaHutang, d.ID
+from MOTOROLI2017.dbo.TblPiutang a
+Left join MOTOROLI2017.dbo.TblMJual c on a.NoPenjualan = c.NoPenjualan
+left join Motoroli_01.dbo.TCUSTOMER b on a.KdPelanggan = b.KODE
+left join Motoroli_01.dbo.TSALESMAN d on c.KdSales = d.KODE
+where isnull(a.Lunas,0) = 0
+and a.SisaHutang > 1000
+
+
+
+INSERT INTO Motoroli_01.dbo.TTRANSDETAIL(
+TRANSDATE, header_id, header_flag, item_id, uom_id, qty, KONVERSI, 
+WAREHOUSE_ID,  harga, HARGAAVG, LASTCOST, refno)
+select '2019-07-01',0,0,B.ID AS ITEM_ID, 1 AS UOM_ID, A.JmlPcs,
+1 AS KONVERSI, 1 AS WAREHOUSE_ID, C.HARGABELI, C.HARGABELI,c.HARGABELI, 'SALDO_AWAL'
+from MOTOROLI2017.dbo.TblStok a
+inner join Motoroli_01.dbo.TITEM b on a.KdBar = b.KODE
+inner join Motoroli_01.dbo.TITEMUOM C on B.ID = C.ITEM_ID AND C.UOM_ID=1
+where a.JmlPcs > 0
