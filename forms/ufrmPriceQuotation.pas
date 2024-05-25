@@ -148,6 +148,7 @@ begin
 
     cxGrdMain.DataController.SetEditValue(colMargin.Index,
           (lHargaBeli + iRec.Values[colHrgBeli.Index]) / lHargaBeli * 100,  evsValue);
+
   end;
 
 end;
