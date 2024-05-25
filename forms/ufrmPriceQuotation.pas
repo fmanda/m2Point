@@ -30,14 +30,8 @@ type
     colSatuan: TcxGridDBBandedColumn;
     colKonversi: TcxGridDBBandedColumn;
     colHrgBeli: TcxGridDBBandedColumn;
-    colMargin1: TcxGridDBBandedColumn;
-    colHrgJual1: TcxGridDBBandedColumn;
-    colMargin2: TcxGridDBBandedColumn;
-    colHrgJual2: TcxGridDBBandedColumn;
-    colMargin3: TcxGridDBBandedColumn;
-    colHrgJual3: TcxGridDBBandedColumn;
-    colMargin4: TcxGridDBBandedColumn;
-    colHrgJual4: TcxGridDBBandedColumn;
+    colMargin: TcxGridDBBandedColumn;
+    colHrgJual: TcxGridDBBandedColumn;
     cxGrid1Level1: TcxGridLevel;
     colItemCode: TcxGridDBBandedColumn;
     colItemName: TcxGridDBBandedColumn;
@@ -50,8 +44,6 @@ type
     Label2: TLabel;
     colItemID: TcxGridDBBandedColumn;
     cxMemo1: TcxMemo;
-    colPriceList: TcxGridDBBandedColumn;
-    colMarginBeli: TcxGridDBBandedColumn;
     styleGreen: TcxStyle;
     pmGrid: TPopupMenu;
     F6LookupDataBarangterakhirdiinputedit1: TMenuItem;
@@ -138,44 +130,24 @@ procedure TfrmPriceQuotation.CalcSellPrice(aIndexPrice: Integer; IsMargin:
     Boolean);
 var
   iRec: TcxCustomGridRecord;
-  lPriceList: Double;
+  lHargaBeli: Double;
 begin
   cxGrdMain.DataController.Post();
   iRec      := cxGrdMain.Controller.FocusedRecord;
   if iRec = nil then exit;
 
-  lPriceList := iRec.Values[colPriceList.Index];
+  lHargaBeli := iRec.Values[colHrgBeli.Index];
 
   if IsMargin then
   begin
-    case aIndexPrice of
-      0 : cxGrdMain.DataController.SetEditValue(colHrgBeli.Index,
-          lPriceList * (1 - (iRec.Values[colMarginBeli.Index] /100)),  evsValue);
-      1 : cxGrdMain.DataController.SetEditValue(colHrgJual1.Index,
-          lPriceList * (1 - (iRec.Values[colMargin1.Index] /100)),  evsValue);
-      2 : cxGrdMain.DataController.SetEditValue(colHrgJual2.Index,
-          lPriceList * (1 - (iRec.Values[colMargin2.Index] /100)),  evsValue);
-      3 : cxGrdMain.DataController.SetEditValue(colHrgJual3.Index,
-          lPriceList * (1 - (iRec.Values[colMargin3.Index] /100)),  evsValue);
-      4 : cxGrdMain.DataController.SetEditValue(colHrgJual4.Index,
-          lPriceList * (1 - (iRec.Values[colMargin4.Index] /100)),  evsValue);
-    end;
+    cxGrdMain.DataController.SetEditValue(colHrgJual.Index,
+          lHargaBeli * (1 + (iRec.Values[colMargin.Index] /100)),  evsValue);
   end else
   begin
-    if lPriceList = 0 then exit;
+    if lHargaBeli = 0 then exit;
 
-    case aIndexPrice of
-      0 : cxGrdMain.DataController.SetEditValue(colMarginBeli.Index,
-          (lPriceList - iRec.Values[colHrgBeli.Index]) / lPriceList * 100,  evsValue);
-      1 : cxGrdMain.DataController.SetEditValue(colMargin1.Index,
-          (lPriceList - iRec.Values[colHrgJual1.Index]) / lPriceList * 100,  evsValue);
-      2 : cxGrdMain.DataController.SetEditValue(colMargin2.Index,
-          (lPriceList - iRec.Values[colHrgJual2.Index]) / lPriceList * 100,  evsValue);
-      3 : cxGrdMain.DataController.SetEditValue(colMargin3.Index,
-          (lPriceList - iRec.Values[colHrgJual3.Index]) / lPriceList * 100,  evsValue);
-      4 : cxGrdMain.DataController.SetEditValue(colMargin4.Index,
-          (lPriceList - iRec.Values[colHrgJual4.Index]) / lPriceList * 100,  evsValue);
-    end;
+    cxGrdMain.DataController.SetEditValue(colMargin.Index,
+          (lHargaBeli + iRec.Values[colHrgBeli.Index]) / lHargaBeli * 100,  evsValue);
   end;
 
 end;
@@ -587,18 +559,10 @@ begin
     DC.SetEditValue(colSatuan.Index, lItemUOM.UOM.ID, evsValue);
     DC.SetEditValue(colKonversi.Index, lItemUOM.Konversi, evsValue);
 
-    DC.SetEditValue(colPriceList.Index, lItemUOM.PriceList, evsValue);
     DC.SetEditValue(colHrgBeli.Index, lItemUOM.HargaBeli, evsValue);
-    DC.SetEditValue(colHrgJual1.Index, lItemUOM.HargaJual1, evsValue);
-    DC.SetEditValue(colHrgJual2.Index, lItemUOM.HargaJual2, evsValue);
-    DC.SetEditValue(colHrgJual3.Index, lItemUOM.HargaJual3, evsValue);
-    DC.SetEditValue(colHrgJual4.Index, lItemUOM.HargaJual4, evsValue);
+    DC.SetEditValue(colHrgJual.Index, lItemUOM.HargaJual, evsValue);
 
-    DC.SetEditValue(colMarginBeli.Index, lItemUOM.GetPriceListMargin(0), evsValue);
-    DC.SetEditValue(colMargin1.Index, lItemUOM.GetPriceListMargin(1), evsValue);
-    DC.SetEditValue(colMargin2.Index, lItemUOM.GetPriceListMargin(2), evsValue);
-    DC.SetEditValue(colMargin3.Index, lItemUOM.GetPriceListMargin(3), evsValue);
-    DC.SetEditValue(colMargin4.Index, lItemUOM.GetPriceListMargin(4), evsValue);
+    DC.SetEditValue(colMargin.Index, lItemUOM.GetMargin, evsValue);
     DC.Post();
 
     IsAppendRec := True;

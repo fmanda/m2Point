@@ -42,7 +42,6 @@ type
     colNama: TcxGridDBColumn;
     colUOM: TcxGridDBColumn;
     colQty: TcxGridDBColumn;
-    colPriceList: TcxGridDBColumn;
     colDisc: TcxGridDBColumn;
     colSubTotal: TcxGridDBColumn;
     cxLabel7: TcxLabel;
@@ -314,8 +313,6 @@ begin
   Try
     DC.SetEditValue(colKonversi.Index, lItemUOM.Konversi, evsValue);
     DC.SetEditValue(colHrgBeli.Index, lItemUOM.HargaBeli, evsValue);
-    DC.SetEditValue(colPriceList.Index, lItemUOM.PriceList, evsValue);
-    DC.SetEditValue(colDisc.Index, lItemUOM.GetPriceListMargin(0), evsValue);
 
 
     CalculateAll;
@@ -774,8 +771,6 @@ begin
     if lItemUOM = nil then exit;
     Try
       DC.SetEditValue(colKonversi.Index, lItemUOM.Konversi, evsValue);
-      DC.SetEditValue(colPriceList.Index, lItemUOM.PriceList, evsValue);
-      DC.SetEditValue(colDisc.Index, lItemUOM.GetPriceListMargin(0), evsValue);
       DC.SetEditValue(colHrgBeli.Index, lItemUOM.HargaBeli, evsValue);
     Finally
       FreeAndNil(lItemUOM);

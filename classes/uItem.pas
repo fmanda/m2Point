@@ -100,18 +100,14 @@ type
     FKonversi: Double;
     FHargaBeli: Double;
     FHargaAvg: Double;
-    FHargaJual1: Double;
-    FHargaJual2: Double;
-    FHargaJual3: Double;
-    FHargaJual4: Double;
-    FPriceList: Double;
+    FHargaJual: Double;
     FModifiedDate: TDateTime;
     FModifiedBy: String;
   public
     destructor Destroy; override;
     function GetHarga(aTipeHarga: Integer): Double;
+    function GetMargin: Double;
     class function GetItemUOM(aItemID, aUOMID: Integer): TItemUOM;
-    function GetPriceListMargin(aPriceIndex: Integer): Double;
     function UpdateHargaAvg(aNewAvg: Double): Boolean;
   published
     [AttributeOfHeader]
@@ -120,11 +116,7 @@ type
     property Konversi: Double read FKonversi write FKonversi;
     property HargaBeli: Double read FHargaBeli write FHargaBeli;
     property HargaAvg: Double read FHargaAvg write FHargaAvg;
-    property HargaJual1: Double read FHargaJual1 write FHargaJual1;  //harga umum
-    property HargaJual2: Double read FHargaJual2 write FHargaJual2;  //harga bengkel
-    property HargaJual3: Double read FHargaJual3 write FHargaJual3;  //harga grosir
-    property HargaJual4: Double read FHargaJual4 write FHargaJual4;  //harga keliling
-    property PriceList: Double read FPriceList write FPriceList;
+    property HargaJual: Double read FHargaJual write FHargaJual;  //harga umum
     property ModifiedDate: TDateTime read FModifiedDate write FModifiedDate;
     property ModifiedBy: String read FModifiedBy write FModifiedBy;
   end;
@@ -342,15 +334,22 @@ end;
 
 function TItemUOM.GetHarga(aTipeHarga: Integer): Double;
 begin
-//  Result := 0;      
-  Case aTipeHarga of
-    0 : Result := HargaJual1;
-    1 : Result := HargaJual2;
-    2 : Result := HargaJual3;
-    3 : Result := HargaJual4;
-  else 
-    raise Exception.Create('Tipe Harga Index : ' + Inttostr(aTipeHarga) + ' tidak ter-register di TItemUOM');
-  end;
+  Result := HargaJual;
+//  Case aTipeHarga of
+//    0 : Result := HargaJual1;
+//    1 : Result := HargaJual2;
+//    2 : Result := HargaJual3;
+//    3 : Result := HargaJual4;
+//  else
+//    raise Exception.Create('Tipe Harga Index : ' + Inttostr(aTipeHarga) + ' tidak ter-register di TItemUOM');
+//  end;
+end;
+
+function TItemUOM.GetMargin: Double;
+begin
+  Result := 0;
+  if HargaBeli <> 0 then
+    Result := (HargaJual-HargaBeli) / HargaBeli * 100
 end;
 
 class function TItemUOM.GetItemUOM(aItemID, aUOMID: Integer): TItemUOM;
@@ -374,20 +373,6 @@ begin
   End;
 end;
 
-function TItemUOM.GetPriceListMargin(aPriceIndex: Integer): Double;
-begin
-  Result := 0;
-  if Self.PriceList = 0 then
-    exit;
-
-  case aPriceIndex of
-    0 : Result := (Self.PriceList - Self.HargaBeli) / Self.PriceList * 100;
-    1 : Result := (Self.PriceList - Self.HargaJual1) / Self.PriceList * 100;
-    2 : Result := (Self.PriceList - Self.HargaJual2) / Self.PriceList * 100;
-    3 : Result := (Self.PriceList - Self.HargaJual3) / Self.PriceList * 100;
-    4 : Result := (Self.PriceList - Self.HargaJual4) / Self.PriceList * 100;
-  end;
-end;
 
 function TItemUOM.UpdateHargaAvg(aNewAvg: Double): Boolean;
 var

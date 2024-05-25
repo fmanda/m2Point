@@ -1,7 +1,7 @@
 object frmMain: TfrmMain
   Left = 0
   Top = 0
-  Caption = 'AutoPart - [Software Manajemen Bengkel & Toko Sparepart]'
+  Caption = 'M2Point'
   ClientHeight = 729
   ClientWidth = 1350
   Color = clScrollBar
@@ -366,7 +366,7 @@ object frmMain: TfrmMain
     object dxBarManagerBar6: TdxBar
       Caption = 'Lap Inventory'
       CaptionButtons = <>
-      DockedLeft = 458
+      DockedLeft = 457
       DockedTop = 0
       FloatLeft = 901
       FloatTop = 8
@@ -463,7 +463,7 @@ object frmMain: TfrmMain
     object dxBarManagerBar10: TdxBar
       Caption = 'Laporan'
       CaptionButtons = <>
-      DockedLeft = 302
+      DockedLeft = 301
       DockedTop = 0
       FloatLeft = 901
       FloatTop = 8

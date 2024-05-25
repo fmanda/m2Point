@@ -1,11 +1,10 @@
 inherited frmItem: TfrmItem
   Caption = 'Update Data Barang'
   ClientHeight = 560
-  ClientWidth = 882
+  ClientWidth = 738
   KeyPreview = True
   OnKeyDown = FormKeyDown
-  ExplicitTop = -148
-  ExplicitWidth = 898
+  ExplicitWidth = 754
   ExplicitHeight = 599
   PixelsPerInch = 96
   TextHeight = 13
@@ -13,22 +12,21 @@ inherited frmItem: TfrmItem
     Top = 525
     TabOrder = 2
     ExplicitTop = 525
-    ExplicitWidth = 882
-    Width = 882
+    ExplicitWidth = 738
+    Width = 738
     inherited btnCancel: TcxButton
-      Left = 797
-      ExplicitLeft = 797
+      Left = 653
+      ExplicitLeft = 653
     end
     inherited btnPrint: TcxButton
-      Left = 711
+      Left = 567
       OnClick = btnPrintClick
-      ExplicitLeft = 711
+      ExplicitLeft = 567
     end
     inherited btnSave: TcxButton
-      Left = 625
+      Left = 481
       OnClick = btnSaveClick
-      ExplicitLeft = 625
-      ExplicitTop = 6
+      ExplicitLeft = 481
     end
     object btnDel: TcxButton
       AlignWithMargins = True
@@ -61,24 +59,24 @@ inherited frmItem: TfrmItem
   end
   inherited Panel2: TPanel
     Top = 504
-    Width = 882
+    Width = 738
     TabOrder = 3
     ExplicitTop = 504
-    ExplicitWidth = 882
+    ExplicitWidth = 738
     inherited lbEscape: TLabel
-      Left = 637
+      Left = 493
       Height = 17
-      ExplicitLeft = 637
+      ExplicitLeft = 493
     end
     inherited lgndSave: TLabel
-      Left = 716
+      Left = 572
       Height = 17
-      ExplicitLeft = 716
+      ExplicitLeft = 572
     end
     inherited lgndPrint: TLabel
-      Left = 803
+      Left = 659
       Height = 17
-      ExplicitLeft = 803
+      ExplicitLeft = 659
     end
   end
   object cxGroupBox1: TcxGroupBox [2]
@@ -88,7 +86,7 @@ inherited frmItem: TfrmItem
     Caption = ' Informasi Barang [F1] '
     TabOrder = 0
     Height = 177
-    Width = 882
+    Width = 738
     object cxLabel1: TcxLabel
       Left = 45
       Top = 43
@@ -247,15 +245,15 @@ inherited frmItem: TfrmItem
   object pgcMain: TcxPageControl [3]
     Left = 0
     Top = 177
-    Width = 882
-    Height = 305
+    Width = 738
+    Height = 327
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = tsUOM
     Properties.CustomButtons.Buttons = <>
     Properties.TabHeight = 30
-    ClientRectBottom = 305
-    ClientRectRight = 882
+    ClientRectBottom = 327
+    ClientRectRight = 738
     ClientRectTop = 32
     object tsUOM: TcxTabSheet
       Caption = 'Konversi && Harga Satuan [F2]'
@@ -264,8 +262,8 @@ inherited frmItem: TfrmItem
         AlignWithMargins = True
         Left = 3
         Top = 3
-        Width = 876
-        Height = 267
+        Width = 732
+        Height = 289
         Align = alClient
         TabOrder = 0
         object cxGrdUOM: TcxGridDBBandedTableView
@@ -287,99 +285,28 @@ inherited frmItem: TfrmItem
           Bands = <
             item
               Caption = 'Satuan'
-              Width = 70
+              Width = 76
             end
             item
-              Caption = 'Konversi'#13'(Dalam PCS)'
-              Width = 75
-            end
-            item
-              Caption = 'Price List'
-              Width = 80
+              Caption = 'Konversi'#13'(Satuan Stock)'
+              Width = 144
             end
             item
               Caption = 'Harga Beli'
-              Styles.Content = styleInfoBk
-              Width = 110
+              Width = 188
             end
             item
-              Caption = 'Harga Umum'
-              Width = 127
-            end
-            item
-              Caption = '%'
-              Position.BandIndex = 4
-              Position.ColIndex = 0
-              Width = 35
-            end
-            item
-              Caption = 'Rp'
-              Position.BandIndex = 4
-              Position.ColIndex = 1
-              Width = 75
-            end
-            item
-              Caption = 'Harga Bengkel'
-              Width = 137
+              Caption = 'Harga Jual'
+              Width = 195
             end
             item
               Caption = '%'
-              Position.BandIndex = 7
-              Position.ColIndex = 0
-              Width = 35
-            end
-            item
-              Caption = 'Rp'
-              Position.BandIndex = 7
-              Position.ColIndex = 1
-              Width = 75
-            end
-            item
-              Caption = 'Harga Grosir'
-              Width = 138
-            end
-            item
-              Caption = '%'
-              Position.BandIndex = 10
-              Position.ColIndex = 0
-              Width = 35
-            end
-            item
-              Caption = 'Rp'
-              Position.BandIndex = 10
-              Position.ColIndex = 1
-              Width = 75
-            end
-            item
-              Caption = 'Harga Keliling'
-              Width = 129
-            end
-            item
-              Caption = '%'
-              Position.BandIndex = 13
-              Position.ColIndex = 0
-              Width = 35
-            end
-            item
-              Caption = 'Rp'
-              Position.BandIndex = 13
-              Position.ColIndex = 1
-              Width = 75
+              Width = 57
             end
             item
               Caption = 'Harga Avg'
               Visible = False
               Width = 100
-            end
-            item
-              Caption = '%'
-              Position.BandIndex = 3
-              Position.ColIndex = 0
-            end
-            item
-              Caption = 'Rp'
-              Position.BandIndex = 3
-              Position.ColIndex = 1
             end>
           object colSatuan: TcxGridDBBandedColumn
             DataBinding.FieldName = 'UOM'
@@ -397,18 +324,6 @@ inherited frmItem: TfrmItem
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
-          object colMarginBeli: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'MarginBeli'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.Alignment.Horz = taRightJustify
-            Properties.DisplayFormat = ',0.0;(,0.0)'
-            Properties.OnEditValueChanged = colMarginBeliPropertiesEditValueChanged
-            Styles.Content = styleInfoBk
-            Width = 37
-            Position.BandIndex = 17
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
           object colHrgBeli: TcxGridDBBandedColumn
             DataBinding.FieldName = 'HargaBeli'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -417,7 +332,7 @@ inherited frmItem: TfrmItem
             Properties.OnEditValueChanged = colHrgBeliPropertiesEditValueChanged
             Styles.Content = styleInfoBk
             Width = 72
-            Position.BandIndex = 18
+            Position.BandIndex = 2
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
@@ -428,95 +343,19 @@ inherited frmItem: TfrmItem
             Properties.DisplayFormat = ',0.0;(,0.0)'
             Properties.OnEditValueChanged = colMargin1PropertiesEditValueChanged
             Styles.Content = styleMoney
-            Position.BandIndex = 5
+            Position.BandIndex = 4
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
           object colHrgJual1: TcxGridDBBandedColumn
+            Caption = 'HargaJual'
             DataBinding.FieldName = 'HargaJual1'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.Alignment.Horz = taRightJustify
             Properties.DisplayFormat = ',0;(,0)'
             Properties.OnEditValueChanged = colHrgJual1PropertiesEditValueChanged
             Styles.Content = styleMoney
-            Position.BandIndex = 6
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object colMargin2: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Margin2'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.Alignment.Horz = taRightJustify
-            Properties.DisplayFormat = ',0.0;(,0.0)'
-            Properties.OnEditValueChanged = colMargin2PropertiesEditValueChanged
-            Styles.Content = styleInfoBk
-            Position.BandIndex = 8
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object colHrgJual2: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'HargaJual2'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.Alignment.Horz = taRightJustify
-            Properties.DisplayFormat = ',0;(,0)'
-            Properties.OnEditValueChanged = colHrgJual2PropertiesEditValueChanged
-            Styles.Content = styleInfoBk
-            Position.BandIndex = 9
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object colMargin3: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Margin3'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.Alignment.Horz = taRightJustify
-            Properties.DisplayFormat = ',0.0;(,0.0)'
-            Properties.OnEditValueChanged = colMargin3PropertiesEditValueChanged
-            Styles.Content = styleMoney
-            Position.BandIndex = 11
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object colHrgJual3: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'HargaJual3'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.Alignment.Horz = taRightJustify
-            Properties.DisplayFormat = ',0;(,0)'
-            Properties.OnEditValueChanged = colHrgJual3PropertiesEditValueChanged
-            Styles.Content = styleMoney
-            Position.BandIndex = 12
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object colMargin4: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'Margin4'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.Alignment.Horz = taRightJustify
-            Properties.DisplayFormat = ',0.0;(,0.0)'
-            Properties.OnEditValueChanged = colMargin4PropertiesEditValueChanged
-            Styles.Content = styleInfoBk
-            Position.BandIndex = 14
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object colHrgJual4: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'HargaJual4'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.Alignment.Horz = taRightJustify
-            Properties.DisplayFormat = ',0;(,0)'
-            Properties.OnEditValueChanged = colHrgJual4PropertiesEditValueChanged
-            Styles.Content = styleInfoBk
-            Position.BandIndex = 15
-            Position.ColIndex = 0
-            Position.RowIndex = 0
-          end
-          object colPriceList: TcxGridDBBandedColumn
-            DataBinding.FieldName = 'PriceList'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.Alignment.Horz = taRightJustify
-            Properties.DisplayFormat = ',0;(,0)'
-            Properties.OnEditValueChanged = colPriceListPropertiesEditValueChanged
-            Styles.Content = styleMoney
-            Position.BandIndex = 2
+            Position.BandIndex = 3
             Position.ColIndex = 0
             Position.RowIndex = 0
           end
@@ -537,8 +376,8 @@ inherited frmItem: TfrmItem
       object cxGrid2: TcxGrid
         Left = 0
         Top = 0
-        Width = 882
-        Height = 273
+        Width = 738
+        Height = 295
         Align = alClient
         TabOrder = 0
         object cxGrdRak: TcxGridDBTableView
@@ -599,10 +438,10 @@ inherited frmItem: TfrmItem
         StyleDisabled.LookAndFeel.NativeStyle = False
         TabOrder = 0
         Height = 35
-        Width = 882
+        Width = 738
         object btnRefresh: TcxButton
           AlignWithMargins = True
-          Left = 802
+          Left = 658
           Top = 5
           Width = 75
           Height = 25
@@ -615,7 +454,7 @@ inherited frmItem: TfrmItem
         end
         object EndDate: TcxDateEdit
           AlignWithMargins = True
-          Left = 696
+          Left = 552
           Top = 5
           Align = alRight
           Properties.SaveTime = False
@@ -625,7 +464,7 @@ inherited frmItem: TfrmItem
         end
         object StartDate: TcxDateEdit
           AlignWithMargins = True
-          Left = 571
+          Left = 427
           Top = 5
           Align = alRight
           Properties.SaveTime = False
@@ -634,7 +473,7 @@ inherited frmItem: TfrmItem
           Width = 100
         end
         object cxLabel9: TcxLabel
-          Left = 501
+          Left = 357
           Top = 2
           Align = alRight
           Caption = 'Filter Periode'
@@ -642,7 +481,7 @@ inherited frmItem: TfrmItem
           AnchorY = 18
         end
         object cxLabel10: TcxLabel
-          Left = 674
+          Left = 530
           Top = 2
           Align = alRight
           Caption = 's/d'
@@ -653,8 +492,8 @@ inherited frmItem: TfrmItem
       object cxGrid: TcxGrid
         Left = 0
         Top = 35
-        Width = 882
-        Height = 238
+        Width = 738
+        Height = 260
         Align = alClient
         TabOrder = 1
         object cxGrdAvg: TcxGridServerModeTableView
@@ -678,34 +517,13 @@ inherited frmItem: TfrmItem
       end
     end
   end
-  object cxMemo1: TcxMemo [4]
-    Left = 0
-    Top = 482
-    Align = alBottom
-    Enabled = False
-    Lines.Strings = (
-      '** Prosentase (%) adalah Diskon dari Harga Price List')
-    ParentFont = False
-    Style.Font.Charset = DEFAULT_CHARSET
-    Style.Font.Color = clWindowText
-    Style.Font.Height = -11
-    Style.Font.Name = 'Tahoma'
-    Style.Font.Style = []
-    Style.TextColor = clBlack
-    Style.TextStyle = [fsBold]
-    Style.IsFontAssigned = True
-    StyleDisabled.TextColor = clBlack
-    TabOrder = 4
-    Height = 22
-    Width = 882
-  end
   inherited styleRepo: TcxStyleRepository
     Left = 824
     PixelsPerInch = 96
   end
   object cxStyleRepository1: TcxStyleRepository
-    Left = 728
-    Top = 96
+    Left = 752
+    Top = 48
     PixelsPerInch = 96
     object styleMoney: TcxStyle
       AssignedValues = [svColor]

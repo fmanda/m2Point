@@ -1,5 +1,5 @@
 inherited frmCashReceipt: TfrmCashReceipt
-  Caption = 'Penerimaan Kas'
+  Caption = '='
   ClientHeight = 507
   ClientWidth = 735
   KeyPreview = True

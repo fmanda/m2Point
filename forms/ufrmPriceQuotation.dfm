@@ -219,74 +219,22 @@ inherited frmPriceQuotation: TfrmPriceQuotation
           Width = 50
         end
         item
-          Caption = 'Price List'
-          Width = 90
-        end
-        item
           Caption = 'Harga Beli'
           Width = 131
         end
         item
-          Caption = 'Harga Umum'
-          Width = 118
+          Caption = 'Harga Jual'
+          Width = 214
         end
         item
           Caption = '%'
-          Position.BandIndex = 6
+          Position.BandIndex = 5
           Position.ColIndex = 0
           Width = 35
         end
         item
           Caption = 'Rp'
-          Position.BandIndex = 6
-          Position.ColIndex = 1
-          Width = 75
-        end
-        item
-          Caption = 'Harga Bengkel'
-          Width = 110
-        end
-        item
-          Caption = '%'
-          Position.BandIndex = 9
-          Position.ColIndex = 0
-          Width = 35
-        end
-        item
-          Caption = 'Rp'
-          Position.BandIndex = 9
-          Position.ColIndex = 1
-          Width = 75
-        end
-        item
-          Caption = 'Harga Grosir'
-          Width = 110
-        end
-        item
-          Caption = '%'
-          Position.BandIndex = 12
-          Position.ColIndex = 0
-          Width = 35
-        end
-        item
-          Caption = 'Rp'
-          Position.BandIndex = 12
-          Position.ColIndex = 1
-          Width = 75
-        end
-        item
-          Caption = 'Harga Keliling'
-          Width = 110
-        end
-        item
-          Caption = '%'
-          Position.BandIndex = 15
-          Position.ColIndex = 0
-          Width = 35
-        end
-        item
-          Caption = 'Rp'
-          Position.BandIndex = 15
+          Position.BandIndex = 5
           Position.ColIndex = 1
           Width = 75
         end
@@ -296,15 +244,9 @@ inherited frmPriceQuotation: TfrmPriceQuotation
           Width = 100
         end
         item
-          Caption = '%'
-          Position.BandIndex = 5
-          Position.ColIndex = 0
-          Width = 42
-        end
-        item
           Caption = 'Rp'
-          Position.BandIndex = 5
-          Position.ColIndex = 1
+          Position.BandIndex = 4
+          Position.ColIndex = 0
           Width = 74
         end>
       object colItemCode: TcxGridDBBandedColumn
@@ -359,95 +301,29 @@ inherited frmPriceQuotation: TfrmPriceQuotation
         Properties.DisplayFormat = ',0;(,0)'
         Properties.OnEditValueChanged = colHrgBeliPropertiesEditValueChanged
         Styles.Content = styleOdd
-        Position.BandIndex = 20
+        Position.BandIndex = 9
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object colMargin1: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'Margin1'
+      object colMargin: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'Margin'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.Alignment.Horz = taRightJustify
         Properties.DisplayFormat = ',0.0;(,0.0)'
         Properties.OnEditValueChanged = colMargin1PropertiesEditValueChanged
         Styles.Content = styleGreen
-        Position.BandIndex = 7
+        Position.BandIndex = 6
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object colHrgJual1: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'HargaJual1'
+      object colHrgJual: TcxGridDBBandedColumn
+        DataBinding.FieldName = 'HargaJual'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.Alignment.Horz = taRightJustify
         Properties.DisplayFormat = ',0;(,0)'
         Properties.OnEditValueChanged = colHrgJual1PropertiesEditValueChanged
         Styles.Content = styleGreen
-        Position.BandIndex = 8
-        Position.ColIndex = 0
-        Position.RowIndex = 0
-      end
-      object colMargin2: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'Margin2'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        Properties.DisplayFormat = ',0.0;(,0.0)'
-        Properties.OnEditValueChanged = colMargin2PropertiesEditValueChanged
-        Styles.Content = styleOdd
-        Position.BandIndex = 10
-        Position.ColIndex = 0
-        Position.RowIndex = 0
-      end
-      object colHrgJual2: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'HargaJual2'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        Properties.DisplayFormat = ',0;(,0)'
-        Properties.OnEditValueChanged = colHrgJual2PropertiesEditValueChanged
-        Styles.Content = styleOdd
-        Position.BandIndex = 11
-        Position.ColIndex = 0
-        Position.RowIndex = 0
-      end
-      object colMargin3: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'Margin3'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        Properties.DisplayFormat = ',0.0;(,0.0)'
-        Properties.OnEditValueChanged = colMargin3PropertiesEditValueChanged
-        Styles.Content = styleGreen
-        Position.BandIndex = 13
-        Position.ColIndex = 0
-        Position.RowIndex = 0
-      end
-      object colHrgJual3: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'HargaJual3'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        Properties.DisplayFormat = ',0;(,0)'
-        Properties.OnEditValueChanged = colHrgJual3PropertiesEditValueChanged
-        Styles.Content = styleGreen
-        Position.BandIndex = 14
-        Position.ColIndex = 0
-        Position.RowIndex = 0
-      end
-      object colMargin4: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'Margin4'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        Properties.DisplayFormat = ',0.0;(,0.0)'
-        Properties.OnEditValueChanged = colMargin4PropertiesEditValueChanged
-        Styles.Content = styleOdd
-        Position.BandIndex = 16
-        Position.ColIndex = 0
-        Position.RowIndex = 0
-      end
-      object colHrgJual4: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'HargaJual4'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        Properties.DisplayFormat = ',0;(,0)'
-        Properties.OnEditValueChanged = colHrgJual4PropertiesEditValueChanged
-        Styles.Content = styleOdd
-        Position.BandIndex = 17
+        Position.BandIndex = 7
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
@@ -457,28 +333,6 @@ inherited frmPriceQuotation: TfrmPriceQuotation
         Position.BandIndex = 0
         Position.ColIndex = 0
         Position.RowIndex = 1
-      end
-      object colPriceList: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'PriceList'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        Properties.DisplayFormat = ',0;(,0)'
-        Properties.OnEditValueChanged = colPriceListPropertiesEditValueChanged
-        Styles.Content = styleGreen
-        Position.BandIndex = 4
-        Position.ColIndex = 0
-        Position.RowIndex = 0
-      end
-      object colMarginBeli: TcxGridDBBandedColumn
-        DataBinding.FieldName = 'MarginBeli'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        Properties.DisplayFormat = ',0.00;(,0.00)'
-        Properties.OnEditValueChanged = colMarginBeliPropertiesEditValueChanged
-        Styles.Content = styleOdd
-        Position.BandIndex = 19
-        Position.ColIndex = 0
-        Position.RowIndex = 0
       end
     end
     object cxGrid1Level1: TcxGridLevel

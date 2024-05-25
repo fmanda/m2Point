@@ -4,7 +4,6 @@ inherited frmPurchaseRetur: TfrmPurchaseRetur
   ClientWidth = 941
   KeyPreview = True
   OnKeyDown = FormKeyDown
-  ExplicitTop = -30
   ExplicitWidth = 957
   ExplicitHeight = 597
   PixelsPerInch = 96
@@ -428,15 +427,11 @@ inherited frmPurchaseRetur: TfrmPurchaseRetur
         HeaderAlignmentHorz = taCenter
         Width = 53
       end
-      object colPriceList: TcxGridDBColumn
-        DataBinding.FieldName = 'PriceList'
+      object colHrgBeli: TcxGridDBColumn
+        DataBinding.FieldName = 'Harga'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        Properties.DisplayFormat = ',0.##;(,0.##)'
         HeaderAlignmentHorz = taCenter
-        Options.Editing = False
-        Options.Focusing = False
-        Width = 90
+        Width = 91
       end
       object colDisc: TcxGridDBColumn
         Caption = 'Disc %'
@@ -479,11 +474,6 @@ inherited frmPurchaseRetur: TfrmPurchaseRetur
       end
       object colPPN: TcxGridDBColumn
         DataBinding.FieldName = 'PPN'
-        Visible = False
-      end
-      object colHrgBeli: TcxGridDBColumn
-        DataBinding.FieldName = 'Harga'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
         Visible = False
       end
     end

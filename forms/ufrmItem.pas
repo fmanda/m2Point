@@ -45,12 +45,6 @@ type
     colHrgBeli: TcxGridDBBandedColumn;
     colMargin1: TcxGridDBBandedColumn;
     colHrgJual1: TcxGridDBBandedColumn;
-    colMargin2: TcxGridDBBandedColumn;
-    colHrgJual2: TcxGridDBBandedColumn;
-    colMargin3: TcxGridDBBandedColumn;
-    colHrgJual3: TcxGridDBBandedColumn;
-    colMargin4: TcxGridDBBandedColumn;
-    colHrgJual4: TcxGridDBBandedColumn;
     cxGrid1Level1: TcxGridLevel;
     tsHistory: TcxTabSheet;
     lbModifiedBy: TcxLabel;
@@ -76,9 +70,6 @@ type
     cxLabel11: TcxLabel;
     spLeadTime: TcxSpinEdit;
     cxLabel12: TcxLabel;
-    cxMemo1: TcxMemo;
-    colMarginBeli: TcxGridDBBandedColumn;
-    colPriceList: TcxGridDBBandedColumn;
     tsRack: TcxTabSheet;
     cxGrid2: TcxGrid;
     cxGrdRak: TcxGridDBTableView;
@@ -215,40 +206,40 @@ begin
   cxGrdUOM.DataController.Post();
   iRec      := cxGrdUOM.Controller.FocusedRecord;
   if iRec = nil then exit;
-
-  lPriceList := iRec.Values[colPriceList.Index];
-
-  if IsMargin then
-  begin
-    case aIndexPrice of
-      0 : cxGrdUOM.DataController.SetEditValue(colHrgBeli.Index,
-          lPriceList * (1 - (iRec.Values[colMarginBeli.Index] /100)),  evsValue);
-      1 : cxGrdUOM.DataController.SetEditValue(colHrgJual1.Index,
-          lPriceList * (1 - (iRec.Values[colMargin1.Index] /100)),  evsValue);
-      2 : cxGrdUOM.DataController.SetEditValue(colHrgJual2.Index,
-          lPriceList * (1 - (iRec.Values[colMargin2.Index] /100)),  evsValue);
-      3 : cxGrdUOM.DataController.SetEditValue(colHrgJual3.Index,
-          lPriceList * (1 - (iRec.Values[colMargin3.Index] /100)),  evsValue);
-      4 : cxGrdUOM.DataController.SetEditValue(colHrgJual4.Index,
-          lPriceList * (1 - (iRec.Values[colMargin4.Index] /100)),  evsValue);
-    end;
-  end else
-  begin
-    if lPriceList = 0 then exit;
-
-    case aIndexPrice of
-      0 : cxGrdUOM.DataController.SetEditValue(colMarginBeli.Index,
-          (lPriceList - iRec.Values[colHrgBeli.Index]) / lPriceList * 100,  evsValue);
-      1 : cxGrdUOM.DataController.SetEditValue(colMargin1.Index,
-          (lPriceList - iRec.Values[colHrgJual1.Index]) / lPriceList * 100,  evsValue);
-      2 : cxGrdUOM.DataController.SetEditValue(colMargin2.Index,
-          (lPriceList - iRec.Values[colHrgJual2.Index]) / lPriceList * 100,  evsValue);
-      3 : cxGrdUOM.DataController.SetEditValue(colMargin3.Index,
-          (lPriceList - iRec.Values[colHrgJual3.Index]) / lPriceList * 100,  evsValue);
-      4 : cxGrdUOM.DataController.SetEditValue(colMargin4.Index,
-          (lPriceList - iRec.Values[colHrgJual4.Index]) / lPriceList * 100,  evsValue);
-    end;
-  end;
+//
+//  lPriceList := iRec.Values[colPriceList.Index];
+//
+//  if IsMargin then
+//  begin
+//    case aIndexPrice of
+//      0 : cxGrdUOM.DataController.SetEditValue(colHrgBeli.Index,
+//          lPriceList * (1 - (iRec.Values[colMarginBeli.Index] /100)),  evsValue);
+//      1 : cxGrdUOM.DataController.SetEditValue(colHrgJual1.Index,
+//          lPriceList * (1 - (iRec.Values[colMargin1.Index] /100)),  evsValue);
+//      2 : cxGrdUOM.DataController.SetEditValue(colHrgJual2.Index,
+//          lPriceList * (1 - (iRec.Values[colMargin2.Index] /100)),  evsValue);
+//      3 : cxGrdUOM.DataController.SetEditValue(colHrgJual3.Index,
+//          lPriceList * (1 - (iRec.Values[colMargin3.Index] /100)),  evsValue);
+//      4 : cxGrdUOM.DataController.SetEditValue(colHrgJual4.Index,
+//          lPriceList * (1 - (iRec.Values[colMargin4.Index] /100)),  evsValue);
+//    end;
+//  end else
+//  begin
+//    if lPriceList = 0 then exit;
+//
+//    case aIndexPrice of
+//      0 : cxGrdUOM.DataController.SetEditValue(colMarginBeli.Index,
+//          (lPriceList - iRec.Values[colHrgBeli.Index]) / lPriceList * 100,  evsValue);
+//      1 : cxGrdUOM.DataController.SetEditValue(colMargin1.Index,
+//          (lPriceList - iRec.Values[colHrgJual1.Index]) / lPriceList * 100,  evsValue);
+//      2 : cxGrdUOM.DataController.SetEditValue(colMargin2.Index,
+//          (lPriceList - iRec.Values[colHrgJual2.Index]) / lPriceList * 100,  evsValue);
+//      3 : cxGrdUOM.DataController.SetEditValue(colMargin3.Index,
+//          (lPriceList - iRec.Values[colHrgJual3.Index]) / lPriceList * 100,  evsValue);
+//      4 : cxGrdUOM.DataController.SetEditValue(colMargin4.Index,
+//          (lPriceList - iRec.Values[colHrgJual4.Index]) / lPriceList * 100,  evsValue);
+//    end;
+//  end;
 
 end;
 
@@ -400,11 +391,7 @@ begin
   if FCDS = nil then
   begin
     FCDS := TItemUOM.CreateDataSet(Self, False);
-    FCDS.AddField('MarginBeli',ftFloat);
-    FCDS.AddField('Margin1',ftFloat);
-    FCDS.AddField('Margin2',ftFloat);
-    FCDS.AddField('Margin3',ftFloat);
-    FCDS.AddField('Margin4',ftFloat);
+    FCDS.AddField('Margin',ftFloat);
     FCDS.CreateDataSet;
   end;
   Result := FCDS;
@@ -514,20 +501,12 @@ begin
     CDS.Append;
     lItemUOM.UpdateToDataset(CDS);
 
-    if lItemUOM.PriceList = 0 then
+    if lItemUOM.HargaBeli = 0 then
     begin
-      CDS.FieldByName('MarginBeli').AsFloat := 0;
-      CDS.FieldByName('Margin1').AsFloat := 0;
-      CDS.FieldByName('Margin2').AsFloat := 0;
-      CDS.FieldByName('Margin3').AsFloat := 0;
-      CDS.FieldByName('Margin4').AsFloat := 0;
+      CDS.FieldByName('Margin').AsFloat := 0;
     end else
     begin
-      CDS.FieldByName('MarginBeli').AsFloat := (lItemUOM.PriceList - lItemUOM.HargaBeli) / lItemUOM.PriceList * 100;
-      CDS.FieldByName('Margin1').AsFloat := (lItemUOM.PriceList - lItemUOM.HargaJual1) / lItemUOM.PriceList * 100;
-      CDS.FieldByName('Margin2').AsFloat := (lItemUOM.PriceList - lItemUOM.HargaJual2) / lItemUOM.PriceList * 100;
-      CDS.FieldByName('Margin3').AsFloat := (lItemUOM.PriceList - lItemUOM.HargaJual3) / lItemUOM.PriceList * 100;
-      CDS.FieldByName('Margin4').AsFloat := (lItemUOM.PriceList - lItemUOM.HargaJual4) / lItemUOM.PriceList * 100;
+      CDS.FieldByName('Margin').AsFloat := (lItemUOM.HargaJual - lItemUOM.HargaBeli) / lItemUOM.HargaBeli * 100;
     end;
 
     CDS.Post;
@@ -724,10 +703,7 @@ begin
   CDS.First;
   while not CDS.Eof do
   begin
-    if (CDS.FieldByName('HargaJual1').AsFloat < CDS.FieldByName('HargaBeli').AsFloat)
-      or (CDS.FieldByName('HargaJual2').AsFloat < CDS.FieldByName('HargaBeli').AsFloat)
-      or (CDS.FieldByName('HargaJual3').AsFloat < CDS.FieldByName('HargaBeli').AsFloat)
-      or (CDS.FieldByName('HargaJual4').AsFloat < CDS.FieldByName('HargaBeli').AsFloat)
+    if (CDS.FieldByName('HargaJual').AsFloat < CDS.FieldByName('HargaBeli').AsFloat)
     then
     begin
       bWarningHJ := True;

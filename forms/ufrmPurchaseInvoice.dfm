@@ -306,7 +306,6 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
     Align = alClient
     TabOrder = 1
     RootLevelOptions.DetailTabsPosition = dtpTop
-    ExplicitTop = 120
     object cxGrdMain: TcxGridDBTableView
       PopupMenu = pmMain
       Navigator.Buttons.CustomButtons = <>
@@ -384,16 +383,12 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
         HeaderAlignmentHorz = taCenter
         Width = 53
       end
-      object colPriceList: TcxGridDBColumn
-        Caption = 'Price List'
-        DataBinding.FieldName = 'PriceList'
+      object colHrgBeli: TcxGridDBColumn
+        DataBinding.FieldName = 'Harga'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        Properties.DisplayFormat = ',0.##;(,0.##)'
+        Properties.DisplayFormat = ',0.00;(,0.00)'
         HeaderAlignmentHorz = taCenter
-        Options.Editing = False
-        Options.Focusing = False
-        Width = 90
+        Width = 107
       end
       object colDisc: TcxGridDBColumn
         Caption = 'Disc %'
@@ -436,12 +431,6 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       end
       object colPPN: TcxGridDBColumn
         DataBinding.FieldName = 'PPN'
-        Visible = False
-      end
-      object colHrgBeli: TcxGridDBColumn
-        DataBinding.FieldName = 'Harga'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;(,0.00)'
         Visible = False
       end
       object colPriceType: TcxGridDBColumn
