@@ -10,7 +10,7 @@ inherited frmCustomer: TfrmCustomer
   TextHeight = 13
   inherited cxGroupBox2: TcxGroupBox
     Top = 317
-    TabOrder = 9
+    TabOrder = 8
     ExplicitTop = 317
     ExplicitWidth = 491
     Width = 491
@@ -40,7 +40,7 @@ inherited frmCustomer: TfrmCustomer
   inherited Panel2: TPanel
     Top = 296
     Width = 491
-    TabOrder = 10
+    TabOrder = 9
     ExplicitTop = 296
     ExplicitWidth = 491
     inherited lbEscape: TLabel
@@ -103,28 +103,30 @@ inherited frmCustomer: TfrmCustomer
   end
   object lbModifiedBy: TcxLabel [9]
     Left = 49
-    Top = 229
+    Top = 187
     Caption = 'Modified By'
   end
   object edModifiedBy: TcxTextEdit [10]
     Left = 109
-    Top = 229
+    Top = 187
     TabStop = False
+    Enabled = False
     Properties.CharCase = ecUpperCase
-    TabOrder = 8
+    TabOrder = 7
     Width = 292
   end
   object lbModified: TcxLabel [11]
     Left = 38
-    Top = 208
+    Top = 166
     Caption = 'Date Modified'
   end
   object dtModified: TcxDateEdit [12]
     Left = 109
-    Top = 208
+    Top = 166
     TabStop = False
-    TabOrder = 7
-    Width = 292
+    Enabled = False
+    TabOrder = 6
+    Width = 133
   end
   object chkActive: TcxCheckBox [13]
     Left = 347
@@ -132,7 +134,7 @@ inherited frmCustomer: TfrmCustomer
     TabStop = False
     Caption = 'Active'
     State = cbsChecked
-    TabOrder = 16
+    TabOrder = 15
   end
   object cxLabel4: TcxLabel [14]
     Left = 46
@@ -146,36 +148,13 @@ inherited frmCustomer: TfrmCustomer
     TabOrder = 3
     Width = 133
   end
-  object rbHarga: TcxRadioGroup [16]
-    Left = 109
-    Top = 160
-    Caption = ' Default Harga '
-    Properties.Columns = 4
-    Properties.Items = <
-      item
-        Caption = 'Umum'
-      end
-      item
-        Caption = 'Bengkel'
-      end
-      item
-        Caption = 'Grosir'
-      end
-      item
-        Caption = 'Keliling'
-      end>
-    ItemIndex = 0
-    TabOrder = 6
-    Height = 44
-    Width = 292
-  end
-  object crTempo: TcxSpinEdit [17]
+  object crTempo: TcxSpinEdit [16]
     Left = 109
     Top = 139
     TabOrder = 4
     Width = 84
   end
-  object crCreditLimit: TcxCurrencyEdit [18]
+  object crCreditLimit: TcxCurrencyEdit [17]
     Left = 294
     Top = 139
     EditValue = 0.000000000000000000
@@ -185,7 +164,7 @@ inherited frmCustomer: TfrmCustomer
     TabOrder = 5
     Width = 107
   end
-  object cxLabel5: TcxLabel [19]
+  object cxLabel5: TcxLabel [18]
     Left = 234
     Top = 140
     Caption = 'Credit Limit'

@@ -17,7 +17,6 @@ type
     FModifiedBy: String;
     FModifiedDate: TDateTime;
     FCreditLimit: Double;
-    FTipeHarga: Integer;
   public
     function GenerateNo: String;
   published
@@ -31,7 +30,6 @@ type
     property ModifiedBy: String read FModifiedBy write FModifiedBy;
     property ModifiedDate: TDateTime read FModifiedDate write FModifiedDate;
     property CreditLimit: Double read FCreditLimit write FCreditLimit;
-    property TipeHarga: Integer read FTipeHarga write FTipeHarga;
   end;
 
 implementation

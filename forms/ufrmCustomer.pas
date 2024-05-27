@@ -27,7 +27,6 @@ type
     chkActive: TcxCheckBox;
     cxLabel4: TcxLabel;
     edTelp: TcxTextEdit;
-    rbHarga: TcxRadioGroup;
     cxLabel3: TcxLabel;
     crTempo: TcxSpinEdit;
     crCreditLimit: TcxCurrencyEdit;
@@ -117,7 +116,7 @@ begin
   edAlamat.Text     := Customer.Alamat;
   edTelp.Text       := Customer.Telp;
   crTempo.Value     := Customer.Tempo;
-  rbHarga.ItemIndex := Customer.TipeHarga;
+//  rbHarga.ItemIndex := Customer.TipeHarga;
   chkActive.Checked := Customer.IsActive = 1;
   btnSave.Enabled   := not IsReadOnly;
 
@@ -134,7 +133,7 @@ begin
   Customer.Alamat       := edAlamat.Text;
   Customer.Telp         := edTelp.Text;
   Customer.Tempo        := VarToInt(crTempo.Value);
-  Customer.TipeHarga    := rbHarga.ItemIndex;
+//  Customer.TipeHarga    := rbHarga.ItemIndex;
   Customer.ModifiedBy   := UserLogin;
   Customer.ModifiedDate := Now();
   Customer.CreditLimit  := crCreditLimit.Value;
