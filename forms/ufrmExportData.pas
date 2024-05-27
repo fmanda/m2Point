@@ -353,8 +353,7 @@ var
 begin
   //load barang
   S := 'select a.ID, a.KODE, a.NAMA, e.NAMA as MERK,'
-      +' c.UOM as STOCKUOM, b.HARGAJUAL1 as HARGAUMUM, b.HARGAJUAL2 AS HARGABENGKEL,'
-      +' b.HARGAJUAL3 AS HARGAGROSIR, b.HARGAJUAL4 AS HARGAKELILING,'
+      +' c.UOM as STOCKUOM, b.HARGAJUAL,'
       +' A.MODIFIEDBY, A.MODIFIEDDATE'
       +' from titem a'
       +' inner join TITEMUOM b on a.id = b.ITEM_ID and a.STOCKUOM_ID = b.UOM_ID'
@@ -473,8 +472,7 @@ begin
   lItem  := TItem.Create;
   Try
     s := 'select a.ID, a.KODE, a.NAMA, e.NAMA as MERK,'
-        +' c.UOM as STOCKUOM, b.HARGAJUAL1 as HARGAUMUM, b.HARGAJUAL2 AS HARGABENGKEL,'
-        +' b.HARGAJUAL3 AS HARGAGROSIR, b.HARGAJUAL4 AS HARGAKELILING,'
+        +' c.UOM as STOCKUOM, b.HARGAJUAL,'
         +' A.MODIFIEDBY, A.MODIFIEDDATE'
         +' from titem a'
         +' inner join TITEMUOM b on a.id = b.ITEM_ID and a.STOCKUOM_ID = b.UOM_ID'

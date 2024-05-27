@@ -9,6 +9,7 @@ inherited frmBrowseItem: TfrmBrowseItem
   inherited cxGrid: TcxGrid
     Width = 920
     Height = 445
+    ExplicitTop = 36
     ExplicitWidth = 920
     ExplicitHeight = 445
     inherited cxGrdMain: TcxGridServerModeTableView
@@ -65,6 +66,7 @@ inherited frmBrowseItem: TfrmBrowseItem
       OptionsImage.Images = frmMain.ImageList
       TabOrder = 7
       OnClick = btnStockClick
+      ExplicitTop = 7
     end
     object btnStockCabang: TcxButton
       AlignWithMargins = True
@@ -77,6 +79,7 @@ inherited frmBrowseItem: TfrmBrowseItem
       OptionsImage.ImageIndex = 67
       OptionsImage.Images = frmMain.ImageList
       TabOrder = 8
+      Visible = False
       OnClick = btnStockCabangClick
     end
   end

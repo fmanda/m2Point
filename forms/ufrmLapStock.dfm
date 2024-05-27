@@ -206,13 +206,6 @@ inherited frmLapStock: TfrmLapStock
         HeaderAlignmentHorz = taCenter
         Width = 110
       end
-      object colPriceList: TcxGridDBColumn
-        DataBinding.FieldName = 'PriceList'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        Properties.DisplayFormat = ',0.##;(,0.##)'
-        HeaderAlignmentHorz = taCenter
-      end
       object colHrgBeli: TcxGridDBColumn
         Caption = 'Hrg Beli'
         DataBinding.FieldName = 'HargaBeli'
@@ -222,32 +215,8 @@ inherited frmLapStock: TfrmLapStock
         HeaderAlignmentHorz = taCenter
       end
       object colHrgJual1: TcxGridDBColumn
-        Caption = 'Hrg Umum'
-        DataBinding.FieldName = 'HargaUmum'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        Properties.DisplayFormat = ',0.##;(,0.##)'
-        HeaderAlignmentHorz = taCenter
-      end
-      object colHrgJual2: TcxGridDBColumn
-        Caption = 'Hrg Bengkel'
-        DataBinding.FieldName = 'HargaBengkel'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        Properties.DisplayFormat = ',0.##;(,0.##)'
-        HeaderAlignmentHorz = taCenter
-      end
-      object colHrgJual3: TcxGridDBColumn
-        Caption = 'Hrg Grosir'
-        DataBinding.FieldName = 'HargaGrosir'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.Alignment.Horz = taRightJustify
-        Properties.DisplayFormat = ',0.##;(,0.##)'
-        HeaderAlignmentHorz = taCenter
-      end
-      object colHrgJual4: TcxGridDBColumn
-        Caption = 'Hrg Keliling'
-        DataBinding.FieldName = 'HargaKeliling'
+        Caption = 'Hrg Jual'
+        DataBinding.FieldName = 'HargaJual'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.Alignment.Horz = taRightJustify
         Properties.DisplayFormat = ',0.##;(,0.##)'

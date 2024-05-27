@@ -2,7 +2,7 @@ inherited frmLogin: TfrmLogin
   Caption = 'Silahkan Login Ke Aplikasi'
   ClientHeight = 296
   ClientWidth = 268
-  Position = poDesktopCenter
+  Position = poScreenCenter
   OnShow = FormShow
   ExplicitWidth = 284
   ExplicitHeight = 335

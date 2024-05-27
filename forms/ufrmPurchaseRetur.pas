@@ -158,8 +158,8 @@ begin
     exit;
   end;
 
-  S := 'SELECT D.ITEM_ID, E.KODE, E.NAMA, D.QTY, D.PRICELIST, CASE WHEN D.PRICELIST = 0 THEN 0 ELSE'
-      +' (D.PRICELIST - D.HARGA) / D.PRICELIST * 100 END AS DISCP, D.HARGA AS NETT, A.INVOICENO, A.TRANSDATE AS TANGGAL, A.NOTES'
+  S := 'SELECT D.ITEM_ID, E.KODE, E.NAMA, D.QTY, D.HARGA, CASE WHEN D.HARGA = 0 THEN 0 ELSE'
+      +' (D.DISCOUNT - D.HARGA) / D.HARGA * 100 END AS DISCP, A.INVOICENO, A.TRANSDATE AS TANGGAL, A.NOTES'
       +' FROM TPURCHASEINVOICE A'
       +' INNER JOIN TSUPPLIER B ON A.SUPPLIER_ID = B.ID'
       +' INNER JOIN TWAREHOUSE C ON A.WAREHOUSE_ID = C.ID'
@@ -185,10 +185,9 @@ begin
         lItem.LoadByID( cxLookup.Data.FieldByName('ITEM_ID').AsInteger ,False);
         SetItemToGrid(lItem);
         lDisc := 0;
-        if CDS.FieldByName('PriceList').AsFloat  <> 0 then
-          lDisc := (CDS.FieldByName('PriceList').AsFloat - CDS.FieldByName('Harga').AsFloat)
-            /CDS.FieldByName('PriceList').AsFloat*100;
-        DC.SetEditValue(colHrgBeli.Index, cxLookup.Data.FieldByName('PriceList').AsFloat , evsValue);
+        if CDS.FieldByName('HARGA').AsFloat  <> 0 then
+          lDisc := (CDS.FieldByName('DISCOUNT').AsFloat - CDS.FieldByName('Harga').AsFloat)
+            /CDS.FieldByName('HARGA').AsFloat*100;
         DC.SetEditValue(colDisc.Index, lDisc , evsValue);
         cxLookup.Data.Next;
         if not cxLookup.Data.Eof then DC.Append;
@@ -241,6 +240,7 @@ procedure TfrmPurchaseRetur.CalculateAll;
 var
   dPPN: Double;
   dSubTotal: Double;
+  lHrganet: Double;
 begin
   if CDS.State in [dsInsert, dsEdit] then
     CDS.Post;
@@ -255,13 +255,12 @@ begin
     while not CDSClone.Eof do
     begin
       CDSClone.Edit;
-      CDSClone.FieldByName('Harga').AsFloat :=
-        (1 - (CDSClone.FieldByName('DiscP').AsFloat /100))
-        * CDSClone.FieldByName('PriceList').AsFloat;
+      lHrganet := (1 - (CDSClone.FieldByName('DiscP').AsFloat /100))
+        * CDSClone.FieldByName('harga').AsFloat;
 
 
       CDSClone.FieldByName('SubTotal').AsFloat :=
-        CDSClone.FieldByName('Harga').AsFloat * CdSClone.FieldByName('QTY').AsFloat;
+        lHrganet * CdSClone.FieldByName('QTY').AsFloat;
       dSubTotal := dSubTotal +  CDSClone.FieldByName('SubTotal').AsFloat;
       dPPN :=  dPPN + (CDSClone.FieldByName('PPN').AsFloat * CDSClone.FieldByName('SubTotal').AsFloat / 100);
 
@@ -660,10 +659,10 @@ begin
     CDS.FieldByName('Kode').AsString := lItem.Item.Kode;
     CDS.FieldByName('Nama').AsString := lItem.Item.Nama;
 
-    if lItem.PriceList > 0 then
+    if lItem.harga > 0 then
       CDS.FieldByName('DiscP').AsFloat :=
-        (CDS.FieldByName('PriceList').AsFloat - CDS.FieldByName('Harga').AsFloat)
-          /CDS.FieldByName('PriceList').AsFloat*100;
+        (CDS.FieldByName('discount').AsFloat )
+          /CDS.FieldByName('harga').AsFloat*100;
 
     CDS.Post;
   end;
@@ -739,10 +738,10 @@ begin
 
     CDS.FieldByName('DiscP').AsFloat := 0;
 
-    if lItem.PriceList > 0 then
+    if lItem.HARGA > 0 then
       CDS.FieldByName('DiscP').AsFloat :=
-        (CDS.FieldByName('PriceList').AsFloat - CDS.FieldByName('Harga').AsFloat)
-          /CDS.FieldByName('PriceList').AsFloat*100;
+        ( CDS.FieldByName('DISCOUNT').AsFloat)
+          /CDS.FieldByName('Harga').AsFloat*100;
 
     CDS.Post;
   end;
@@ -778,7 +777,7 @@ begin
   end;
 
   S := 'SELECT B.ID, A.INVOICENO, A.TRANSDATE, E.NAMA AS SUPPLIER,'
-      +' C.KODE, C.NAMA, D.UOM, B.PRICELIST, B.HARGA'
+      +' C.KODE, C.NAMA, D.UOM,  B.HARGA'
       +' FROM TPURCHASEINVOICE A'
       +' INNER JOIN TTRANSDETAIL B ON A.ID = B.HEADER_ID AND B.HEADER_FLAG = 100'
       +' INNER JOIN TITEM C ON B.ITEM_ID = C.ID'
@@ -795,12 +794,11 @@ begin
     if cxLookup.ShowModal = mrOK then
     begin
       CDS.Edit;
-      CDS.FieldByName('PriceList').AsFloat  := cxLookup.FieldValue('PriceList');
       CDS.FieldByName('Harga').AsFloat      := cxLookup.FieldValue('Harga');
-      if CDS.FieldByName('PriceList').AsFloat  <> 0 then
+      if CDS.FieldByName('Harga').AsFloat  <> 0 then
         CDS.FieldByName('DiscP').AsFloat :=
-        (CDS.FieldByName('PriceList').AsFloat - CDS.FieldByName('Harga').AsFloat)
-          /CDS.FieldByName('PriceList').AsFloat*100;
+        (CDS.FieldByName('discount').AsFloat)
+          /CDS.FieldByName('Harga').AsFloat*100;
 
       CDS.Post;
       CalculateAll;

@@ -89,6 +89,7 @@ inherited frmExportData: TfrmExportData
         Properties.SaveTime = False
         Properties.ShowTime = False
         TabOrder = 0
+        ExplicitHeight = 21
         Width = 100
       end
       object StartDate: TcxDateEdit
@@ -99,6 +100,7 @@ inherited frmExportData: TfrmExportData
         Properties.SaveTime = False
         Properties.ShowTime = False
         TabOrder = 1
+        ExplicitHeight = 21
         Width = 100
       end
       object cxLabel1: TcxLabel
@@ -174,7 +176,6 @@ inherited frmExportData: TfrmExportData
       StyleDisabled.TextColor = clBlack
       TabOrder = 4
       Visible = False
-      ExplicitHeight = 31
       Height = 46
       Width = 432
     end
@@ -194,6 +195,9 @@ inherited frmExportData: TfrmExportData
     object tsItem: TcxTabSheet
       Caption = 'List Master Barang'
       ImageIndex = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridItem: TcxGrid
         Left = 0
         Top = 0
@@ -270,6 +274,9 @@ inherited frmExportData: TfrmExportData
     object tsPriceQuotation: TcxTabSheet
       Caption = 'List Price Quotation'
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -301,10 +308,16 @@ inherited frmExportData: TfrmExportData
     object tsTransfer: TcxTabSheet
       Caption = 'List Transfer Stock'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object tsJSON: TcxTabSheet
       Caption = 'File Preview'
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object mmJSON: TcxMemo
         Left = 0
         Top = 0

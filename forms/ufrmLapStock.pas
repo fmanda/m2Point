@@ -43,12 +43,8 @@ type
     pmMain: TPopupMenu;
     LihatKartuStock1: TMenuItem;
     colRak: TcxGridDBColumn;
-    colPriceList: TcxGridDBColumn;
     colHrgBeli: TcxGridDBColumn;
     colHrgJual1: TcxGridDBColumn;
-    colHrgJual2: TcxGridDBColumn;
-    colHrgJual3: TcxGridDBColumn;
-    colHrgJual4: TcxGridDBColumn;
     ckShowAvgCost: TcxCheckBox;
     styleQty: TcxStyle;
     procedure edKodeKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -121,8 +117,7 @@ end;
 procedure TfrmLapStock.ckShowPricePropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
-  cxGrdMain.SetVisibleColumns(['PriceList','HargaBeli','HargaUmum','HargaBengkel',
-    'HargaGrosir','HargaKeliling'], ckShowPrice.Checked);
+  cxGrdMain.SetVisibleColumns(['HargaBeli','HargaJual'], ckShowPrice.Checked);
 end;
 
 procedure TfrmLapStock.edKodeKeyDown(Sender: TObject; var Key: Word; Shift:
@@ -250,8 +245,7 @@ begin
 
   S := 'SELECT I.ID, I.KODE, I.NAMA, L.UOM,'
       +' I.ISACTIVE, ISNULL(SUM(A.QTYPCS) / J.KONVERSI, 0) AS QTY,'
-      +' M.NAMA AS MERK, N.NAMA AS ITEMGROUP, J.PRICELIST, J.HARGABELI, J.HARGAJUAL1 AS HARGAUMUM,'
-      +' J.HARGAJUAL2 AS HARGABENGKEL, J.HARGAJUAL3 AS HARGAGROSIR, J.HARGAJUAL4 AS HARGAKELILING,'
+      +' M.NAMA AS MERK, N.NAMA AS ITEMGROUP, J.HARGABELI, J.HARGAJUAL,'
       +' CASE WHEN ISNULL(J.HARGAAVG,0) = 0 THEN J.HARGABELI ELSE J.HARGABELI END as HARGAAVG,'
       +' CASE WHEN ISNULL(J.HARGAAVG,0) = 0 THEN J.HARGABELI ELSE J.HARGABELI END * (SUM(A.QTYPCS) / J.KONVERSI) as TOTAL'
       +' FROM FN_STOCK(' + TAppUtils.QuotD(dtStock.Date) + ') A'
@@ -274,8 +268,8 @@ begin
   if ckGudang.Checked then
     S := S + ' AND A.WAREHOUSE_ID = ' + IntToStr(VarToInt(cxLookupGudang.EditValue));
 
-  S := S +' GROUP BY I.ID, I.KODE, I.NAMA, L.UOM, J.HARGABELI, J.PRICELIST, J.HARGAJUAL1, '
-      +' I.ISACTIVE, J.KONVERSI, M.NAMA ,N.NAMA , J.HARGAAVG, J.HARGAJUAL2, J.HARGAJUAL3, J.HARGAJUAL4';
+  S := S +' GROUP BY I.ID, I.KODE, I.NAMA, L.UOM, J.HARGABELI, J.HARGAJUAL, '
+      +' I.ISACTIVE, J.KONVERSI, M.NAMA ,N.NAMA , J.HARGAAVG' ;
 
   //rack
   if ckGudang.Checked then
@@ -286,8 +280,7 @@ begin
 
   FCDS := TDBUtils.OpenDataset(S);
   cxGrdMain.PrepareFromCDS(CDS);
-  cxGrdMain.SetVisibleColumns(['PriceList','HargaBeli','HargaUmum','HargaBengkel',
-    'HargaGrosir','HargaKeliling'], ckShowPrice.Checked);
+  cxGrdMain.SetVisibleColumns(['HargaBeli','HargaJual'], ckShowPrice.Checked);
   cxGrdMain.SetVisibleColumns(['HargaAvg','Total'], ckShowAvgCost.Checked);
   cxGrdMain.SetVisibleColumns(['Merk','ItemGroup'], ckGrupMerk.Checked);
   cxGrdMain.EnableFiltering();

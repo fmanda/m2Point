@@ -176,6 +176,7 @@ procedure TfrmPurchaseInvoice.CalculateAll;
 var
   dPPN: Double;
   dSubTotal: Double;
+  lHrgNet: Double;
 begin
   if CDS.State in [dsInsert, dsEdit] then
     CDS.Post;
@@ -190,13 +191,13 @@ begin
     while not CDSClone.Eof do
     begin
       CDSClone.Edit;
-      CDSClone.FieldByName('Harga').AsFloat :=
+      lHrgNet :=
         (1 - (CDSClone.FieldByName('DiscP').AsFloat /100))
-        * CDSClone.FieldByName('PriceList').AsFloat;
+        * CDSClone.FieldByName('Harga').AsFloat;
 
 
       CDSClone.FieldByName('SubTotal').AsFloat :=
-        CDSClone.FieldByName('Harga').AsFloat * CdSClone.FieldByName('QTY').AsFloat;
+        lHrgNet * CdSClone.FieldByName('QTY').AsFloat;
       dSubTotal := dSubTotal +  CDSClone.FieldByName('SubTotal').AsFloat;
       dPPN :=  dPPN + (CDSClone.FieldByName('PPN').AsFloat * CDSClone.FieldByName('SubTotal').AsFloat / 100);
 
@@ -574,10 +575,9 @@ begin
     CDS.FieldByName('Nama').AsString := lItem.Item.Nama;
     CDS.FieldByName('DiscP').AsFloat := 0;
 
-    if lItem.PriceList > 0 then
-      CDS.FieldByName('DiscP').AsFloat :=
-        (CDS.FieldByName('PriceList').AsFloat - CDS.FieldByName('Harga').AsFloat)
-          /CDS.FieldByName('PriceList').AsFloat*100;
+    if lItem.Harga > 0 then
+      CDS.FieldByName('DiscP').AsFloat := lItem.Discount / lItem.Harga * 100;
+
 
     CDS.Post;
   end;
@@ -599,7 +599,7 @@ begin
   lItem  := TItem.Create;
   Try
     s := 'SELECT A.ID, A.KODE, A.NAMA, D.NAMA AS MERK, B.UOM AS UOMSTOCK,'
-        +' C.PRICELIST, C.HARGABELI'
+        +' C.HARGABELI'
         +' FROM TITEM A'
         +' INNER JOIN TUOM B ON A.STOCKUOM_ID = B.ID'
         +' LEFT JOIN TITEMUOM C ON A.ID = C.ITEM_ID AND C.UOM_ID = B.ID'
@@ -734,7 +734,6 @@ begin
   if CDS.State in [dsInsert, dsEdit] then CDS.Post;
   CDS.Edit;
   CDS.FieldByName('PriceType').AsInteger  := 1;
-  CDS.FieldByName('PriceList').AsFloat    := 0;
   CDS.FieldByName('DiscP').AsInteger      := 0;
   CDS.FieldByName('Harga').AsInteger      := 0;
   CDS.Post;

@@ -129,7 +129,7 @@ var
   eiMain : TEXEVersionData;
 
 const
-  ApplicationRegName : String = 'AutoPart';
+  ApplicationRegName : String = 'M2Point';
   START_KEY = 981; {Start default key}
   MULTI_KEY = 12674; {Mult default key}
   ADD_KEY = 35891;	{Add default key}

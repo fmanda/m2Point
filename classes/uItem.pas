@@ -335,14 +335,6 @@ end;
 function TItemUOM.GetHarga(aTipeHarga: Integer): Double;
 begin
   Result := HargaJual;
-//  Case aTipeHarga of
-//    0 : Result := HargaJual1;
-//    1 : Result := HargaJual2;
-//    2 : Result := HargaJual3;
-//    3 : Result := HargaJual4;
-//  else
-//    raise Exception.Create('Tipe Harga Index : ' + Inttostr(aTipeHarga) + ' tidak ter-register di TItemUOM');
-//  end;
 end;
 
 function TItemUOM.GetMargin: Double;

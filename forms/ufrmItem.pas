@@ -43,8 +43,8 @@ type
     colSatuan: TcxGridDBBandedColumn;
     colKonversi: TcxGridDBBandedColumn;
     colHrgBeli: TcxGridDBBandedColumn;
-    colMargin1: TcxGridDBBandedColumn;
-    colHrgJual1: TcxGridDBBandedColumn;
+    colMargin: TcxGridDBBandedColumn;
+    colHrgJual: TcxGridDBBandedColumn;
     cxGrid1Level1: TcxGridLevel;
     tsHistory: TcxTabSheet;
     lbModifiedBy: TcxLabel;
@@ -85,18 +85,10 @@ type
         TShiftState);
     procedure cxLookupGroupPropertiesEditValueChanged(Sender: TObject);
     procedure colMargin1PropertiesEditValueChanged(Sender: TObject);
-    procedure colMargin2PropertiesEditValueChanged(Sender: TObject);
-    procedure colMargin3PropertiesEditValueChanged(Sender: TObject);
-    procedure colMargin4PropertiesEditValueChanged(Sender: TObject);
-    procedure colHrgJual4PropertiesEditValueChanged(Sender: TObject);
-    procedure colHrgJual3PropertiesEditValueChanged(Sender: TObject);
-    procedure colHrgJual2PropertiesEditValueChanged(Sender: TObject);
     procedure colHrgJual1PropertiesEditValueChanged(Sender: TObject);
     procedure colHrgBeliPropertiesEditValueChanged(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnRefreshClick(Sender: TObject);
-    procedure colMarginBeliPropertiesEditValueChanged(Sender: TObject);
-    procedure colPriceListPropertiesEditValueChanged(Sender: TObject);
     procedure colRakPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure btnPrintClick(Sender: TObject);
@@ -122,7 +114,7 @@ type
     property Item: TItem read GetItem write FItem;
     { Private declarations }
   public
-    procedure CalcSellPrice(aIndexPrice: Integer; IsMargin: Boolean);
+    procedure CalcSellPrice(IsMargin: Boolean);
     function GetGroupName: string; override;
     procedure LoadByID(aID: Integer; IsReadOnly: Boolean = True);
     { Public declarations }
@@ -198,119 +190,45 @@ begin
   end;
 end;
 
-procedure TfrmItem.CalcSellPrice(aIndexPrice: Integer; IsMargin: Boolean);
+procedure TfrmItem.CalcSellPrice(IsMargin: Boolean);
 var
   iRec: TcxCustomGridRecord;
-  lPriceList: Double;
+  lHrgBeli: Double;
 begin
   cxGrdUOM.DataController.Post();
   iRec      := cxGrdUOM.Controller.FocusedRecord;
   if iRec = nil then exit;
-//
-//  lPriceList := iRec.Values[colPriceList.Index];
-//
-//  if IsMargin then
-//  begin
-//    case aIndexPrice of
-//      0 : cxGrdUOM.DataController.SetEditValue(colHrgBeli.Index,
-//          lPriceList * (1 - (iRec.Values[colMarginBeli.Index] /100)),  evsValue);
-//      1 : cxGrdUOM.DataController.SetEditValue(colHrgJual1.Index,
-//          lPriceList * (1 - (iRec.Values[colMargin1.Index] /100)),  evsValue);
-//      2 : cxGrdUOM.DataController.SetEditValue(colHrgJual2.Index,
-//          lPriceList * (1 - (iRec.Values[colMargin2.Index] /100)),  evsValue);
-//      3 : cxGrdUOM.DataController.SetEditValue(colHrgJual3.Index,
-//          lPriceList * (1 - (iRec.Values[colMargin3.Index] /100)),  evsValue);
-//      4 : cxGrdUOM.DataController.SetEditValue(colHrgJual4.Index,
-//          lPriceList * (1 - (iRec.Values[colMargin4.Index] /100)),  evsValue);
-//    end;
-//  end else
-//  begin
-//    if lPriceList = 0 then exit;
-//
-//    case aIndexPrice of
-//      0 : cxGrdUOM.DataController.SetEditValue(colMarginBeli.Index,
-//          (lPriceList - iRec.Values[colHrgBeli.Index]) / lPriceList * 100,  evsValue);
-//      1 : cxGrdUOM.DataController.SetEditValue(colMargin1.Index,
-//          (lPriceList - iRec.Values[colHrgJual1.Index]) / lPriceList * 100,  evsValue);
-//      2 : cxGrdUOM.DataController.SetEditValue(colMargin2.Index,
-//          (lPriceList - iRec.Values[colHrgJual2.Index]) / lPriceList * 100,  evsValue);
-//      3 : cxGrdUOM.DataController.SetEditValue(colMargin3.Index,
-//          (lPriceList - iRec.Values[colHrgJual3.Index]) / lPriceList * 100,  evsValue);
-//      4 : cxGrdUOM.DataController.SetEditValue(colMargin4.Index,
-//          (lPriceList - iRec.Values[colHrgJual4.Index]) / lPriceList * 100,  evsValue);
-//    end;
-//  end;
+
+  lHrgBeli := iRec.Values[colHrgBeli.Index];
+
+  if lHrgBeli = 0 then exit;
+
+
+  if IsMargin then
+    cxGrdUOM.DataController.SetEditValue(colHrgJual.Index,
+          lHrgBeli * (1 + (iRec.Values[colMargin.Index] /100)),  evsValue)
+  else
+    cxGrdUOM.DataController.SetEditValue(colMargin.Index,
+          (iRec.Values[colHrgJual.Index] - lHrgBeli) / lHrgBeli * 100,  evsValue);
 
 end;
 
 procedure TfrmItem.colHrgBeliPropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
-  CalcSellPrice(0, False);
+  CalcSellPrice(False);
 end;
 
 procedure TfrmItem.colHrgJual1PropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
-  CalcSellPrice(1, False);
-end;
-
-procedure TfrmItem.colHrgJual2PropertiesEditValueChanged(Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(2, False);
-end;
-
-procedure TfrmItem.colHrgJual3PropertiesEditValueChanged(Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(3, False);
-end;
-
-procedure TfrmItem.colHrgJual4PropertiesEditValueChanged(Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(4, False);
+  CalcSellPrice(False);
 end;
 
 procedure TfrmItem.colMargin1PropertiesEditValueChanged(Sender: TObject);
 begin
   inherited;
-  CalcSellPrice(1, True);
-end;
-
-procedure TfrmItem.colMargin2PropertiesEditValueChanged(Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(2, True);
-end;
-
-procedure TfrmItem.colMargin3PropertiesEditValueChanged(Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(3, True);
-end;
-
-procedure TfrmItem.colMargin4PropertiesEditValueChanged(Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(4, True);
-end;
-
-procedure TfrmItem.colMarginBeliPropertiesEditValueChanged(Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(0, True);
-end;
-
-procedure TfrmItem.colPriceListPropertiesEditValueChanged(Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(0, False);
-  CalcSellPrice(1, False);
-  CalcSellPrice(2, False);
-  CalcSellPrice(3, False);
-  CalcSellPrice(4, False);
+  CalcSellPrice(True);
 end;
 
 procedure TfrmItem.colRakPropertiesButtonClick(Sender: TObject;
@@ -338,11 +256,11 @@ begin
   inherited;
   if VarIsNull(cxLookupGroup.EditValue) then exit;
 
+  lGroup := TItemGroup.Create;
+  lGroup.LoadByID(cxLookupGroup.EditValue);
+
   if Item.ID = 0 then
   begin
-    lGroup := TItemGroup.Create;
-    lGroup.LoadByID(cxLookupGroup.EditValue);
-
     edKode.Text := Item.GenerateNo(lGroup.Kode,5);
     lGroup.Free;
   end;

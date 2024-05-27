@@ -19,7 +19,7 @@ inherited frmLookupItem: TfrmLookupItem
       Left = 3
       Top = 1
       Width = 102
-      Height = 17
+      Height = 16
       Margins.Top = 1
       Margins.Right = 13
       Margins.Bottom = 1
@@ -31,7 +31,6 @@ inherited frmLookupItem: TfrmLookupItem
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 16
     end
   end
   inherited Panel1: TPanel

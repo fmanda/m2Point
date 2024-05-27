@@ -43,11 +43,7 @@ type
     FUOM: TUOM;
     FKonversi: Double;
     FHargaBeli: Double;
-    FHargaJual1: Double;
-    FHargaJual2: Double;
-    FHargaJual3: Double;
-    FHargaJual4: Double;
-    FPriceList: Double;
+    FHargaJual: Double;
     FQuotation: TPriceQuotation;
     FModifiedDate: TDateTime;
     FModifiedBy: String;
@@ -58,11 +54,7 @@ type
     property UOM: TUOM read FUOM write FUOM;
     property Konversi: Double read FKonversi write FKonversi;
     property HargaBeli: Double read FHargaBeli write FHargaBeli;
-    property HargaJual1: Double read FHargaJual1 write FHargaJual1;  //harga umum
-    property HargaJual2: Double read FHargaJual2 write FHargaJual2;  //harga bengkel
-    property HargaJual3: Double read FHargaJual3 write FHargaJual3;  //harga grosir
-    property HargaJual4: Double read FHargaJual4 write FHargaJual4;  //harga keliling
-    property PriceList: Double read FPriceList write FPriceList;
+    property HargaJual: Double read FHargaJual write FHargaJual;
     [AttributeOfHeader]
     property Quotation: TPriceQuotation read FQuotation write FQuotation;
     property ModifiedDate: TDateTime read FModifiedDate write FModifiedDate;
@@ -88,12 +80,8 @@ begin
   if Self.IsActive <> 1 then exit;
 
   S := 'UPDATE C SET'
-      +' C.PRICELIST = B.PRICELIST,'
       +' C.HARGABELI = B.HARGABELI,'
-      +' C.HARGAJUAL1 = B.HARGAJUAL1,'
-      +' C.HARGAJUAL2 = B.HARGAJUAL2,'
-      +' C.HARGAJUAL3 = B.HARGAJUAL3,'
-      +' C.HARGAJUAL4 = B.HARGAJUAL4,'
+      +' C.HARGAJUAL = B.HARGAJUAL,'
       +' C.MODIFIEDDATE = GETDATE(),'
       +' C.MODIFIEDBY = A.MODIFIEDBY'
       +' FROM TPRICEQUOTATION A'

@@ -59,23 +59,15 @@ type
       var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
     procedure colHrgBeliPropertiesEditValueChanged(Sender: TObject);
     procedure colMargin1PropertiesEditValueChanged(Sender: TObject);
-    procedure colMargin2PropertiesEditValueChanged(Sender: TObject);
-    procedure colMargin3PropertiesEditValueChanged(Sender: TObject);
-    procedure colMargin4PropertiesEditValueChanged(Sender: TObject);
     procedure colHrgJual1PropertiesEditValueChanged(Sender: TObject);
-    procedure colHrgJual2PropertiesEditValueChanged(Sender: TObject);
-    procedure colHrgJual3PropertiesEditValueChanged(Sender: TObject);
-    procedure colHrgJual4PropertiesEditValueChanged(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
-    procedure colMarginBeliPropertiesEditValueChanged(Sender: TObject);
-    procedure colPriceListPropertiesEditValueChanged(Sender: TObject);
     procedure F6LookupDataBarangterakhirdiinputedit1Click(Sender: TObject);
   private
     FCDS: TClientDataset;
     FCDSClone: TClientDataset;
     FCDSUOM: TClientDataset;
     FPriceQuot: TPriceQuotation;
-    procedure CalcSellPrice(aIndexPrice: Integer; IsMargin: Boolean);
+    procedure CalcSellPrice(IsMargin: Boolean);
     function DC: TcxGridDBDataController;
     procedure FocusToGrid;
     function GetCDS: TClientDataset;
@@ -126,8 +118,7 @@ begin
   end;
 end;
 
-procedure TfrmPriceQuotation.CalcSellPrice(aIndexPrice: Integer; IsMargin:
-    Boolean);
+procedure TfrmPriceQuotation.CalcSellPrice(IsMargin: Boolean);
 var
   iRec: TcxCustomGridRecord;
   lHargaBeli: Double;
@@ -147,7 +138,7 @@ begin
     if lHargaBeli = 0 then exit;
 
     cxGrdMain.DataController.SetEditValue(colMargin.Index,
-          (lHargaBeli + iRec.Values[colHrgBeli.Index]) / lHargaBeli * 100,  evsValue);
+          (iRec.Values[colHrgJual.Index] - lHargaBeli) / lHargaBeli * 100,  evsValue);
 
   end;
 
@@ -157,35 +148,14 @@ procedure TfrmPriceQuotation.colHrgBeliPropertiesEditValueChanged(
   Sender: TObject);
 begin
   inherited;
-  CalcSellPrice(0, False);
+  CalcSellPrice(False);
 end;
 
 procedure TfrmPriceQuotation.colHrgJual1PropertiesEditValueChanged(
   Sender: TObject);
 begin
   inherited;
-  CalcSellPrice(1, False);
-end;
-
-procedure TfrmPriceQuotation.colHrgJual2PropertiesEditValueChanged(
-  Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(2, False);
-end;
-
-procedure TfrmPriceQuotation.colHrgJual3PropertiesEditValueChanged(
-  Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(3, False);
-end;
-
-procedure TfrmPriceQuotation.colHrgJual4PropertiesEditValueChanged(
-  Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(4, False);
+  CalcSellPrice(False);
 end;
 
 procedure TfrmPriceQuotation.colItemCodePropertiesButtonClick(Sender: TObject;
@@ -224,46 +194,7 @@ procedure TfrmPriceQuotation.colMargin1PropertiesEditValueChanged(
   Sender: TObject);
 begin
   inherited;
-  CalcSellPrice(1, True);
-end;
-
-procedure TfrmPriceQuotation.colMargin2PropertiesEditValueChanged(
-  Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(2, True);
-end;
-
-procedure TfrmPriceQuotation.colMargin3PropertiesEditValueChanged(
-  Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(3, True);
-end;
-
-procedure TfrmPriceQuotation.colMargin4PropertiesEditValueChanged(
-  Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(4, True);
-end;
-
-procedure TfrmPriceQuotation.colMarginBeliPropertiesEditValueChanged(
-  Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(0, True);
-end;
-
-procedure TfrmPriceQuotation.colPriceListPropertiesEditValueChanged(
-  Sender: TObject);
-begin
-  inherited;
-  CalcSellPrice(0, False);
-  CalcSellPrice(1, False);
-  CalcSellPrice(2, False);
-  CalcSellPrice(3, False);
-  CalcSellPrice(4, False);
+  CalcSellPrice( True);
 end;
 
 procedure TfrmPriceQuotation.cxGrdMainEditKeyDown(Sender:
@@ -340,11 +271,7 @@ begin
     FCDS.AddField('ItemCode', ftString);
     FCDS.AddField('ItemName', ftString);
 //    FCDS.AddField('Konversi', ftFloat);
-    FCDS.AddField('MarginBeli',ftFloat);
-    FCDS.AddField('Margin1',ftFloat);
-    FCDS.AddField('Margin2',ftFloat);
-    FCDS.AddField('Margin3',ftFloat);
-    FCDS.AddField('Margin4',ftFloat);
+    FCDS.AddField('Margin',ftFloat);
     FCDS.CreateDataSet;
   end;
   Result := FCDS;
@@ -419,20 +346,12 @@ begin
     CDS.FieldByName('ItemCode').AsString := lItem.Item.Kode;
     CDS.FieldByName('ItemName').AsString := lItem.Item.Nama;
 
-    if lItem.PriceList = 0 then
+    if lItem.HargaBeli = 0 then
     begin
-      CDS.FieldByName('MarginBeli').AsFloat := 0;
-      CDS.FieldByName('Margin1').AsFloat := 0;
-      CDS.FieldByName('Margin2').AsFloat := 0;
-      CDS.FieldByName('Margin3').AsFloat := 0;
-      CDS.FieldByName('Margin4').AsFloat := 0;
+      CDS.FieldByName('Margin').AsFloat := 0;
     end else
     begin
-      CDS.FieldByName('MarginBeli').AsFloat := (lItem.PriceList - lItem.HargaBeli) / lItem.PriceList * 100;
-      CDS.FieldByName('Margin1').AsFloat := (lItem.PriceList - lItem.HargaJual1) / lItem.PriceList * 100;
-      CDS.FieldByName('Margin2').AsFloat := (lItem.PriceList - lItem.HargaJual2) / lItem.PriceList * 100;
-      CDS.FieldByName('Margin3').AsFloat := (lItem.PriceList - lItem.HargaJual3) / lItem.PriceList * 100;
-      CDS.FieldByName('Margin4').AsFloat := (lItem.PriceList - lItem.HargaJual4) / lItem.PriceList * 100;
+      CDS.FieldByName('Margin').AsFloat := (lItem.HargaJual - lItem.HargaBeli) / lItem.HargaBeli * 100;
     end;
 
     CDS.Post;
@@ -445,6 +364,13 @@ var
   cxLookup: TfrmCXServerLookup;
   lItem: TItem;
   s: string;
+
+
+
+
+
+
+
 begin
   lItem  := TItem.Create;
   Try
@@ -481,8 +407,7 @@ begin
   lItem  := TItem.Create;
   Try
     s := 'select a.ID, a.KODE, a.NAMA, e.NAMA as MERK,'
-        +' c.UOM as STOCKUOM, b.HARGAJUAL1 as HARGAUMUM, b.HARGAJUAL2 AS HARGABENGKEL,'
-        +' b.HARGAJUAL3 AS HARGAGROSIR, b.HARGAJUAL4 AS HARGAKELILING,'
+        +' c.UOM as STOCKUOM, b.HARGAJUAL, '
         +' A.MODIFIEDBY, A.MODIFIEDDATE'
         +' from titem a'
         +' inner join TITEMUOM b on a.id = b.ITEM_ID and a.STOCKUOM_ID = b.UOM_ID'
@@ -643,10 +568,7 @@ begin
   CDS.First;
   while not CDS.Eof do
   begin
-    if (CDS.FieldByName('HargaJual1').AsFloat < CDS.FieldByName('HargaBeli').AsFloat)
-      or (CDS.FieldByName('HargaJual2').AsFloat < CDS.FieldByName('HargaBeli').AsFloat)
-      or (CDS.FieldByName('HargaJual3').AsFloat < CDS.FieldByName('HargaBeli').AsFloat)
-      or (CDS.FieldByName('HargaJual4').AsFloat < CDS.FieldByName('HargaBeli').AsFloat)
+    if (CDS.FieldByName('HargaJual').AsFloat < CDS.FieldByName('HargaBeli').AsFloat)
     then
     begin
       bWarningHJ := True;

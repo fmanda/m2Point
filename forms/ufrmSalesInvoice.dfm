@@ -4,7 +4,6 @@ inherited frmSalesInvoice: TfrmSalesInvoice
   ClientWidth = 984
   KeyPreview = True
   OnKeyDown = FormKeyDown
-  ExplicitTop = -113
   ExplicitWidth = 1000
   ExplicitHeight = 680
   PixelsPerInch = 96
@@ -76,13 +75,11 @@ inherited frmSalesInvoice: TfrmSalesInvoice
     ExplicitWidth = 984
     inherited lbEscape: TLabel
       Left = 904
-      Height = 17
       ExplicitLeft = 904
     end
     inherited lgndSave: TLabel
       Left = 721
       Width = 77
-      Height = 17
       Margins.Right = 25
       Caption = '[F9] Opsi Bayar'
       ExplicitLeft = 721
@@ -90,7 +87,6 @@ inherited frmSalesInvoice: TfrmSalesInvoice
     end
     inherited lgndPrint: TLabel
       Left = 826
-      Height = 17
       Visible = True
       ExplicitLeft = 826
     end
@@ -99,7 +95,7 @@ inherited frmSalesInvoice: TfrmSalesInvoice
       Left = 99
       Top = 1
       Width = 152
-      Height = 17
+      Height = 16
       Margins.Top = 1
       Margins.Bottom = 1
       Align = alLeft
@@ -110,14 +106,13 @@ inherited frmSalesInvoice: TfrmSalesInvoice
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 16
     end
     object Label2: TLabel
       AlignWithMargins = True
       Left = 3
       Top = 1
       Width = 90
-      Height = 17
+      Height = 16
       Margins.Top = 1
       Margins.Bottom = 1
       Align = alLeft
@@ -128,14 +123,13 @@ inherited frmSalesInvoice: TfrmSalesInvoice
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 16
     end
     object Label3: TLabel
       AlignWithMargins = True
       Left = 257
       Top = 1
       Width = 62
-      Height = 17
+      Height = 16
       Margins.Top = 1
       Margins.Bottom = 1
       Align = alLeft
@@ -149,14 +143,13 @@ inherited frmSalesInvoice: TfrmSalesInvoice
       ParentColor = False
       ParentFont = False
       Transparent = False
-      ExplicitHeight = 16
     end
     object Label4: TLabel
       AlignWithMargins = True
       Left = 325
       Top = 1
       Width = 71
-      Height = 17
+      Height = 16
       Margins.Top = 1
       Margins.Bottom = 1
       Align = alLeft
@@ -170,14 +163,13 @@ inherited frmSalesInvoice: TfrmSalesInvoice
       ParentColor = False
       ParentFont = False
       Transparent = False
-      ExplicitHeight = 16
     end
     object Label5: TLabel
       AlignWithMargins = True
       Left = 402
       Top = 1
       Width = 64
-      Height = 17
+      Height = 16
       Margins.Top = 1
       Margins.Bottom = 1
       Align = alLeft
@@ -191,14 +183,13 @@ inherited frmSalesInvoice: TfrmSalesInvoice
       ParentColor = False
       ParentFont = False
       Transparent = False
-      ExplicitHeight = 16
     end
     object Label6: TLabel
       AlignWithMargins = True
       Left = 472
       Top = 1
       Width = 67
-      Height = 17
+      Height = 16
       Margins.Top = 1
       Margins.Bottom = 1
       Align = alLeft
@@ -212,14 +203,13 @@ inherited frmSalesInvoice: TfrmSalesInvoice
       ParentColor = False
       ParentFont = False
       Transparent = False
-      ExplicitHeight = 16
     end
     object Label8: TLabel
       AlignWithMargins = True
       Left = 624
       Top = 1
       Width = 69
-      Height = 17
+      Height = 16
       Margins.Top = 1
       Margins.Right = 25
       Margins.Bottom = 1
@@ -231,7 +221,6 @@ inherited frmSalesInvoice: TfrmSalesInvoice
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 16
     end
   end
   object cxGroupBox1: TcxGroupBox [2]
@@ -803,6 +792,7 @@ inherited frmSalesInvoice: TfrmSalesInvoice
     Height = 8
     HotZoneClassName = 'TcxXPTaskBarStyle'
     AlignSplitter = salBottom
+    ExplicitWidth = 8
   end
   object cxGridService: TcxGrid [5]
     Left = 0
