@@ -413,8 +413,8 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
         Width = 100
       end
       object colWarehouse: TcxGridDBColumn
-        Caption = 'Gudang'
-        DataBinding.FieldName = 'Warehouse'
+        Caption = 'Receive No'
+        DataBinding.FieldName = 'RecNo'
         PropertiesClassName = 'TcxExtLookupComboBoxProperties'
         HeaderAlignmentHorz = taCenter
         Width = 153
@@ -451,14 +451,17 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
     ExplicitWidth = 978
     inherited lbEscape: TLabel
       Left = 898
+      Height = 17
       ExplicitLeft = 898
     end
     inherited lgndSave: TLabel
       Left = 733
+      Height = 17
       ExplicitLeft = 733
     end
     inherited lgndPrint: TLabel
       Left = 820
+      Height = 17
       ExplicitLeft = 820
     end
     object Label2: TLabel
@@ -466,7 +469,7 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Left = 319
       Top = 1
       Width = 84
-      Height = 16
+      Height = 17
       Margins.Top = 1
       Margins.Right = 13
       Margins.Bottom = 1
@@ -478,13 +481,14 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 16
     end
     object Label1: TLabel
       AlignWithMargins = True
       Left = 3
       Top = 1
       Width = 175
-      Height = 16
+      Height = 17
       Margins.Top = 1
       Margins.Right = 13
       Margins.Bottom = 1
@@ -496,13 +500,14 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 16
     end
     object Label3: TLabel
       AlignWithMargins = True
       Left = 194
       Top = 1
       Width = 109
-      Height = 16
+      Height = 17
       Margins.Top = 1
       Margins.Right = 13
       Margins.Bottom = 1
@@ -514,6 +519,7 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 16
     end
   end
   inherited styleRepo: TcxStyleRepository

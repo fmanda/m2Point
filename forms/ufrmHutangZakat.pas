@@ -14,7 +14,7 @@ uses
   cxFilter, cxData, cxDataStorage, cxNavigator,
   cxDataControllerConditionalFormattingRulesManagerDialog, Data.DB, cxDBData,
   cxGridLevel, cxGridCustomView, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGrid, Datasnap.DBClient;
+  cxGridDBTableView, cxGrid, Datasnap.DBClient, uFinancialTransaction;
 
 type
   TfrmHutangZakat = class(TfrmDefaultInput)

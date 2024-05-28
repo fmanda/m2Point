@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridLevel,
   cxClasses, cxGridCustomView, cxGrid, cxLookupEdit, cxDBLookupEdit,
   cxDBExtLookupComboBox, Vcl.ExtCtrls, uTransDetail, uDBUtils, uItem,
-  cxGridDBDataDefinitions, cxSpinEdit;
+  cxGridDBDataDefinitions, cxSpinEdit, uFinancialTransaction;
 
 type
   TfrmPurchaseInvoice = class(TfrmDefaultInput)
@@ -143,7 +143,7 @@ implementation
 
 uses
   uAppUtils, uDXUtils, ufrmCXServerLookup, cxDataUtils, uSupplier, uWarehouse,
-  uFinancialTransaction, uAccount, uVariable, ufrmLookupItem;
+  uAccount, uVariable, ufrmLookupItem;
 
 {$R *.dfm}
 
@@ -164,7 +164,7 @@ begin
   inherited;
   if not ValidateData then exit;
   UpdateData;
-  if PurchInv.SaveRepeat(False) then
+  if PurchInv.SaveRepeat(2, False) then
   begin
     btnPrint.Click;
 //    TAppUtils.InformationBerhasilSimpan;
@@ -456,7 +456,7 @@ function TfrmPurchaseInvoice.GetCDS: TClientDataset;
 begin
   if FCDS = nil then
   begin
-    FCDS := TTransDetail.CreateDataSet(Self, False);
+    FCDS := TPurchaseInvoiceItem.CreateDataSet(Self, False);
     FCDS.AddField('Kode',ftString);
     FCDS.AddField('Nama',ftString);
     FCDS.AddField('SubTotal',ftFloat);
@@ -520,7 +520,7 @@ end;
 procedure TfrmPurchaseInvoice.LoadByID(aID: Integer; IsReadOnly: Boolean =
     True);
 var
-  lItem: TTransDetail;
+  lInvItem: TPurchaseInvoiceItem;
 begin
   if FPurchInv <> nil then
     FreeAndNil(FPurchInv);
@@ -566,17 +566,17 @@ begin
     cxLookupGudang.EditValue := PurchInv.Warehouse.ID;
 
   CDS.EmptyDataSet;
-  for lItem in PurchInv.Items do
+  for lInvItem in PurchInv.InvItems do
   begin
     CDS.Append;
-    lItem.UpdateToDataset(CDS);
-    lItem.Item.ReLoad(False);
-    CDS.FieldByName('Kode').AsString := lItem.Item.Kode;
-    CDS.FieldByName('Nama').AsString := lItem.Item.Nama;
+    lInvItem.UpdateToDataset(CDS);
+    lInvItem.Item.ReLoad(False);
+    CDS.FieldByName('Kode').AsString := lInvItem.Item.Kode;
+    CDS.FieldByName('Nama').AsString := lInvItem.Item.Nama;
     CDS.FieldByName('DiscP').AsFloat := 0;
 
-    if lItem.Harga > 0 then
-      CDS.FieldByName('DiscP').AsFloat := lItem.Discount / lItem.Harga * 100;
+    if lInvItem.Harga > 0 then
+      CDS.FieldByName('DiscP').AsFloat := lInvItem.Discount / lInvItem.Harga * 100;
 
 
     CDS.Post;
@@ -791,7 +791,7 @@ end;
 
 procedure TfrmPurchaseInvoice.UpdateData;
 var
-  lItem: TTransDetail;
+  lItem: TPurchaseInvoiceItem;
 begin
 
   PurchInv.InvoiceNo := edNoInv.Text;
@@ -824,9 +824,9 @@ begin
   CDS.First;
   while not CDS.Eof do
   begin
-    lItem := TTransDetail.Create;
+    lItem := TPurchaseInvoiceItem.Create;
     lItem.SetFromDataset(CDS);
-    PurchInv.Items.Add(lItem);
+    PurchInv.InvItems.Add(lItem);
     CDS.Next;
   end;
 

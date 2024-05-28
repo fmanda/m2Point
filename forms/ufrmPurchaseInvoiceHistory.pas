@@ -13,7 +13,7 @@ uses
   cxCalendar, cxTextEdit, cxCurrencyEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBExtLookupComboBox, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxDropDownEdit, cxMaskEdit,
-  cxButtonEdit;
+  cxButtonEdit, uFinancialTransaction;
 
 type
   TfrmPurchaseInvoiceHistory = class(TfrmDefaultReport)
@@ -87,7 +87,7 @@ implementation
 
 uses
   uDBUtils, uDXUtils, uAppUtils, System.DateUtils,
-  uFinancialTransaction, ufrmCXServerLookup, System.Math;
+  ufrmCXServerLookup, System.Math;
 
 {$R *.dfm}
 
