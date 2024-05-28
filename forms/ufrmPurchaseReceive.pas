@@ -156,7 +156,8 @@ end;
 
 procedure TfrmPurchaseReceive.CalculateAll;
 begin
-
+  if CDS.State in [dsInsert, dsEdit] then
+    CDS.Post;
 end;
 
 procedure TfrmPurchaseReceive.CDSAfterInsert(DataSet: TDataSet);
