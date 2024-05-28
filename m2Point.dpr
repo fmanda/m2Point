@@ -43,9 +43,9 @@ uses
   ufrmRekening in 'forms\ufrmRekening.pas' {frmRekening},
   ufrmBrowseRekening in 'forms\ufrmBrowseRekening.pas' {frmBrowseRekening},
   uTransDetail in 'classes\uTransDetail.pas',
-  ufrmPurchaseInvoice in 'forms\ufrmPurchaseInvoice.pas' {frmPurchaseInvoice},
+  ufrmPurchaseReceive in 'forms\ufrmPurchaseReceive.pas' {frmPurchaseReceive},
   ufrmCXServerLookup in 'lib\ufrmCXServerLookup.pas' {frmCXServerLookup},
-  ufrmBrowsePurchaseInvoice in 'forms\ufrmBrowsePurchaseInvoice.pas' {frmBrowsePurchaseInvoice},
+  ufrmBrowsePurchaseReceive in 'forms\ufrmBrowsePurchaseReceive.pas' {frmBrowsePurchaseReceive},
   ufrmKartuStock in 'forms\ufrmKartuStock.pas' {frmKartuStock},
   ufrmPurchaseRetur in 'forms\ufrmPurchaseRetur.pas' {frmPurchaseRetur},
   ufrmBrowsePurchaseRetur in 'forms\ufrmBrowsePurchaseRetur.pas' {frmBrowsePurchaseRetur},
@@ -131,7 +131,8 @@ uses
   ufrmUangMukaZakat in 'forms\ufrmUangMukaZakat.pas' {frmUangMukaZakat},
   ufrmBrowseUangMukaZakat in 'forms\ufrmBrowseUangMukaZakat.pas' {frmBrowseUangMukaZakat},
   uDBThread in 'classes\uDBThread.pas',
-  ufrmStockCabang in 'forms\ufrmStockCabang.pas' {frmStockCabang};
+  ufrmStockCabang in 'forms\ufrmStockCabang.pas' {frmStockCabang},
+  ufrmPurchaseInvoice in 'forms\ufrmPurchaseInvoice.pas' {frmPurchaseInvoice};
 
 {$R *.res}
 

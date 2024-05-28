@@ -1,17 +1,31 @@
 inherited frmLookupItem: TfrmLookupItem
+  Position = poScreenCenter
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlHeader: TPanel
     inherited lblFilterData: TcxLabel
       AnchorY = 16
     end
+    inherited StartDate: TcxDateEdit
+      ExplicitHeight = 23
+    end
+    inherited EndDate: TcxDateEdit
+      ExplicitHeight = 23
+    end
     inherited lblsdFilter: TcxLabel
       AnchorY = 16
     end
   end
   inherited Panel2: TPanel
+    inherited lbEscape: TLabel
+      Height = 17
+    end
+    inherited Label1: TLabel
+      Height = 17
+    end
     inherited Label2: TLabel
       Left = 121
+      Height = 17
       ExplicitLeft = 121
     end
     object Label3: TLabel
@@ -19,7 +33,7 @@ inherited frmLookupItem: TfrmLookupItem
       Left = 3
       Top = 1
       Width = 102
-      Height = 16
+      Height = 17
       Margins.Top = 1
       Margins.Right = 13
       Margins.Bottom = 1
@@ -31,6 +45,7 @@ inherited frmLookupItem: TfrmLookupItem
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 16
     end
   end
   inherited Panel1: TPanel

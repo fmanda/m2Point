@@ -11,7 +11,7 @@ object frmCXServerLookup: TfrmCXServerLookup
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  Position = poDesktopCenter
+  Position = poScreenCenter
   OnKeyDown = FormKeyDown
   OnShow = FormShow
   PixelsPerInch = 96

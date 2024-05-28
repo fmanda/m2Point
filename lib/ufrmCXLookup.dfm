@@ -52,7 +52,6 @@ object frmCXLookup: TfrmCXLookup
       Caption = 'Filter Data'
       Properties.Alignment.Vert = taVCenter
       Transparent = True
-      ExplicitLeft = 377
       AnchorY = 16
     end
     object StartDate: TcxDateEdit

@@ -623,6 +623,43 @@ type
     property TransDate: TDatetime read FTransDate write FTransDate;
   end;
 
+type
+  TPurchaseReceive = class(TCRUDTransDetail)
+  private
+    FSupplier: TSupplier;
+    FRecNo: string;
+    FAvgCostItems: TObjectList<TAvgCostUpdate>;
+    FNotes: string;
+    FReferensi: string;
+    FStatus: Integer;
+    FWarehouse: TWarehouse;
+    procedure GenerateAvgCost;
+    function GetAvgCostItems: TObjectList<TAvgCostUpdate>;
+    function GetOrAddAvgCost(aDetail: TTransDetail): TAvgCostUpdate;
+  protected
+    function AfterSaveToDB: Boolean; override;
+    function BeforeDeleteFromDB: Boolean; override;
+    function BeforeSaveToDB: Boolean; override;
+    function GetRefno: String; override;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function GenerateNo: String; override;
+    function GetHeaderFlag: Integer; override;
+    class procedure PrintData(aInvoiceID: Integer);
+    procedure SetGenerateNo; override;
+    property AvgCostItems: TObjectList<TAvgCostUpdate> read GetAvgCostItems write
+        FAvgCostItems;
+  published
+    property Supplier: TSupplier read FSupplier write FSupplier;
+    [AttributeOfCode]
+    property RecNo: string read FRecNo write FRecNo;
+    property Notes: string read FNotes write FNotes;
+    property Referensi: string read FReferensi write FReferensi;
+    property Status: Integer read FStatus write FStatus;
+    property Warehouse: TWarehouse read FWarehouse write FWarehouse;
+  end;
+
 const
   HeaderFlag_PurchaseInvoice : Integer = 100;
   HeaderFlag_PurchaseRetur : Integer = 150;
@@ -2482,6 +2519,199 @@ end;
 procedure TTransferRequest.SetGenerateNo;
 begin
   if Self.ID = 0 then Self.RefNo := Self.GenerateNo;
+end;
+
+constructor TPurchaseReceive.Create;
+begin
+  inherited;
+
+end;
+
+destructor TPurchaseReceive.Destroy;
+begin
+  inherited;
+  if FSupplier <> nil then FreeAndNil(FSupplier);
+end;
+
+function TPurchaseReceive.AfterSaveToDB: Boolean;
+begin
+  Result := True;
+end;
+
+function TPurchaseReceive.BeforeDeleteFromDB: Boolean;
+var
+  lAvg: TAvgCostUpdate;
+begin
+  for lAvg in Self.AvgCostItems do
+  begin
+    lAvg.RevertAvgCost;
+  end;
+  Result := True;
+end;
+
+function TPurchaseReceive.BeforeSaveToDB: Boolean;
+var
+  lPurchasePayment: TPurchasePayment;
+begin
+  GenerateAvgCost;
+  Result := True;
+end;
+
+procedure TPurchaseReceive.GenerateAvgCost;
+var
+  i: Integer;
+  lAvg: TAvgCostUpdate;
+  lFound: Boolean;
+  lItem: TTransDetail;
+begin
+  //AvgCostItems.Clear;
+  //delete avgcostitems where item doesnt exist in transdetail
+  for i := Self.AvgCostItems.Count-1 downto 0 do
+  begin
+    lAvg := Self.AvgCostItems[i];
+
+    lFound := False;
+    for lItem in Self.Items do
+    begin
+      lFound := lAvg.Item.ID = lItem.Item.ID;
+      if lFound then break;
+    end;
+
+    if not lFound then
+      Self.AvgCostItems.Delete(i);
+  end;
+
+  //clear transaksi
+  for lAvg in Self.AvgCostItems do
+  begin
+    lAvg.TransTotalPCS    := 0;
+    lAvg.TransTotalValue  := 0;
+//    lAvg.TransDate        := Now();
+  end;
+
+  //create if not exit;
+  for lItem in Self.Items do
+  begin
+    if lItem.Harga = 0 then continue;
+
+    GetOrAddAvgCost(lItem);
+
+    lItem.HargaAvg  := lItem.Harga;
+    lItem.LastCost  := lItem.Harga;
+  end;
+end;
+
+function TPurchaseReceive.GetAvgCostItems: TObjectList<TAvgCostUpdate>;
+begin
+  if FAvgCostItems = nil then
+  begin
+    FAvgCostItems := TObjectList<TAvgCostUpdate>.Create();
+  end;
+  Result := FAvgCostItems;
+end;
+
+function TPurchaseReceive.GenerateNo: String;
+var
+  aDigitCount: Integer;
+  aPrefix: string;
+  lNum: Integer;
+  S: string;
+begin
+  lNum := 0;
+  aDigitCount := 5;
+  aPrefix := Cabang + '.RC' + FormatDateTime('yymm',Now()) + '.';
+
+
+  S := 'SELECT MAX(RecNo) FROM TPurchaseReceive where RecNo LIKE ' + QuotedStr(aPrefix + '%');
+
+  with TDBUtils.OpenQuery(S) do
+  begin
+    Try
+      if not eof then
+        TryStrToInt(RightStr(Fields[0].AsString, aDigitCount), lNum);
+    Finally
+      Free;
+    End;
+  end;
+
+  inc(lNum);
+  Result := aPrefix + RightStr('00000' + IntToStr(lNum), aDigitCount);
+end;
+
+function TPurchaseReceive.GetHeaderFlag: Integer;
+begin
+  Result := HeaderFlag_PurchaseInvoice;
+end;
+
+function TPurchaseReceive.GetOrAddAvgCost(aDetail: TTransDetail):
+    TAvgCostUpdate;
+var
+  lAvg: TAvgCostUpdate;
+  S: string;
+begin
+  Result := nil;
+  for lAvg in Self.AvgCostItems do
+  begin
+    if lAvg.Item.ID = aDetail.Item.ID then
+    begin
+      Result := lAvg;
+      break;
+    end;
+  end;
+
+  if Result = nil then
+  begin
+    Result                    := TAvgCostUpdate.Create;
+    Result.Item               := TItem.CreateID(aDetail.Item.ID);
+    Result.Item.ReLoad(True);
+
+    if Abs(Result.Item.GetAvgCostPCS - (aDetail.Harga * aDetail.Konversi))<1 then
+      exit;  //no need save this
+
+
+    Result.LastStockPCS       := 0;
+    Result.LastAvgCost        := 0;
+
+    //getstock here
+    S := 'select sum(qtypcs) from FN_STOCK_BYITEM(' + IntToStr(aDetail.Item.ID) + ', getdate())';
+    with TDBUtils.OpenQuery(S) do
+    begin
+      Try
+        if not eof then
+        begin
+          Result.LastStockPCS := Fields[0].AsFloat;
+          Result.LastAvgCost  := Result.Item.GetAvgCostPCS;
+        end;
+      Finally
+        Free;
+      End;
+    end;
+    Self.AvgCostItems.Add(Result);
+  end;
+
+  Result.Refno            := Self.RecNo;
+  Result.TransDate        := Now();
+  Result.TransTotalPCS    := Result.TransTotalPCS + (aDetail.Qty * aDetail.Konversi);
+  Result.TransTotalValue  := Result.TransTotalValue + (aDetail.Qty * aDetail.Harga);
+
+end;
+
+function TPurchaseReceive.GetRefno: String;
+begin
+  Result := RecNo;
+end;
+
+class procedure TPurchaseReceive.PrintData(aInvoiceID: Integer);
+var
+  S: string;
+begin
+  S := 'SELECT * FROM FN_SLIP_PURCHASERECEIVE(' + IntToStr(aInvoiceID) + ')';
+  DMReport.ExecuteReport('SlipPurchaseInvoice', S);
+end;
+
+procedure TPurchaseReceive.SetGenerateNo;
+begin
+  if Self.ID = 0 then Self.RecNo := Self.GenerateNo;
 end;
 
 end.

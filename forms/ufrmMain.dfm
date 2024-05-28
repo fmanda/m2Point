@@ -69,7 +69,6 @@ object frmMain: TfrmMain
       Index = 0
     end
     object dxRTMaster: TdxRibbonTab
-      Active = True
       Caption = 'Master Data'
       Groups = <
         item
@@ -84,6 +83,7 @@ object frmMain: TfrmMain
       Index = 1
     end
     object dxRTInventory: TdxRibbonTab
+      Active = True
       Caption = 'Inventory'
       Groups = <
         item
@@ -366,7 +366,7 @@ object frmMain: TfrmMain
     object dxBarManagerBar6: TdxBar
       Caption = 'Lap Inventory'
       CaptionButtons = <>
-      DockedLeft = 457
+      DockedLeft = 484
       DockedTop = 0
       FloatLeft = 901
       FloatTop = 8
@@ -908,9 +908,8 @@ object frmMain: TfrmMain
       ImageIndex = 79
     end
     object dxBarButton38: TdxBarButton
-      Action = actPurchaseInvoice
+      Action = actPurchaseReceive
       Category = 0
-      ImageIndex = 16
     end
     object dxBarButton39: TdxBarButton
       Action = actPurchaseRetur
@@ -1264,6 +1263,7 @@ object frmMain: TfrmMain
       Category = 'Master'
       Caption = 'Data Merk'
       ImageIndex = 8
+      Visible = False
       OnExecute = actMerkExecute
     end
     object actItem: TAction
@@ -1620,6 +1620,12 @@ object frmMain: TfrmMain
       Caption = 'Pembayaran Uang Muka Zakat'
       ImageIndex = 41
       OnExecute = actUangMukaZakatExecute
+    end
+    object actPurchaseReceive: TAction
+      Category = 'Inventory'
+      Caption = 'Purchase Receive (BTB)'
+      ImageIndex = 31
+      OnExecute = actPurchaseReceiveExecute
     end
   end
   object ImageList: TcxImageList

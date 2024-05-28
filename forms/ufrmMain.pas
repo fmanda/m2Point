@@ -225,6 +225,7 @@ type
     actUangMukaZakat: TAction;
     dxBarButton99: TdxBarButton;
     dxBarButton100: TdxBarButton;
+    actPurchaseReceive: TAction;
     procedure actAccountExecute(Sender: TObject);
     procedure actAgingARExecute(Sender: TObject);
     procedure actAgingStockExecute(Sender: TObject);
@@ -261,6 +262,7 @@ type
     procedure actPrintTrfReqFileExecute(Sender: TObject);
     procedure actPurchaseInvoiceExecute(Sender: TObject);
     procedure actPurchaseInvoiceHistoryExecute(Sender: TObject);
+    procedure actPurchaseReceiveExecute(Sender: TObject);
     procedure actPurchaseReturExecute(Sender: TObject);
     procedure actPurchaseReturHistoryExecute(Sender: TObject);
     procedure actPurchPaymentExecute(Sender: TObject);
@@ -313,7 +315,7 @@ uses
   ufrmBrowseUOM, ufrmBrowseItemGroup, ufrmBrowseMerk, uItem, ufrmBrowseItem,
   ufrmBrowseService, ufrmBrowseCustomer, ufrmBrowseSupplier, ufrmAgingStock,
   ufrmBrowseWarehouse, ufrmBrowseRekening, ufrmCXServerLookup,
-  ufrmBrowsePurchaseInvoice, ufrmKartuStock, ufrmHutangZakat,
+  ufrmBrowsePurchaseReceive, ufrmKartuStock, ufrmHutangZakat,
   ufrmBrowsePurchaseRetur, ufrmBrowseTransferStock, ufrmLapStock,
   ufrmBrowseSalesman, ufrmBrowseMekanik, ufrmBrowseSalesInvoice, ufrmVariable,
   uVariable, ufrmSalesInvoiceHistory, ufrmPurchaseInvoiceHistory,
@@ -605,12 +607,17 @@ end;
 
 procedure TfrmMain.actPurchaseInvoiceExecute(Sender: TObject);
 begin
-  ShowForm(TfrmBrowsePurchaseInvoice);
+//  ShowForm(TfrmBrowsePurchaseInvoice);
 end;
 
 procedure TfrmMain.actPurchaseInvoiceHistoryExecute(Sender: TObject);
 begin
   ShowForm(TfrmPurchaseInvoiceHistory);
+end;
+
+procedure TfrmMain.actPurchaseReceiveExecute(Sender: TObject);
+begin
+  Showform(TfrmBrowsePurchaseReceive);
 end;
 
 procedure TfrmMain.actPurchaseReturExecute(Sender: TObject);
