@@ -223,12 +223,9 @@ type
     FSubTotal: Double;
     FPPN: Double;
     FSupplier: TSupplier;
-    FInvoiceNo: string;
-    FDueDate: TDateTime;
-    FAmount: Double;
     FInvItems: TObjectList<TPurchaseInvoiceItem>;
+    FInvoiceNo: String;
     FPaidOff: Integer;
-    FNotes: string;
     FReferensi: string;
     FPaidAmount: Double;
     FPaidOffDate: TDatetime;
@@ -258,12 +255,8 @@ type
     property SubTotal: Double read FSubTotal write FSubTotal;
     property PPN: Double read FPPN write FPPN;
     property Supplier: TSupplier read FSupplier write FSupplier;
-    [AttributeOfCode]
-    property InvoiceNo: string read FInvoiceNo write FInvoiceNo;
-    property DueDate: TDateTime read FDueDate write FDueDate;
-    property Amount: Double read FAmount write FAmount;
+    property InvoiceNo: String read FInvoiceNo write FInvoiceNo;
     property PaidOff: Integer read FPaidOff write FPaidOff;
-    property Notes: string read FNotes write FNotes;
     property Referensi: string read FReferensi write FReferensi;
     property PaidAmount: Double read FPaidAmount write FPaidAmount;
     property PaidOffDate: TDatetime read FPaidOffDate write FPaidOffDate;
@@ -318,7 +311,6 @@ type
 
   TPurchaseInvoiceItem = class(TCRUDObject)
   private
-    FAmount: Double;
     FDiscount: Double;
     FHarga: Double;
     FItem: TItem;
@@ -330,7 +322,6 @@ type
     FTotal: Double;
     FUOM: TUOM;
   published
-    property Amount: Double read FAmount write FAmount;
     property Discount: Double read FDiscount write FDiscount;
     property Harga: Double read FHarga write FHarga;
     property Item: TItem read FItem write FItem;

@@ -1,30 +1,30 @@
 inherited frmPurchaseInvoice: TfrmPurchaseInvoice
   Caption = 'Faktur Pembelian Barang'
-  ClientHeight = 587
-  ClientWidth = 978
+  ClientHeight = 631
+  ClientWidth = 967
   KeyPreview = True
   OnKeyDown = FormKeyDown
-  ExplicitWidth = 994
-  ExplicitHeight = 626
+  ExplicitWidth = 983
+  ExplicitHeight = 670
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxGroupBox2: TcxGroupBox
-    Top = 552
+    Top = 596
     TabOrder = 2
     ExplicitTop = 552
     ExplicitWidth = 978
-    Width = 978
+    Width = 967
     inherited btnCancel: TcxButton
-      Left = 893
+      Left = 882
       ExplicitLeft = 893
     end
     inherited btnPrint: TcxButton
-      Left = 807
+      Left = 796
       OnClick = btnPrintClick
       ExplicitLeft = 807
     end
     inherited btnSave: TcxButton
-      Left = 721
+      Left = 710
       OnClick = btnSaveClick
       ExplicitLeft = 721
     end
@@ -49,10 +49,10 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
     Caption = '  Header Invoice [F1] '
     TabOrder = 0
     DesignSize = (
-      978
-      121)
-    Height = 121
-    Width = 978
+      967
+      135)
+    Height = 135
+    Width = 967
     object cxLabel1: TcxLabel
       Left = 13
       Top = 28
@@ -129,8 +129,8 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Width = 269
     end
     object crSubTotal: TcxCurrencyEdit
-      Left = 782
-      Top = 22
+      Left = 771
+      Top = 10
       TabStop = False
       Anchors = [akTop, akRight]
       EditValue = 0.000000000000000000
@@ -149,8 +149,8 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Width = 185
     end
     object cxLabel2: TcxLabel
-      Left = 714
-      Top = 23
+      Left = 703
+      Top = 11
       Anchors = [akTop, akRight]
       Caption = 'Sub Total'
       ParentFont = False
@@ -162,8 +162,8 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Style.IsFontAssigned = True
     end
     object cxLabel3: TcxLabel
-      Left = 750
-      Top = 49
+      Left = 739
+      Top = 37
       Anchors = [akTop, akRight]
       Caption = 'PPN'
       ParentFont = False
@@ -175,8 +175,8 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Style.IsFontAssigned = True
     end
     object crPPN: TcxCurrencyEdit
-      Left = 782
-      Top = 48
+      Left = 771
+      Top = 36
       TabStop = False
       Anchors = [akTop, akRight]
       EditValue = 0.000000000000000000
@@ -195,8 +195,8 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Width = 185
     end
     object cxLabel5: TcxLabel
-      Left = 727
-      Top = 77
+      Left = 716
+      Top = 91
       Anchors = [akTop, akRight]
       Caption = 'TOTAL'
       ParentFont = False
@@ -208,8 +208,8 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Style.IsFontAssigned = True
     end
     object crTotal: TcxCurrencyEdit
-      Left = 782
-      Top = 74
+      Left = 771
+      Top = 88
       TabStop = False
       Anchors = [akTop, akRight]
       EditValue = 0.000000000000000000
@@ -287,15 +287,50 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Style.Font.Style = [fsItalic]
       Style.IsFontAssigned = True
     end
+    object cxLabel7: TcxLabel
+      Left = 721
+      Top = 63
+      Anchors = [akTop, akRight]
+      Caption = 'Others'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -15
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+    end
+    object crOthers: TcxCurrencyEdit
+      Left = 771
+      Top = 62
+      TabStop = False
+      Anchors = [akTop, akRight]
+      EditValue = 0.000000000000000000
+      ParentFont = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DisplayFormat = ',0.##;(,0.##)'
+      Properties.ReadOnly = True
+      Style.Color = clCream
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -16
+      Style.Font.Name = 'Consolas'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+      TabOrder = 25
+      Width = 185
+    end
   end
   object cxGrid1: TcxGrid [2]
     Left = 0
-    Top = 121
-    Width = 978
-    Height = 410
+    Top = 135
+    Width = 967
+    Height = 440
     Align = alClient
     TabOrder = 1
     RootLevelOptions.DetailTabsPosition = dtpTop
+    ExplicitTop = 120
+    ExplicitHeight = 454
     object cxGrdMain: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       OnEditKeyDown = cxGrdMainEditKeyDown
@@ -433,29 +468,110 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
         Visible = False
       end
     end
+    object cxGrdOthers: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.##;(,0.##)'
+          Kind = skSum
+          Column = colOthDebet
+        end
+        item
+          Format = ',0.##;(,0.##)'
+          Kind = skSum
+          Column = colOthCredit
+        end>
+      DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.FocusCellOnTab = True
+      OptionsBehavior.FocusFirstCellOnNewRecord = True
+      OptionsBehavior.GoToNextCellOnEnter = True
+      OptionsBehavior.FocusCellOnCycle = True
+      OptionsCustomize.ColumnSorting = False
+      OptionsData.Appending = True
+      OptionsView.Footer = True
+      OptionsView.GroupByBox = False
+      OptionsView.HeaderHeight = 30
+      Styles.ContentOdd = styleOdd
+      object colOthAccCode: TcxGridDBColumn
+        Caption = 'Account Code'
+        DataBinding.FieldName = 'Account'
+        PropertiesClassName = 'TcxExtLookupComboBoxProperties'
+        Properties.ImmediatePost = True
+        HeaderAlignmentHorz = taCenter
+        Width = 99
+      end
+      object colOthAccName: TcxGridDBColumn
+        Caption = 'Account Name'
+        DataBinding.FieldName = 'Account'
+        PropertiesClassName = 'TcxExtLookupComboBoxProperties'
+        Properties.ImmediatePost = True
+        HeaderAlignmentHorz = taCenter
+        Width = 242
+      end
+      object colOthDescription: TcxGridDBColumn
+        DataBinding.FieldName = 'Notes'
+        PropertiesClassName = 'TcxTextEditProperties'
+        HeaderAlignmentHorz = taCenter
+        Width = 286
+      end
+      object colOthDebet: TcxGridDBColumn
+        Caption = 'Debet'
+        DataBinding.FieldName = 'DebetAmt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.Alignment.Horz = taRightJustify
+        Properties.DisplayFormat = ',0.##;(,0.##)'
+        Properties.OnEditValueChanged = colOthDebetPropertiesEditValueChanged
+        HeaderAlignmentHorz = taCenter
+        Width = 95
+      end
+      object colOthCredit: TcxGridDBColumn
+        Caption = 'Credit'
+        DataBinding.FieldName = 'CreditAmt'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.Alignment.Horz = taRightJustify
+        Properties.DisplayFormat = ',0.##;(,0.##)'
+        Properties.OnEditValueChanged = colOthCreditPropertiesEditValueChanged
+        HeaderAlignmentHorz = taCenter
+        Width = 114
+      end
+    end
+    object cxGrid1DBTableView1: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      object cxGrid1DBTableView1Column1: TcxGridDBColumn
+        DataBinding.FieldName = 'Notes'
+      end
+    end
     object cxGrid1Level1: TcxGridLevel
       Caption = 'Detail Transaksi [F2]'
       GridView = cxGrdMain
     end
+    object cxGrid1Level2: TcxGridLevel
+      Caption = 'Others / BIaya Lain [F3]'
+      GridView = cxGrdOthers
+    end
   end
   inherited Panel2: TPanel
-    Top = 531
-    Width = 978
+    Top = 575
+    Width = 967
     TabOrder = 3
     ExplicitTop = 531
     ExplicitWidth = 978
     inherited lbEscape: TLabel
-      Left = 898
+      Left = 887
       Height = 17
       ExplicitLeft = 898
     end
     inherited lgndSave: TLabel
-      Left = 733
+      Left = 722
       Height = 17
       ExplicitLeft = 733
     end
     inherited lgndPrint: TLabel
-      Left = 820
+      Left = 809
       Height = 17
       ExplicitLeft = 820
     end

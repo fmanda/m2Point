@@ -66,6 +66,17 @@ type
     Label3: TLabel;
     colPriceType: TcxGridDBColumn;
     btnLoadRec: TcxButton;
+    cxGrid1Level2: TcxGridLevel;
+    cxGrdOthers: TcxGridDBTableView;
+    colOthAccCode: TcxGridDBColumn;
+    colOthAccName: TcxGridDBColumn;
+    colOthDescription: TcxGridDBColumn;
+    colOthDebet: TcxGridDBColumn;
+    colOthCredit: TcxGridDBColumn;
+    cxLabel7: TcxLabel;
+    crOthers: TcxCurrencyEdit;
+    cxGrid1DBTableView1: TcxGridDBTableView;
+    cxGrid1DBTableView1Column1: TcxGridDBColumn;
     procedure cxGrdMainEditKeyDown(Sender: TcxCustomGridTableView; AItem:
         TcxCustomGridTableItem; AEdit: TcxCustomEdit; var Key: Word; Shift:
         TShiftState);
@@ -97,12 +108,17 @@ type
       var AStyle: TcxStyle);
     procedure btnLoadRecClick(Sender: TObject);
     procedure colPPNPropertiesEditValueChanged(Sender: TObject);
+    procedure colOthDebetPropertiesEditValueChanged(Sender: TObject);
+    procedure colOthCreditPropertiesEditValueChanged(Sender: TObject);
   private
     DisableTrigger: Boolean;
     FCDS: TClientDataset;
+    FCDSOthers: TClientDataset;
     FCDSClone: TClientDataset;
     FCDSUOM: TClientDataset;
     FCDSDummy: TClientDataset;
+    FCDSAccount: TClientDataset;
+    FCDSCloneOth: TClientDataset;
     FPurchInv: TPurchaseInvoice;
     procedure CalculateAll;
     procedure CDSAfterDelete(DataSet: TDataSet);
@@ -111,9 +127,12 @@ type
     procedure FocusToGrid;
     procedure GenerateDummy;
     function GetCDS: TClientDataset;
+    function GetCDSOthers: TClientDataset;
     function GetCDSClone: TClientDataset;
     function GetCDSUOM: TClientDataset;
     function GetCDSDummy: TClientDataset;
+    function GetCDSAccount: TClientDataset;
+    function GetCDSCloneOth: TClientDataset;
     function GetPurchInv: TPurchaseInvoice;
     procedure InitView;
     procedure LoadReceive(aPRID: Integer);
@@ -125,9 +144,12 @@ type
     procedure UpdateData;
     function ValidateData: Boolean;
     property CDS: TClientDataset read GetCDS write FCDS;
+    property CDSOthers: TClientDataset read GetCDSOthers write FCDSOthers;
     property CDSClone: TClientDataset read GetCDSClone write FCDSClone;
     property CDSUOM: TClientDataset read GetCDSUOM write FCDSUOM;
     property CDSDummy: TClientDataset read GetCDSDummy write FCDSDummy;
+    property CDSAccount: TClientDataset read GetCDSAccount write FCDSAccount;
+    property CDSCloneOth: TClientDataset read GetCDSCloneOth write FCDSCloneOth;
     property PurchInv: TPurchaseInvoice read GetPurchInv write FPurchInv;
     { Private declarations }
   protected
@@ -182,6 +204,7 @@ end;
 
 procedure TfrmPurchaseInvoice.CalculateAll;
 var
+  dOth: Double;
   dPPN: Double;
   dSubTotal: Double;
   lHrgNet: Double;
@@ -189,11 +212,17 @@ begin
   if CDS.State in [dsInsert, dsEdit] then
     CDS.Post;
 
+  if CDSOthers.State in [dsInsert, dsEdit] then
+    CDSOthers.Post;
+
+
   CDS.DisableControls;
+  CDSOthers.DisableControls;
   DisableTrigger := True;
   Try
     dSubTotal := 0;
     dPPN := 0;
+    dOth := 0;
 
     CDSClone.First;
     while not CDSClone.Eof do
@@ -213,11 +242,22 @@ begin
       CDSClone.Next;
     end;
 
+    CDSCloneOth.First;
+    while not CDSCloneOth.Eof do
+    begin
+      dOth := dOth +  CDSCloneOth.FieldByName('DebetAmt').AsFloat
+        - CDSCloneOth.FieldByName('CreditAmt').AsFloat;
+      CDSCloneOth.Next;
+    end;
+
+
     crSubTotal.Value  := dSubTotal;
     crPPN.Value       := dPPN;
-    crTotal.Value     := crSubTotal.Value + crPPN.Value;
+    crOthers.Value    := dOth;
+    crTotal.Value     := dSubTotal + dPPN + dOth;
   Finally
     CDS.EnableControls;
+    CDSOthers.EnableControls;
     DisableTrigger := False;
   End;
 end;
@@ -289,6 +329,20 @@ begin
   Finally
     lItem.Free;
   End;
+end;
+
+procedure TfrmPurchaseInvoice.colOthCreditPropertiesEditValueChanged(
+  Sender: TObject);
+begin
+  inherited;
+  CalculateAll;
+end;
+
+procedure TfrmPurchaseInvoice.colOthDebetPropertiesEditValueChanged(
+  Sender: TObject);
+begin
+  inherited;
+  CalculateAll;
 end;
 
 procedure TfrmPurchaseInvoice.colPPNPropertiesEditValueChanged(Sender: TObject);
@@ -516,6 +570,7 @@ end;
 procedure TfrmPurchaseInvoice.InitView;
 begin
   cxGrdMain.PrepareFromCDS(CDS);
+  cxGrdOthers.PrepareFromCDS(CDSOthers);
 //  TcxExtLookup(colWarehouse.Properties).LoadFromSQL(Self,
 //    'select id, nama from twarehouse where is_external = 0','nama');
   TcxExtLookup(colUOM.Properties).LoadFromCDS(CDSUOM, 'id', 'uom', ['id'], Self);
@@ -526,17 +581,24 @@ begin
     'select id, nama from trekening','nama');
 
 
+  TcxExtLookup(colOthAccCode.Properties).LoadFromCDS(CDSAccount, 'id', 'kode', ['id'], Self);
+  TcxExtLookup(colOthAccName.Properties).LoadFromCDS(CDSAccount, 'id', 'nama', ['id'], Self);
+
+
   if PurchInv.Rekening = nil then
     PurchInv.Rekening := TRekening.Create;
 
   PurchInv.Rekening.LoadByCode(AppVariable.Def_Rekening);
   cxLookupRekening.EditValue := PurchInv.Rekening.ID;
+
+  cxGrid1.FocusedView := cxGrdMain;
 end;
 
 procedure TfrmPurchaseInvoice.LoadByID(aID: Integer; IsReadOnly: Boolean =
     True);
 var
   lInvItem: TPurchaseInvoiceItem;
+  lItem: TFinancialTransaction;
 begin
   if FPurchInv <> nil then
     FreeAndNil(FPurchInv);
@@ -595,6 +657,15 @@ begin
 
     CDS.Post;
   end;
+
+  CDSOthers.EmptyDataSet;
+  for lItem in PurchInv.Items do
+  begin
+    CDSOthers.Append;
+    lItem.UpdateToDataset(CDSOthers);
+    CDSOthers.Post;
+  end;
+
   CalculateAll;
   btnSave.Enabled := not IsReadOnly;
 end;
@@ -707,6 +778,21 @@ begin
 
 end;
 
+function TfrmPurchaseInvoice.GetCDSOthers: TClientDataset;
+begin
+  if FCDSOthers = nil then
+  begin
+    FCDSOthers := TFinancialTransaction.CreateDataSet(Self, False);
+//    FCDSOthers.AfterInsert := CDSAfterInsert;
+    FCDSOthers.AfterDelete := CDSAfterDelete;
+//    FCDSOthers.AfterPost := CDSAfterPost;
+//    FCDSOthers.AddField('ItemObject',ftInteger);
+    FCDSOthers.CreateDataSet;
+    DisableTrigger := False;
+  end;
+  Result := FCDSOthers;
+end;
+
 function TfrmPurchaseInvoice.GetCDSDummy: TClientDataset;
 begin
   if FCDSDummy = nil then
@@ -714,6 +800,24 @@ begin
     FCDSDummy := TDBUtils.OpenDataset('select * from titem where nama like ''oli%'' ',Self);
   end;
   Result := FCDSDummy;
+end;
+
+function TfrmPurchaseInvoice.GetCDSAccount: TClientDataset;
+begin
+  if FCDSAccount = nil then
+  begin
+    FCDSAccount := TDBUtils.OpenDataset('select id, kode, nama from taccount',Self);
+  end;
+  Result := FCDSAccount;
+end;
+
+function TfrmPurchaseInvoice.GetCDSCloneOth: TClientDataset;
+begin
+  if FCDSCloneOth = nil then
+  begin
+    FCDSCloneOth := CDSOthers.ClonedDataset(Self);
+  end;
+  Result := FCDSCloneOth;
 end;
 
 function TfrmPurchaseInvoice.GetGroupName: string;
@@ -894,6 +998,7 @@ end;
 
 procedure TfrmPurchaseInvoice.UpdateData;
 var
+  lFinItem: TFinancialTransaction;
   lItem: TPurchaseInvoiceItem;
 begin
 
@@ -917,8 +1022,7 @@ begin
   else
     PurchInv.Rekening.ID := 0;
 
-  PurchInv.Items.Clear;
-
+  PurchInv.InvItems.Clear;
   CDS.First;
   while not CDS.Eof do
   begin
@@ -926,6 +1030,17 @@ begin
     lItem.SetFromDataset(CDS);
     PurchInv.InvItems.Add(lItem);
     CDS.Next;
+  end;
+
+
+  PurchInv.Items.Clear;
+  CDSOthers.First;
+  while not CDSOthers.Eof do
+  begin
+    lFinItem := TFinancialTransaction.Create;
+    lFinItem.SetFromDataset(CDSOthers);
+    PurchInv.Items.Add(lFinItem);
+    CDSOthers.Next;
   end;
 
 end;
@@ -1007,11 +1122,11 @@ begin
 //    exit;
 //  end;
 
-  if CDS.Locate('Warehouse', 0, []) or CDS.Locate('Warehouse', null, []) then
-  begin
-    TAppUtils.Warning('Warehouse tidak boleh kosong' + #13 + 'Baris : ' +IntTostr(CDS.RecNo));
-    exit;
-  end;
+//  if CDS.Locate('Warehouse', 0, []) or CDS.Locate('Warehouse', null, []) then
+//  begin
+//    TAppUtils.Warning('Warehouse tidak boleh kosong' + #13 + 'Baris : ' +IntTostr(CDS.RecNo));
+//    exit;
+//  end;
 
   if edReferensi.Text = '' then
   begin
