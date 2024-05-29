@@ -454,6 +454,7 @@ inherited frmPurchaseRetur: TfrmPurchaseRetur
         Caption = 'Gudang'
         DataBinding.FieldName = 'Warehouse'
         PropertiesClassName = 'TcxExtLookupComboBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         Width = 153
       end
@@ -499,11 +500,13 @@ inherited frmPurchaseRetur: TfrmPurchaseRetur
     Width = 935
   end
   inherited styleRepo: TcxStyleRepository
+    Left = 280
+    Top = 336
     PixelsPerInch = 96
   end
   object pmMain: TPopupMenu
     Left = 232
-    Top = 368
+    Top = 344
     object AmbilHargaDariFakturPembelian1: TMenuItem
       Caption = 'Ambil Harga Dari Faktur Pembelian ...'
       OnClick = AmbilHargaDariFakturPembelian1Click

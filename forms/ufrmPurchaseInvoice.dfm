@@ -36,10 +36,10 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Height = 25
       Align = alLeft
       Caption = 'Tambah Penerimaan / BTB'
-      OptionsImage.ImageIndex = 0
+      OptionsImage.ImageIndex = 1
       OptionsImage.Images = frmMain.ImageList
       TabOrder = 3
-      Visible = False
+      OnClick = btnLoadRecClick
     end
   end
   object cxGroupBox1: TcxGroupBox [1]
@@ -79,7 +79,7 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
     object edNotes: TcxMemo
       Left = 431
       Top = 68
-      TabOrder = 9
+      TabOrder = 8
       OnKeyDown = edNotesKeyDown
       Height = 40
       Width = 250
@@ -145,7 +145,7 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Style.Font.Name = 'Consolas'
       Style.Font.Style = []
       Style.IsFontAssigned = True
-      TabOrder = 10
+      TabOrder = 9
       Width = 185
     end
     object cxLabel2: TcxLabel
@@ -191,7 +191,7 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Style.Font.Name = 'Consolas'
       Style.Font.Style = []
       Style.IsFontAssigned = True
-      TabOrder = 11
+      TabOrder = 10
       Width = 185
     end
     object cxLabel5: TcxLabel
@@ -224,19 +224,8 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Style.Font.Name = 'Consolas'
       Style.Font.Style = []
       Style.IsFontAssigned = True
-      TabOrder = 12
+      TabOrder = 11
       Width = 185
-    end
-    object cxLabel7: TcxLabel
-      Left = 354
-      Top = 29
-      Caption = 'Gudang Tujuan'
-    end
-    object cxLookupGudang: TcxExtLookupComboBox
-      Left = 431
-      Top = 28
-      TabOrder = 7
-      Width = 250
     end
     object cbBayar: TcxComboBox
       Left = 73
@@ -263,7 +252,7 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
     object cxLookupRekening: TcxExtLookupComboBox
       Left = 431
       Top = 48
-      TabOrder = 8
+      TabOrder = 7
       Width = 250
     end
     object spTempo: TcxSpinEdit
@@ -308,7 +297,6 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
     TabOrder = 1
     RootLevelOptions.DetailTabsPosition = dtpTop
     object cxGrdMain: TcxGridDBTableView
-      PopupMenu = pmMain
       Navigator.Buttons.CustomButtons = <>
       OnEditKeyDown = cxGrdMainEditKeyDown
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -345,12 +333,16 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
         Caption = 'Kode Barang'
         DataBinding.FieldName = 'Kode'
         PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <>
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
         Properties.ReadOnly = True
         Properties.OnButtonClick = colKodePropertiesButtonClick
         Properties.OnValidate = colKodePropertiesValidate
         HeaderAlignmentHorz = taCenter
-        Width = 116
+        Width = 107
       end
       object colNama: TcxGridDBColumn
         Caption = 'Nama Barang'
@@ -360,7 +352,7 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Options.Focusing = False
-        Width = 355
+        Width = 272
       end
       object colUOM: TcxGridDBColumn
         Caption = 'Satuan'
@@ -387,12 +379,13 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;(,0.00)'
         HeaderAlignmentHorz = taCenter
-        Width = 107
+        Width = 79
       end
       object colPPN: TcxGridDBColumn
         DataBinding.FieldName = 'PPN'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;(,0.##)'
+        Properties.OnEditValueChanged = colPPNPropertiesEditValueChanged
         HeaderAlignmentHorz = taCenter
       end
       object colDisc: TcxGridDBColumn
@@ -404,7 +397,7 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
         Properties.ReadOnly = False
         Properties.OnEditValueChanged = colDiscPropertiesEditValueChanged
         HeaderAlignmentHorz = taCenter
-        Width = 70
+        Width = 50
       end
       object colSubTotal: TcxGridDBColumn
         Caption = 'Sub Total'
@@ -418,9 +411,10 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
         Width = 100
       end
       object colWarehouse: TcxGridDBColumn
-        Caption = 'Gudang'
-        PropertiesClassName = 'TcxExtLookupComboBoxProperties'
-        Visible = False
+        Caption = 'Receive No'
+        DataBinding.FieldName = 'RecNo'
+        PropertiesClassName = 'TcxTextEditProperties'
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         Width = 153
       end
@@ -537,6 +531,7 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
     Top = 408
     object SetSebagaiBarangBonus1: TMenuItem
       Caption = 'Set Sebagai Barang Bonus'
+      Enabled = False
       OnClick = SetSebagaiBarangBonus1Click
     end
   end

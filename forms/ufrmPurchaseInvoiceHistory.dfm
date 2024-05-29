@@ -222,18 +222,6 @@ inherited frmPurchaseInvoiceHistory: TfrmPurchaseInvoiceHistory
       TabOrder = 15
       Width = 180
     end
-    object cxLabel7: TcxLabel
-      Left = 16
-      Top = 86
-      Caption = 'Gudang Tujuan'
-    end
-    object cxLookupGudang: TcxExtLookupComboBox
-      Left = 93
-      Top = 86
-      Properties.ReadOnly = True
-      TabOrder = 17
-      Width = 312
-    end
   end
   object cxGrid1: TcxGrid [3]
     AlignWithMargins = True

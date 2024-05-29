@@ -12,7 +12,8 @@ uses
   cxDataControllerConditionalFormattingRulesManagerDialog, Data.DB, cxDBData,
   cxCalendar, cxTextEdit, cxCurrencyEdit, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxDropDownEdit,
-  cxLookupEdit, cxDBLookupEdit, cxDBExtLookupComboBox, cxMaskEdit, cxButtonEdit;
+  cxLookupEdit, cxDBLookupEdit, cxDBExtLookupComboBox, cxMaskEdit,
+  cxButtonEdit, uFinancialTransaction;
 
 type
   TfrmPurchaseReturHistory = class(TfrmDefaultReport)
@@ -83,7 +84,7 @@ implementation
 
 uses
   uDBUtils, uDXUtils, uAppUtils, System.DateUtils,
-  uFinancialTransaction, ufrmCXServerLookup, System.Math;
+  ufrmCXServerLookup, System.Math;
 
 {$R *.dfm}
 

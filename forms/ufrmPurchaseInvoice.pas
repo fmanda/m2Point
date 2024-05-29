@@ -14,8 +14,8 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridLevel,
   cxClasses, cxGridCustomView, cxGrid, cxLookupEdit, cxDBLookupEdit,
   cxDBExtLookupComboBox, Vcl.ExtCtrls, uTransDetail, uDBUtils, uItem,
-  cxGridDBDataDefinitions, cxSpinEdit, ufrmCXLookup, DateUtils;
-
+  cxGridDBDataDefinitions, cxSpinEdit, uFinancialTransaction, ufrmCXLookup,
+  DateUtils;
 type
   TfrmPurchaseInvoice = class(TfrmDefaultInput)
     cxGroupBox1: TcxGroupBox;
@@ -44,8 +44,6 @@ type
     colQty: TcxGridDBColumn;
     colDisc: TcxGridDBColumn;
     colSubTotal: TcxGridDBColumn;
-    cxLabel7: TcxLabel;
-    cxLookupGudang: TcxExtLookupComboBox;
     cbBayar: TcxComboBox;
     cxLabel10: TcxLabel;
     colWarehouse: TcxGridDBColumn;
@@ -97,6 +95,8 @@ type
     procedure cxGrdMainStylesGetContentStyle(Sender: TcxCustomGridTableView;
       ARecord: TcxCustomGridRecord; AItem: TcxCustomGridTableItem;
       var AStyle: TcxStyle);
+    procedure btnLoadRecClick(Sender: TObject);
+    procedure colPPNPropertiesEditValueChanged(Sender: TObject);
   private
     DisableTrigger: Boolean;
     FCDS: TClientDataset;
@@ -118,7 +118,7 @@ type
     procedure InitView;
     procedure LoadReceive(aPRID: Integer);
     procedure LookupItem(aKey: string = '');
-    procedure LookupPurchase;
+    procedure LookupReceive;
     procedure LookupSupplier(sKey: string = '');
     procedure SetBarangBonus;
     procedure SetItemToGrid(aItem: TItem);
@@ -145,7 +145,7 @@ implementation
 
 uses
   uAppUtils, uDXUtils, ufrmCXServerLookup, cxDataUtils, uSupplier, uWarehouse,
-  uFinancialTransaction, uAccount, uVariable, ufrmLookupItem;
+  uAccount, uVariable, ufrmLookupItem;
 
 {$R *.dfm}
 
@@ -153,6 +153,12 @@ procedure TfrmPurchaseInvoice.btnGenerateClick(Sender: TObject);
 begin
   inherited;
   GenerateDummy;
+end;
+
+procedure TfrmPurchaseInvoice.btnLoadRecClick(Sender: TObject);
+begin
+  inherited;
+  LookupReceive;
 end;
 
 procedure TfrmPurchaseInvoice.btnPrintClick(Sender: TObject);
@@ -166,7 +172,7 @@ begin
   inherited;
   if not ValidateData then exit;
   UpdateData;
-  if PurchInv.SaveRepeat(False) then
+  if PurchInv.SaveRepeat(2, False) then
   begin
     btnPrint.Click;
 //    TAppUtils.InformationBerhasilSimpan;
@@ -236,7 +242,7 @@ end;
 procedure TfrmPurchaseInvoice.CDSAfterInsert(DataSet: TDataSet);
 begin
   inherited;
-  DataSet.FieldByName('Warehouse').AsInteger := VarToInt(cxLookupGudang.EditValue);
+  //do nothing
 end;
 
 procedure TfrmPurchaseInvoice.CDSAfterPost(DataSet: TDataSet);
@@ -283,6 +289,12 @@ begin
   Finally
     lItem.Free;
   End;
+end;
+
+procedure TfrmPurchaseInvoice.colPPNPropertiesEditValueChanged(Sender: TObject);
+begin
+  inherited;
+  CalculateAll;
 end;
 
 procedure TfrmPurchaseInvoice.colQtyPropertiesEditValueChanged(Sender: TObject);
@@ -458,11 +470,14 @@ function TfrmPurchaseInvoice.GetCDS: TClientDataset;
 begin
   if FCDS = nil then
   begin
-    FCDS := TTransDetail.CreateDataSet(Self, False);
+    FCDS := TPurchaseInvoiceItem.CreateDataSet(Self, False);
     FCDS.AddField('Kode',ftString);
     FCDS.AddField('Nama',ftString);
     FCDS.AddField('SubTotal',ftFloat);
     FCDS.AddField('DiscP',ftFloat);
+
+    FCDS.AddField('RecNo',ftString);
+
     FCDS.AfterInsert := CDSAfterInsert;
     FCDS.AfterDelete := CDSAfterDelete;
 //    FCDS.AfterPost := CDSAfterPost;
@@ -501,16 +516,15 @@ end;
 procedure TfrmPurchaseInvoice.InitView;
 begin
   cxGrdMain.PrepareFromCDS(CDS);
-  TcxExtLookup(colWarehouse.Properties).LoadFromSQL(Self,
-    'select id, nama from twarehouse where is_external = 0','nama');
+//  TcxExtLookup(colWarehouse.Properties).LoadFromSQL(Self,
+//    'select id, nama from twarehouse where is_external = 0','nama');
   TcxExtLookup(colUOM.Properties).LoadFromCDS(CDSUOM, 'id', 'uom', ['id'], Self);
-  cxLookupGudang.Properties.LoadFromSQL(Self,
-    'select id, nama from twarehouse where is_external = 0','nama');
+//  cxLookupGudang.Properties.LoadFromSQL(Self,
+//    'select id, nama from twarehouse where is_external = 0','nama');
 
   cxLookupRekening.Properties.LoadFromSQL(Self,
     'select id, nama from trekening','nama');
 
-  cxLookupGudang.SetDefaultValue();
 
   if PurchInv.Rekening = nil then
     PurchInv.Rekening := TRekening.Create;
@@ -522,7 +536,7 @@ end;
 procedure TfrmPurchaseInvoice.LoadByID(aID: Integer; IsReadOnly: Boolean =
     True);
 var
-  lItem: TTransDetail;
+  lInvItem: TPurchaseInvoiceItem;
 begin
   if FPurchInv <> nil then
     FreeAndNil(FPurchInv);
@@ -564,21 +578,19 @@ begin
     edSupplier.Text := PurchInv.Supplier.Nama;
   end;
 
-  if PurchInv.Warehouse <> nil then
-    cxLookupGudang.EditValue := PurchInv.Warehouse.ID;
 
   CDS.EmptyDataSet;
-  for lItem in PurchInv.Items do
+  for lInvItem in PurchInv.InvItems do
   begin
     CDS.Append;
-    lItem.UpdateToDataset(CDS);
-    lItem.Item.ReLoad(False);
-    CDS.FieldByName('Kode').AsString := lItem.Item.Kode;
-    CDS.FieldByName('Nama').AsString := lItem.Item.Nama;
+    lInvItem.UpdateToDataset(CDS);
+    lInvItem.Item.ReLoad(False);
+    CDS.FieldByName('Kode').AsString := lInvItem.Item.Kode;
+    CDS.FieldByName('Nama').AsString := lInvItem.Item.Nama;
     CDS.FieldByName('DiscP').AsFloat := 0;
 
-    if lItem.Harga > 0 then
-      CDS.FieldByName('DiscP').AsFloat := lItem.Discount / lItem.Harga * 100;
+    if lInvItem.Harga > 0 then
+      CDS.FieldByName('DiscP').AsFloat := lInvItem.Discount / lInvItem.Harga * 100;
 
 
     CDS.Post;
@@ -657,9 +669,9 @@ begin
     if PurchInv.Supplier.LoadByID(Random(126)) then
       break;
   end;        
-  edSupplier.Text := PurchInv.Supplier.Nama;        
+  edSupplier.Text := PurchInv.Supplier.Nama;
   dtJtTempo.Date := dtInvoice.Date + Random(14);
-  cxLookupGudang.SetDefaultValue();
+
   cxLookupRekening.SetDefaultValue();
   edNotes.Text := 'Dummy Data';
 
@@ -714,6 +726,13 @@ var
   lItem: TTransDetail;
   lPR: TPurchaseReceive;
 begin
+  if CDS.Locate('PurchaseReceive', aPRID, [loCaseInsensitive]) then
+  begin
+    TAppUtils.Warning('BTB sudah ada di grid, silahkan dihapus terlebih dahulu');
+    exit;
+  end;
+
+
   lPR := TPurchaseReceive.Create;
   try
     lPR.LoadByID(aPRID);
@@ -722,10 +741,13 @@ begin
     begin
       CDS.Append;
 
+      CDS.FieldByName('PurchaseReceive').AsInteger := lPR.ID;
+      CDS.FieldByName('RecNo').AsString   := lPR.RecNo;
+
       if lItem.Item <> nil  then
       begin
         CDS.FieldByName('Item').AsInteger := lItem.Item.ID;
-        lItem.ReLoad();
+        lItem.Item.ReLoad();
         CDS.FieldByName('Kode').AsString  := lItem.Item.Kode;
         CDS.FieldByName('Nama').AsString  := lItem.Item.Nama;
         CDS.FieldByName('PPN').AsFloat    := lItem.Item.PPN;
@@ -754,7 +776,7 @@ begin
   end;
 end;
 
-procedure TfrmPurchaseInvoice.LookupPurchase;
+procedure TfrmPurchaseInvoice.LookupReceive;
 var
   cxLookup: TfrmCXLookup;
   S: string;
@@ -772,7 +794,7 @@ begin
       +' where a.transdate between :d1 and :d2'
       +' AND A.SUPPLIER_ID = ' + IntToStr(PurchInv.Supplier.ID);
 
-  cxLookup := TfrmCXLookup.ExecuteRange(S, StartOfTheYear(Now()-360), EndOfTheMonth(Now()), True ,
+  cxLookup := TfrmCXLookup.ExecuteRange(S, StartOfTheYear(Now()-360), EndOfTheMonth(Now()), False ,
     'Lookup Data Purchase Receive'
   );
 
@@ -872,7 +894,7 @@ end;
 
 procedure TfrmPurchaseInvoice.UpdateData;
 var
-  lItem: TTransDetail;
+  lItem: TPurchaseInvoiceItem;
 begin
 
   PurchInv.InvoiceNo := edNoInv.Text;
@@ -887,11 +909,6 @@ begin
   PurchInv.ModifiedBy := UserLogin;
   PurchInv.Referensi  := edReferensi.Text;
 
-  if PurchInv.Warehouse = nil then
-    PurchInv.Warehouse := TWarehouse.Create;
-
-  PurchInv.Warehouse.LoadByID(VarToInt(cxLookupGudang.EditValue));
-
   if PurchInv.Rekening = nil then
     PurchInv.Rekening := TRekening.Create;
 
@@ -905,9 +922,9 @@ begin
   CDS.First;
   while not CDS.Eof do
   begin
-    lItem := TTransDetail.Create;
+    lItem := TPurchaseInvoiceItem.Create;
     lItem.SetFromDataset(CDS);
-    PurchInv.Items.Add(lItem);
+    PurchInv.InvItems.Add(lItem);
     CDS.Next;
   end;
 

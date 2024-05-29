@@ -16,7 +16,7 @@ uses
   Data.DB, FireDAC.Comp.Client, Vcl.StdCtrls, dxRibbonBackstageView,
   cxImageList, dxNavBarOfficeNavigationBar, Vcl.Menus, cxButtons,
   ufrmLapStockOpname, FireDAC.Stan.StorageJSON, uTransDetail,
-  Datasnap.DBClient, ufrmUangMukaZakat;
+  Datasnap.DBClient, ufrmUangMukaZakat, ufrmBrowsePurchaseInvoice;
 
 type
   TfrmMain = class(TForm)
@@ -226,6 +226,7 @@ type
     dxBarButton99: TdxBarButton;
     dxBarButton100: TdxBarButton;
     actPurchaseReceive: TAction;
+    dxBarButton101: TdxBarButton;
     procedure actAccountExecute(Sender: TObject);
     procedure actAgingARExecute(Sender: TObject);
     procedure actAgingStockExecute(Sender: TObject);
@@ -607,7 +608,7 @@ end;
 
 procedure TfrmMain.actPurchaseInvoiceExecute(Sender: TObject);
 begin
-//  ShowForm(TfrmBrowsePurchaseInvoice);
+  ShowForm(TfrmBrowsePurchaseInvoice);
 end;
 
 procedure TfrmMain.actPurchaseInvoiceHistoryExecute(Sender: TObject);

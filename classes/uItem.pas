@@ -71,7 +71,7 @@ type
   public
     destructor Destroy; override;
     function GenerateNo(aPrefix: String; aDigitCount: Integer): String;
-    function GetAvgCostPCS: Double;
+    function GetAvgCostPCS(IsOverride: Boolean = True): Double;
     function GetKonversi(aUOMID: Integer): Double;
     function ValidateEditUOM: Boolean;
     property ItemUOMs: TObjectList<TItemUOM> read GetItemUOMs write FItemUOMs;
@@ -204,7 +204,7 @@ begin
   Result := aPrefix + RightStr('0000000000' + IntToStr(lNum), aDigitCount);
 end;
 
-function TItem.GetAvgCostPCS: Double;
+function TItem.GetAvgCostPCS(IsOverride: Boolean = True): Double;
 var
   lHarga: Double;
   lUOM: TItemUOM;
@@ -213,7 +213,8 @@ begin
   for lUOM in Self.ItemUOMs do
   begin
     lHarga := lUOM.HargaAvg;
-    if lHarga <= 0 then lHarga := lUOM.HargaBeli;
+
+    if (lHarga <= 0) and (IsOverride) then lHarga := lUOM.HargaBeli;
 
     Result := lHarga * lUOM.Konversi;
     exit;

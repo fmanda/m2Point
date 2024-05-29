@@ -8,8 +8,8 @@ inherited frmHutangZakat: TfrmHutangZakat
   TextHeight = 13
   inherited cxGroupBox2: TcxGroupBox
     Top = 378
-    ExplicitTop = 504
-    ExplicitWidth = 634
+    ExplicitTop = 378
+    ExplicitWidth = 704
     Width = 704
     inherited btnCancel: TcxButton
       Left = 619
@@ -37,10 +37,6 @@ inherited frmHutangZakat: TfrmHutangZakat
       Caption = 
         '** Untuk menghapus inputan bisa lewat Browse Faktur Pembelian di' +
         ' '
-      ExplicitLeft = 56
-      ExplicitTop = 16
-      ExplicitWidth = 332
-      ExplicitHeight = 17
     end
   end
   inherited Panel2: TPanel
@@ -50,18 +46,15 @@ inherited frmHutangZakat: TfrmHutangZakat
     ExplicitWidth = 634
     inherited lbEscape: TLabel
       Left = 624
-      Height = 17
-      ExplicitLeft = 554
+      ExplicitLeft = 624
     end
     inherited lgndSave: TLabel
       Left = 459
-      Height = 17
-      ExplicitLeft = 389
+      ExplicitLeft = 459
     end
     inherited lgndPrint: TLabel
       Left = 546
-      Height = 17
-      ExplicitLeft = 476
+      ExplicitLeft = 546
     end
   end
   object cxGroupBox1: TcxGroupBox [2]
@@ -70,7 +63,6 @@ inherited frmHutangZakat: TfrmHutangZakat
     Align = alTop
     Caption = ' Parameter '
     TabOrder = 2
-    ExplicitWidth = 680
     Height = 169
     Width = 704
     object edURL: TcxTextEdit

@@ -132,7 +132,8 @@ uses
   ufrmBrowseUangMukaZakat in 'forms\ufrmBrowseUangMukaZakat.pas' {frmBrowseUangMukaZakat},
   uDBThread in 'classes\uDBThread.pas',
   ufrmStockCabang in 'forms\ufrmStockCabang.pas' {frmStockCabang},
-  ufrmPurchaseInvoice in 'forms\ufrmPurchaseInvoice.pas' {frmPurchaseInvoice};
+  ufrmPurchaseInvoice in 'forms\ufrmPurchaseInvoice.pas' {frmPurchaseInvoice},
+  ufrmBrowsePurchaseInvoice in 'forms\ufrmBrowsePurchaseInvoice.pas' {frmBrowsePurchaseInvoice};
 
 {$R *.res}
 

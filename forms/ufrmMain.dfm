@@ -83,7 +83,6 @@ object frmMain: TfrmMain
       Index = 1
     end
     object dxRTInventory: TdxRibbonTab
-      Active = True
       Caption = 'Inventory'
       Groups = <
         item
@@ -106,6 +105,7 @@ object frmMain: TfrmMain
       Index = 3
     end
     object dxRTARAP: TdxRibbonTab
+      Active = True
       Caption = 'Hutang - Piutang'
       Groups = <
         item
@@ -366,7 +366,7 @@ object frmMain: TfrmMain
     object dxBarManagerBar6: TdxBar
       Caption = 'Lap Inventory'
       CaptionButtons = <>
-      DockedLeft = 484
+      DockedLeft = 482
       DockedTop = 0
       FloatLeft = 901
       FloatTop = 8
@@ -541,7 +541,7 @@ object frmMain: TfrmMain
       WholeRow = False
     end
     object dxBarManagerBar12: TdxBar
-      Caption = 'Hutang - Piutang'
+      Caption = 'Account Payable'
       CaptionButtons = <>
       DockedLeft = 0
       DockedTop = 0
@@ -550,6 +550,10 @@ object frmMain: TfrmMain
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton101'
+        end
         item
           Visible = True
           ItemName = 'dxBarButton64'
@@ -1227,6 +1231,10 @@ object frmMain: TfrmMain
       Category = 0
       ImageIndex = 66
     end
+    object dxBarButton101: TdxBarButton
+      Action = actPurchaseInvoice
+      Category = 0
+    end
   end
   object ActionManager: TActionManager
     Images = ImageList
@@ -1310,7 +1318,7 @@ object frmMain: TfrmMain
     end
     object actPurchaseInvoice: TAction
       Category = 'Inventory'
-      Caption = 'Pembelian Barang'
+      Caption = 'Invoice Pembelian'
       ImageIndex = 36
       OnExecute = actPurchaseInvoiceExecute
     end

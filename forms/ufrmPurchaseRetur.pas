@@ -14,7 +14,7 @@ uses
   cxClasses, cxGridCustomView, cxGrid, cxDropDownEdit, cxLookupEdit,
   cxDBLookupEdit, cxMaskEdit, cxCalendar, cxMemo, cxLabel, uTransDetail,
   Datasnap.DBClient, cxRadioGroup, uItem, cxGridDBDataDefinitions, cxDataUtils,
-  cxCheckBox;
+  cxCheckBox, uFinancialTransaction;
 
 type
   TfrmPurchaseRetur = class(TfrmDefaultInput)
@@ -332,7 +332,7 @@ end;
 procedure TfrmPurchaseRetur.colKodePropertiesValidate(Sender: TObject;
   var DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
 var
-  lDetail: TTransDetail;
+  lInvItem: TPurchaseInvoiceItem;
   lFound: Boolean;
   lItem: TItem;
 begin
@@ -364,9 +364,9 @@ begin
           PurchRetur.Invoice.ReLoad(True);
 
         lFound := False;
-        for lDetail in PurchRetur.Invoice.Items do
+        for lInvItem in PurchRetur.Invoice.InvItems do
         begin
-          lFound := lDetail.Item.ID = lItem.ID;
+          lFound := lInvItem.Item.ID = lItem.ID;
           if lFound then break;
         end;
 
@@ -649,15 +649,24 @@ end;
 
 procedure TfrmPurchaseRetur.LoadAllInvoiceItem;
 var
-  lItem: TTransDetail;
+  lItem: TPurchaseInvoiceItem;
 begin
-  for lItem in PurchRetur.Invoice.Items do
+  for lItem in PurchRetur.Invoice.InvItems do
   begin
     CDS.Append;
-    lItem.UpdateToDataset(CDS);
+//    lItem.UpdateToDataset(CDS);
+
+
+    CDS.FieldByName('Item').AsInteger     := lItem.Item.ID;
+    CDS.FieldByName('UOM').AsInteger      := lItem.UOM.ID;
     lItem.Item.ReLoad(False);
-    CDS.FieldByName('Kode').AsString := lItem.Item.Kode;
-    CDS.FieldByName('Nama').AsString := lItem.Item.Nama;
+    CDS.FieldByName('Kode').AsString      := lItem.Item.Kode;
+    CDS.FieldByName('Nama').AsString      := lItem.Item.Nama;
+    CDS.FieldByName('Qty').AsFloat        := lItem.Qty;
+    CDS.FieldByName('Harga').AsFloat      := lItem.Harga;
+    CDS.FieldByName('discount').AsFloat   := lItem.discount;
+
+
 
     if lItem.harga > 0 then
       CDS.FieldByName('DiscP').AsFloat :=
@@ -853,7 +862,7 @@ begin
       edInv.Text := PurchRetur.Invoice.InvoiceNo;
       dtInvoice.Date := PurchRetur.Invoice.TransDate;
 //      edSupp.Text := PurchRetur.Supplier.Nama;
-      cxLookupGudang.EditValue := PurchRetur.Invoice.Warehouse.ID;
+//      cxLookupGudang.EditValue := PurchRetur.Invoice.Warehouse.ID;
 
       CDS.EmptyDataSet;
 
@@ -1033,13 +1042,17 @@ begin
   CDS.First;
   while not CDS.Eof do
   begin
+    CDS.Edit;
+    CDS.FieldByName('warehouse').AsInteger := VarToInt(cxLookupGudang.EditValue);
+    CDS.Post;
+
     lItem := TTransDetail.Create;
     lItem.SetFromDataset(CDS);
 
     lItem.MakeNegative;
     PurchRetur.Items.Add(lItem);
     CDS.Next;
-  end;    
+  end;
 end;
 
 function TfrmPurchaseRetur.ValidateData: Boolean;
@@ -1124,7 +1137,7 @@ end;
 
 function TfrmPurchaseRetur.ValidateItem: Boolean;
 var
-  lItem: TTransDetail;
+  lInvItem: TPurchaseInvoiceItem;
 begin
 //  Result := ;
 
@@ -1158,15 +1171,15 @@ begin
   if PurchRetur.Invoice.Items.Count = 0 then
     PurchRetur.Invoice.ReLoad(True);
 
-  for lItem in PurchRetur.Invoice.Items do
+  for lInvItem in PurchRetur.Invoice.InvItems do
   begin       
-    if not CDSValidate.Locate('ItemID',lItem.Item.ID,[]) then
+    if not CDSValidate.Locate('ItemID',lInvItem.Item.ID,[]) then
       continue;
-      
+
     CDSValidate.Edit;
     CDSValidate.FieldByName('TotalPCS_Faktur').AsFloat := 
       CDSValidate.FieldByName('TotalPCS_Faktur').AsFloat 
-       + (lItem.Qty * lItem.Konversi);  
+       + (lInvItem.Qty * lInvItem.Konversi);
     CDSValidate.Post;
   end;       
 

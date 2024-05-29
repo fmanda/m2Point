@@ -13,7 +13,7 @@ uses
   cxCalendar, cxTextEdit, cxCurrencyEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBExtLookupComboBox, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxDropDownEdit, cxMaskEdit,
-  cxButtonEdit;
+  cxButtonEdit, uFinancialTransaction;
 
 type
   TfrmPurchaseInvoiceHistory = class(TfrmDefaultReport)
@@ -44,8 +44,6 @@ type
     colReturAmt: TcxGridDBColumn;
     colSaldo: TcxGridDBColumn;
     cxGrid1Level1: TcxGridLevel;
-    cxLabel7: TcxLabel;
-    cxLookupGudang: TcxExtLookupComboBox;
     procedure btnExportClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
     procedure edInvoiceKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -87,7 +85,7 @@ implementation
 
 uses
   uDBUtils, uDXUtils, uAppUtils, System.DateUtils,
-  uFinancialTransaction, ufrmCXServerLookup, System.Math;
+  ufrmCXServerLookup, System.Math;
 
 {$R *.dfm}
 
@@ -191,8 +189,7 @@ end;
 procedure TfrmPurchaseInvoiceHistory.InitView;
 begin
   cxGrdMain.PrepareFromCDS(CDS);
-  cxLookupGudang.Properties.LoadFromSQL(Self,
-    'select id, nama from twarehouse where is_external = 0','nama');
+
 end;
 
 procedure TfrmPurchaseInvoiceHistory.LoadData;
@@ -258,7 +255,7 @@ begin
   cbBayar.ItemIndex := PurchaseInvoice.PaymentFlag;
 
   edSupplier.Clear;
-  cxLookupGudang.Clear;
+
 
   crAmount.Value    := PurchaseInvoice.Amount;
   crPaid.Value      := PurchaseInvoice.GetTotalBayar;
@@ -269,11 +266,11 @@ begin
     PurchaseInvoice.Supplier.ReLoad();
     edSupplier.Text := PurchaseInvoice.Supplier.Nama;
   end;
-
-  if PurchaseInvoice.Warehouse <> nil then
-  begin
-    cxLookupGudang.EditValue := PurchaseInvoice.Warehouse.ID;
-  end;
+//
+//  if PurchaseInvoice.Warehouse <> nil then
+//  begin
+//    cxLookupGudang.EditValue := PurchaseInvoice.Warehouse.ID;
+//  end;
 
   LoadData;
 //  btnRefreshClick(Self);
