@@ -14,7 +14,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridLevel,
   cxClasses, cxGridCustomView, cxGrid, cxLookupEdit, cxDBLookupEdit,
   cxDBExtLookupComboBox, Vcl.ExtCtrls, uTransDetail, uDBUtils, uItem,
-  cxGridDBDataDefinitions, cxSpinEdit;
+  cxGridDBDataDefinitions, cxSpinEdit, ufrmCXLookup, DateUtils;
 
 type
   TfrmPurchaseInvoice = class(TfrmDefaultInput)
@@ -56,7 +56,6 @@ type
     Label1: TLabel;
     cxLabel13: TcxLabel;
     cxLookupRekening: TcxExtLookupComboBox;
-    btnGenerate: TcxButton;
     spTempo: TcxSpinEdit;
     cxLabel11: TcxLabel;
     edReferensi: TcxTextEdit;
@@ -68,6 +67,7 @@ type
     stylBonus: TcxStyle;
     Label3: TLabel;
     colPriceType: TcxGridDBColumn;
+    btnLoadRec: TcxButton;
     procedure cxGrdMainEditKeyDown(Sender: TcxCustomGridTableView; AItem:
         TcxCustomGridTableItem; AEdit: TcxCustomEdit; var Key: Word; Shift:
         TShiftState);
@@ -116,7 +116,9 @@ type
     function GetCDSDummy: TClientDataset;
     function GetPurchInv: TPurchaseInvoice;
     procedure InitView;
+    procedure LoadReceive(aPRID: Integer);
     procedure LookupItem(aKey: string = '');
+    procedure LookupPurchase;
     procedure LookupSupplier(sKey: string = '');
     procedure SetBarangBonus;
     procedure SetItemToGrid(aItem: TItem);
@@ -705,6 +707,85 @@ end;
 function TfrmPurchaseInvoice.GetGroupName: string;
 begin
   Result := 'Inventory';
+end;
+
+procedure TfrmPurchaseInvoice.LoadReceive(aPRID: Integer);
+var
+  lItem: TTransDetail;
+  lPR: TPurchaseReceive;
+begin
+  lPR := TPurchaseReceive.Create;
+  try
+    lPR.LoadByID(aPRID);
+
+    for lItem in lPR.Items do
+    begin
+      CDS.Append;
+
+      if lItem.Item <> nil  then
+      begin
+        CDS.FieldByName('Item').AsInteger := lItem.Item.ID;
+        lItem.ReLoad();
+        CDS.FieldByName('Kode').AsString  := lItem.Item.Kode;
+        CDS.FieldByName('Nama').AsString  := lItem.Item.Nama;
+        CDS.FieldByName('PPN').AsFloat    := lItem.Item.PPN;
+      end;
+
+      if lItem.UOM <> nil  then
+      begin
+        CDS.FieldByName('UOM').AsInteger  := lItem.UOM.ID;
+      end;
+
+      CDS.FieldByName('Qty').AsFloat      := lItem.Qty;
+      CDS.FieldByName('Harga').AsFloat    := lItem.Harga;
+      CDS.FieldByName('Discount').AsFloat := lItem.Discount;
+
+
+      if lItem.Harga <> 0 then
+        CDS.FieldByName('DiscP').AsFloat  := lItem.Discount / lItem.Harga * 100;
+
+      CDS.Post;
+    end;
+
+    CalculateAll;
+
+  finally
+    lPR.Free;
+  end;
+end;
+
+procedure TfrmPurchaseInvoice.LookupPurchase;
+var
+  cxLookup: TfrmCXLookup;
+  S: string;
+begin
+  if edSupplier.Text = '' then
+  begin
+    TAppUtils.Warning('Supplier belum dipilih');
+    exit;
+  end;
+
+  S := 'select a.id, a.RECNO, a.REFERENSI, a.TRANSDATE, b.NAMA as SUPPLIER,'
+      +' a.MODIFIEDDATE, a.MODIFIEDBY'
+      +' from TPURCHASERECEIVE a'
+      +' inner join TSUPPLIER b on a.SUPPLIER_ID = b.ID'
+      +' where a.transdate between :d1 and :d2'
+      +' AND A.SUPPLIER_ID = ' + IntToStr(PurchInv.Supplier.ID);
+
+  cxLookup := TfrmCXLookup.ExecuteRange(S, StartOfTheYear(Now()-360), EndOfTheMonth(Now()), True ,
+    'Lookup Data Purchase Receive'
+  );
+
+  Try
+    cxLookup.HideFields(['ID']);
+    if cxLookup.ShowModal = mrOK then
+    begin
+      LoadReceive(cxLookup.Data.FieldByName('ID').AsInteger);
+    end;
+  finally
+    cxLookup.Free;
+  end;
+
 end;
 
 procedure TfrmPurchaseInvoice.LookupSupplier(sKey: string = '');

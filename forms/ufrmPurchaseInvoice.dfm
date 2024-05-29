@@ -28,17 +28,18 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       OnClick = btnSaveClick
       ExplicitLeft = 721
     end
-    object btnGenerate: TcxButton
+    object btnLoadRec: TcxButton
       AlignWithMargins = True
       Left = 5
       Top = 5
-      Width = 124
+      Width = 164
       Height = 25
       Align = alLeft
-      Caption = 'Generate Dummy '
+      Caption = 'Tambah Penerimaan / BTB'
+      OptionsImage.ImageIndex = 0
+      OptionsImage.Images = frmMain.ImageList
       TabOrder = 3
       Visible = False
-      OnClick = btnGenerateClick
     end
   end
   object cxGroupBox1: TcxGroupBox [1]
@@ -326,7 +327,7 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       OptionsBehavior.GoToNextCellOnEnter = True
       OptionsBehavior.FocusCellOnCycle = True
       OptionsCustomize.ColumnSorting = False
-      OptionsData.Appending = True
+      OptionsData.Inserting = False
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 30
@@ -344,11 +345,8 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
         Caption = 'Kode Barang'
         DataBinding.FieldName = 'Kode'
         PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
+        Properties.Buttons = <>
+        Properties.ReadOnly = True
         Properties.OnButtonClick = colKodePropertiesButtonClick
         Properties.OnValidate = colKodePropertiesValidate
         HeaderAlignmentHorz = taCenter
@@ -358,10 +356,11 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
         Caption = 'Nama Barang'
         DataBinding.FieldName = 'Nama'
         PropertiesClassName = 'TcxTextEditProperties'
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Options.Focusing = False
-        Width = 276
+        Width = 355
       end
       object colUOM: TcxGridDBColumn
         Caption = 'Satuan'
@@ -390,6 +389,12 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
         HeaderAlignmentHorz = taCenter
         Width = 107
       end
+      object colPPN: TcxGridDBColumn
+        DataBinding.FieldName = 'PPN'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;(,0.##)'
+        HeaderAlignmentHorz = taCenter
+      end
       object colDisc: TcxGridDBColumn
         Caption = 'Disc %'
         DataBinding.FieldName = 'DiscP'
@@ -414,8 +419,8 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       end
       object colWarehouse: TcxGridDBColumn
         Caption = 'Gudang'
-        DataBinding.FieldName = 'Warehouse'
         PropertiesClassName = 'TcxExtLookupComboBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         Width = 153
       end
@@ -428,10 +433,6 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
         DataBinding.FieldName = 'Konversi'
         Visible = False
         Options.Editing = False
-      end
-      object colPPN: TcxGridDBColumn
-        DataBinding.FieldName = 'PPN'
-        Visible = False
       end
       object colPriceType: TcxGridDBColumn
         DataBinding.FieldName = 'PriceType'
@@ -451,14 +452,17 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
     ExplicitWidth = 978
     inherited lbEscape: TLabel
       Left = 898
+      Height = 17
       ExplicitLeft = 898
     end
     inherited lgndSave: TLabel
       Left = 733
+      Height = 17
       ExplicitLeft = 733
     end
     inherited lgndPrint: TLabel
       Left = 820
+      Height = 17
       ExplicitLeft = 820
     end
     object Label2: TLabel
@@ -466,7 +470,7 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Left = 319
       Top = 1
       Width = 84
-      Height = 16
+      Height = 17
       Margins.Top = 1
       Margins.Right = 13
       Margins.Bottom = 1
@@ -478,13 +482,14 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 16
     end
     object Label1: TLabel
       AlignWithMargins = True
       Left = 3
       Top = 1
       Width = 175
-      Height = 16
+      Height = 17
       Margins.Top = 1
       Margins.Right = 13
       Margins.Bottom = 1
@@ -496,13 +501,14 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 16
     end
     object Label3: TLabel
       AlignWithMargins = True
       Left = 194
       Top = 1
       Width = 109
-      Height = 16
+      Height = 17
       Margins.Top = 1
       Margins.Right = 13
       Margins.Bottom = 1
@@ -514,6 +520,7 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
+      ExplicitHeight = 16
     end
   end
   inherited styleRepo: TcxStyleRepository
@@ -526,8 +533,8 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
     end
   end
   object pmMain: TPopupMenu
-    Left = 296
-    Top = 320
+    Left = 416
+    Top = 408
     object SetSebagaiBarangBonus1: TMenuItem
       Caption = 'Set Sebagai Barang Bonus'
       OnClick = SetSebagaiBarangBonus1Click
