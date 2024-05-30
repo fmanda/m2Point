@@ -556,10 +556,38 @@ type
     property Warehouse: TWarehouse read FWarehouse write FWarehouse;
   end;
 
+type
+  TDeliveryOrder = class(TCRUDTransDetail)
+  private
+    FDONo: string;
+    FNotes: string;
+    FStatus: Integer;
+    FCustomer: TCustomer;
+    FWarehouse: TWarehouse;
+  protected
+    function BeforeSaveToDB: Boolean; override;
+    function GetRefno: String; override;
+    function LogLevel: Integer; override;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function GenerateNo: String; reintroduce;
+    function GetHeaderFlag: Integer; override;
+    class procedure PrintData(aSalesInvoiceID: Integer);
+    procedure SetGenerateNo; override;
+  published
+    [AttributeOfCode]
+    property DONo: string read FDONo write FDONo;
+    property Notes: string read FNotes write FNotes;
+    property Status: Integer read FStatus write FStatus;
+    property Customer: TCustomer read FCustomer write FCustomer;
+    property Warehouse: TWarehouse read FWarehouse write FWarehouse;
+  end;
+
 const
-  HeaderFlag_PurchaseInvoice : Integer = 100;
+  HeaderFlag_PurchaseReceive : Integer = 100;
   HeaderFlag_PurchaseRetur : Integer = 150;
-  HeaderFlag_SalesInvoice : Integer = 200;
+  HeaderFlag_DeliveryOrder : Integer = 200;
   HeaderFlag_SalesRetur : Integer = 250;
   HeaderFlag_TransferStock : Integer = 400;
   HeaderFlag_Wastage : Integer = 450;
@@ -1199,7 +1227,7 @@ end;
 
 function TSalesInvoice.GetHeaderFlag: Integer;
 begin
-  Result := HeaderFlag_SalesInvoice;
+  Result := HeaderFlag_DeliveryOrder;
 end;
 
 function TSalesInvoice.GetServices: TObjectList<TServiceDetail>;
@@ -2127,7 +2155,7 @@ end;
 
 function TPurchaseReceive.GetHeaderFlag: Integer;
 begin
-  Result := HeaderFlag_PurchaseInvoice;
+  Result := HeaderFlag_PurchaseReceive;
 end;
 
 function TPurchaseReceive.GetOrAddAvgCost(aDetail: TTransDetail):
@@ -2199,6 +2227,91 @@ end;
 procedure TPurchaseReceive.SetGenerateNo;
 begin
   if Self.ID = 0 then Self.RecNo := Self.GenerateNo;
+end;
+
+constructor TDeliveryOrder.Create;
+begin
+  inherited;
+end;
+
+destructor TDeliveryOrder.Destroy;
+begin
+  inherited;
+  if FCustomer <> nil then FreeAndNil(FCustomer);
+  if FWarehouse <> nil then FreeAndNil(FWarehouse);
+end;
+
+function TDeliveryOrder.BeforeSaveToDB: Boolean;
+var
+  lItem: TTransDetail;
+begin
+  for lItem in Self.Items do
+  begin
+    lItem.SetAvgCost;
+    lItem.MakeNegative;
+  end;
+
+  Result := True;
+
+  if Self.ID = 0 then exit;
+end;
+
+function TDeliveryOrder.GenerateNo: String;
+var
+  aDigitCount: Integer;
+  aPrefix: string;
+  fPrefix: string;
+  lNum: Integer;
+  S: string;
+begin
+  lNum := 0;
+  aDigitCount := 5;
+  fPrefix := 'DO';
+
+  aPrefix := Cabang + '.' + fPrefix + FormatDateTime('yymm',Now()) + '.';
+  S := 'SELECT MAX(DONo) FROM TDeliveryOrder where DONo LIKE ' + QuotedStr(aPrefix + '%');
+  with TDBUtils.OpenQuery(S) do
+  begin
+    Try
+      if not eof then
+        TryStrToInt(RightStr(Fields[0].AsString, aDigitCount), lNum);
+    Finally
+      Free;
+    End;
+  end;
+
+  inc(lNum);
+  Result := aPrefix + RightStr('00000' + IntToStr(lNum), aDigitCount);
+end;
+
+function TDeliveryOrder.GetHeaderFlag: Integer;
+begin
+  Result := HeaderFlag_DeliveryOrder;
+end;
+
+function TDeliveryOrder.GetRefno: String;
+begin
+  Result := DONo;
+end;
+
+function TDeliveryOrder.LogLevel: Integer;
+begin
+  Result := 2; //0 : no log
+  //1 : all
+  //2 : update and delete only
+ end;
+
+class procedure TDeliveryOrder.PrintData(aSalesInvoiceID: Integer);
+var
+  S: string;
+begin
+  S := 'SELECT * FROM FN_SLIP_SALESINVOICE(' + IntToStr(aSalesInvoiceID) + ')';
+  DMReport.ExecuteReport('SlipSalesInvoice', S);
+end;
+
+procedure TDeliveryOrder.SetGenerateNo;
+begin
+  if Self.ID = 0 then Self.DONo := Self.GenerateNo();
 end;
 
 end.
