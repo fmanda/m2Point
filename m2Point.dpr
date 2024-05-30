@@ -60,10 +60,10 @@ uses
   ufrmBrowseSalesman in 'forms\ufrmBrowseSalesman.pas' {frmBrowseSalesman},
   ufrmBrowseMekanik in 'forms\ufrmBrowseMekanik.pas' {frmBrowseMekanik},
   uFinancialTransaction in 'classes\uFinancialTransaction.pas',
-  ufrmSalesInvoice in 'forms\ufrmSalesInvoice.pas' {frmSalesInvoice},
+  ufrmDeliveryOrder in 'forms\ufrmDeliveryOrder.pas' {frmDeliveryOrder},
   uVariable in 'classes\uVariable.pas',
   ufrmVariable in 'forms\ufrmVariable.pas' {frmVariable},
-  ufrmBrowseSalesInvoice in 'forms\ufrmBrowseSalesInvoice.pas' {frmBrowseSalesInvoice},
+  ufrmBrowseDeliveryOrder in 'forms\ufrmBrowseDeliveryOrder.pas' {frmBrowseDeliveryOrder},
   ufrmSalesInvoiceHistory in 'forms\ufrmSalesInvoiceHistory.pas' {frmSalesInvoiceHistory},
   ufrmPurchaseInvoiceHistory in 'forms\ufrmPurchaseInvoiceHistory.pas' {frmPurchaseInvoiceHistory},
   ufrmSettingFee in 'forms\ufrmSettingFee.pas' {frmSettingFee},
@@ -133,7 +133,9 @@ uses
   uDBThread in 'classes\uDBThread.pas',
   ufrmStockCabang in 'forms\ufrmStockCabang.pas' {frmStockCabang},
   ufrmPurchaseInvoice in 'forms\ufrmPurchaseInvoice.pas' {frmPurchaseInvoice},
-  ufrmBrowsePurchaseInvoice in 'forms\ufrmBrowsePurchaseInvoice.pas' {frmBrowsePurchaseInvoice};
+  ufrmBrowsePurchaseInvoice in 'forms\ufrmBrowsePurchaseInvoice.pas' {frmBrowsePurchaseInvoice},
+  ufrmBrowseSalesInvoice in 'forms\ufrmBrowseSalesInvoice.pas' {frmBrowseSalesInvoice},
+  ufrmSalesInvoice in 'forms\ufrmSalesInvoice.pas' {frmSalesInvoice};
 
 {$R *.res}
 
