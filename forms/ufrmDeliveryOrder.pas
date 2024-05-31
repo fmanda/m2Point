@@ -150,8 +150,6 @@ begin
 end;
 
 procedure TfrmDeliveryOrder.btnSaveClick(Sender: TObject);
-var
-  lWithPaymentDlg: Boolean;
 begin
   inherited;
 
@@ -167,7 +165,7 @@ begin
       on E:Exception do
       begin
         TAppUtils.Error(
-          'Gagal Cetak Invoice, Silahkan cetak ulang dari Browse' + #13 +
+          'Gagal Cetak DO, Silahkan cetak ulang dari Browse' + #13 +
           E.Message);
       end;
     end;
@@ -197,14 +195,14 @@ var
   lCalc: TStockCheck;
   lCDS: TClientDataSet;
   lItem: TTransDetail;
-  lOldSalesInv: TSalesInvoice;
+  lOldDO: TDeliveryOrder;
   QTYPCS: Integer;
 begin
   Result := AppVariable.Check_Stock <> 1;
   if Result then exit;
 
   lCalc := TStockCheck.Create(dtInvoice.Date);
-  lOldSalesInv := TSalesInvoice.Create;
+  lOldDO := TDeliveryOrder.Create;
   Application.ProcessMessages;
 
   lCDS := TClientDataSet.Create(Self);
@@ -225,8 +223,8 @@ begin
     //apabila edit
     If DevOrder.ID <> 0 then
     begin
-      lOldSalesInv.LoadByID(DevOrder.ID);
-      for lItem in lOldSalesInv.Items do
+      lOldDO.LoadByID(DevOrder.ID);
+      for lItem in lOldDO.Items do
       begin
         lCalc.AddOnHandPCS(
             lItem.Item.ID,
@@ -238,7 +236,7 @@ begin
     Result := lCalc.CheckStockIgnore(True);
   finally
     lCDS.Free;
-    lOldSalesInv.Free;
+    lOldDO.Free;
     lCalc.Free;
   End;
 end;

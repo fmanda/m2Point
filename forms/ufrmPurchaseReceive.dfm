@@ -187,22 +187,17 @@ inherited frmPurchaseReceive: TfrmPurchaseReceive
       end
       object colKode: TcxGridDBColumn
         Caption = 'Kode Barang'
-        DataBinding.FieldName = 'Kode'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.OnButtonClick = colKodePropertiesButtonClick
-        Properties.OnValidate = colKodePropertiesValidate
+        DataBinding.FieldName = 'Item'
+        PropertiesClassName = 'TcxExtLookupComboBoxProperties'
+        Properties.ImmediatePost = True
         HeaderAlignmentHorz = taCenter
         Width = 116
       end
       object colNama: TcxGridDBColumn
         Caption = 'Nama Barang'
-        DataBinding.FieldName = 'Nama'
-        PropertiesClassName = 'TcxTextEditProperties'
+        DataBinding.FieldName = 'Item'
+        PropertiesClassName = 'TcxExtLookupComboBoxProperties'
+        Properties.ImmediatePost = True
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Options.Focusing = False

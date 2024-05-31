@@ -83,6 +83,7 @@ object frmMain: TfrmMain
       Index = 1
     end
     object dxRTInventory: TdxRibbonTab
+      Active = True
       Caption = 'Inventory'
       Groups = <
         item
@@ -93,19 +94,7 @@ object frmMain: TfrmMain
         end>
       Index = 2
     end
-    object dxRTSales: TdxRibbonTab
-      Caption = 'Penjualan & Kas'
-      Groups = <
-        item
-          ToolbarName = 'dxBarManagerBar9'
-        end
-        item
-          ToolbarName = 'dxBarManagerBar10'
-        end>
-      Index = 3
-    end
     object dxRTARAP: TdxRibbonTab
-      Active = True
       Caption = 'Hutang - Piutang'
       Groups = <
         item
@@ -117,6 +106,17 @@ object frmMain: TfrmMain
         item
           ToolbarName = 'dxBarManagerBar8'
         end>
+      Index = 3
+    end
+    object dxRTSales: TdxRibbonTab
+      Caption = 'Finance'
+      Groups = <
+        item
+          ToolbarName = 'dxBarManagerBar9'
+        end
+        item
+          ToolbarName = 'dxBarManagerBar10'
+        end>
       Index = 4
     end
     object dxRTManagement: TdxRibbonTab
@@ -127,9 +127,6 @@ object frmMain: TfrmMain
         end
         item
           ToolbarName = 'dxBarManagerBar11'
-        end
-        item
-          ToolbarName = 'dxBarManagerBar15'
         end>
       Index = 5
     end
@@ -186,16 +183,9 @@ object frmMain: TfrmMain
           ItemName = 'dxBarButton3'
         end
         item
-          Visible = True
-          ItemName = 'dxBarButton4'
-        end
-        item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarButton30'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton33'
         end
         item
           Visible = True
@@ -230,6 +220,7 @@ object frmMain: TfrmMain
           ItemName = 'dxBarButton27'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarButton50'
         end
@@ -238,6 +229,7 @@ object frmMain: TfrmMain
           ItemName = 'dxBarButton51'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarButton85'
         end
@@ -254,7 +246,7 @@ object frmMain: TfrmMain
     object dxBarManagerBar3: TdxBar
       Caption = 'Business Partner'
       CaptionButtons = <>
-      DockedLeft = 221
+      DockedLeft = 229
       DockedTop = 0
       FloatLeft = 656
       FloatTop = 8
@@ -268,10 +260,6 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'dxBarButton35'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton46'
         end>
       OneOnRow = False
       Row = 0
@@ -282,7 +270,7 @@ object frmMain: TfrmMain
     object dxBarManagerBar4: TdxBar
       Caption = 'Data Toko / Bengkel'
       CaptionButtons = <>
-      DockedLeft = 376
+      DockedLeft = 384
       DockedTop = 0
       FloatLeft = 901
       FloatTop = 8
@@ -299,15 +287,7 @@ object frmMain: TfrmMain
         end
         item
           Visible = True
-          ItemName = 'dxBarButton48'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarButton49'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton73'
         end>
       OneOnRow = False
       Row = 0
@@ -331,9 +311,10 @@ object frmMain: TfrmMain
         end
         item
           Visible = True
-          ItemName = 'dxBarButton39'
+          ItemName = 'dxBarButton102'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarButton40'
         end
@@ -346,6 +327,7 @@ object frmMain: TfrmMain
           ItemName = 'dxBarButton42'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarButton88'
         end
@@ -366,7 +348,7 @@ object frmMain: TfrmMain
     object dxBarManagerBar6: TdxBar
       Caption = 'Lap Inventory'
       CaptionButtons = <>
-      DockedLeft = 482
+      DockedLeft = 500
       DockedTop = 0
       FloatLeft = 901
       FloatTop = 8
@@ -386,6 +368,7 @@ object frmMain: TfrmMain
           ItemName = 'dxBarButton45'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarButton76'
         end
@@ -424,7 +407,7 @@ object frmMain: TfrmMain
       WholeRow = False
     end
     object dxBarManagerBar9: TdxBar
-      Caption = 'Transaksi Penjualan & Kas'
+      Caption = 'Transaksi Kas & Bank'
       CaptionButtons = <>
       DockedLeft = 0
       DockedTop = 0
@@ -435,15 +418,6 @@ object frmMain: TfrmMain
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarButton52'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton53'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarButton56'
         end
         item
@@ -453,6 +427,15 @@ object frmMain: TfrmMain
         item
           Visible = True
           ItemName = 'dxBarButton55'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarButton106'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton107'
         end>
       OneOnRow = False
       Row = 0
@@ -463,7 +446,7 @@ object frmMain: TfrmMain
     object dxBarManagerBar10: TdxBar
       Caption = 'Laporan'
       CaptionButtons = <>
-      DockedLeft = 301
+      DockedLeft = 307
       DockedTop = 0
       FloatLeft = 901
       FloatTop = 8
@@ -483,6 +466,7 @@ object frmMain: TfrmMain
           ItemName = 'dxBarButton61'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarButton60'
         end
@@ -523,6 +507,7 @@ object frmMain: TfrmMain
           ItemName = 'dxBarButton79'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarButton80'
         end
@@ -541,7 +526,7 @@ object frmMain: TfrmMain
       WholeRow = False
     end
     object dxBarManagerBar12: TdxBar
-      Caption = 'Account Payable'
+      Caption = 'Invoice & Settlement'
       CaptionButtons = <>
       DockedLeft = 0
       DockedTop = 0
@@ -556,12 +541,18 @@ object frmMain: TfrmMain
         end
         item
           Visible = True
-          ItemName = 'dxBarButton64'
+          ItemName = 'dxBarButton104'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarButton103'
         end
         item
           Visible = True
-          ItemName = 'dxBarButton65'
+          ItemName = 'dxBarButton105'
         end>
+      MultiLine = True
       OneOnRow = False
       Row = 0
       UseOwnFont = False
@@ -571,7 +562,7 @@ object frmMain: TfrmMain
     object dxBarManagerBar14: TdxBar
       Caption = 'Laporan Hutang'
       CaptionButtons = <>
-      DockedLeft = 146
+      DockedLeft = 251
       DockedTop = 0
       FloatLeft = 901
       FloatTop = 8
@@ -587,6 +578,7 @@ object frmMain: TfrmMain
           ItemName = 'dxBarButton67'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarButton74'
         end
@@ -603,7 +595,7 @@ object frmMain: TfrmMain
     object dxBarManagerBar8: TdxBar
       Caption = 'Laporan Piutang'
       CaptionButtons = <>
-      DockedLeft = 476
+      DockedLeft = 600
       DockedTop = 0
       FloatLeft = 901
       FloatTop = 8
@@ -619,6 +611,7 @@ object frmMain: TfrmMain
           ItemName = 'dxBarButton71'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'dxBarButton75'
         end
@@ -655,30 +648,6 @@ object frmMain: TfrmMain
           ItemName = 'dxBarButton97'
         end>
       OneOnRow = True
-      Row = 0
-      UseOwnFont = False
-      Visible = True
-      WholeRow = False
-    end
-    object dxBarManagerBar15: TdxBar
-      Caption = 'Zakat'
-      CaptionButtons = <>
-      DockedLeft = 352
-      DockedTop = 0
-      FloatLeft = 1384
-      FloatTop = 8
-      FloatClientWidth = 0
-      FloatClientHeight = 0
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarButton99'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarButton100'
-        end>
-      OneOnRow = False
       Row = 0
       UseOwnFont = False
       Visible = True
@@ -1235,6 +1204,30 @@ object frmMain: TfrmMain
       Action = actPurchaseInvoice
       Category = 0
     end
+    object dxBarButton102: TdxBarButton
+      Action = actDeliveryOrder
+      Category = 0
+    end
+    object dxBarButton103: TdxBarButton
+      Action = actSales
+      Category = 0
+    end
+    object dxBarButton104: TdxBarButton
+      Action = actPurchaseRetur
+      Category = 0
+    end
+    object dxBarButton105: TdxBarButton
+      Action = actSalesRetur
+      Category = 0
+    end
+    object dxBarButton106: TdxBarButton
+      Action = actPurchPayment
+      Category = 0
+    end
+    object dxBarButton107: TdxBarButton
+      Action = actSalesPayment
+      Category = 0
+    end
   end
   object ActionManager: TActionManager
     Images = ImageList
@@ -1318,7 +1311,7 @@ object frmMain: TfrmMain
     end
     object actPurchaseInvoice: TAction
       Category = 'Inventory'
-      Caption = 'Invoice Pembelian'
+      Caption = 'Faktur Pembelian'
       ImageIndex = 36
       OnExecute = actPurchaseInvoiceExecute
     end
@@ -1395,15 +1388,15 @@ object frmMain: TfrmMain
       OnExecute = actUserExecute
     end
     object actSales: TAction
-      Category = 'Kasir & Penjualan'
-      Caption = 'Penjualan && Service'
-      ImageIndex = 9
+      Category = 'Hutang Piutang'
+      Caption = 'Faktur Penjualan'
+      ImageIndex = 84
       OnExecute = actSalesExecute
     end
     object actSalesRetur: TAction
       Category = 'Kasir & Penjualan'
       Caption = 'Retur Penjualan'
-      ImageIndex = 11
+      ImageIndex = 15
       OnExecute = actSalesReturExecute
     end
     object actCashIn: TAction
@@ -1467,7 +1460,7 @@ object frmMain: TfrmMain
     object actSalesPayment: TAction
       Category = 'Hutang Piutang'
       Caption = 'Pembayaran Piutang'
-      ImageIndex = 13
+      ImageIndex = 84
       OnExecute = actSalesPaymentExecute
     end
     object actSaldoHutang: TAction
@@ -1535,6 +1528,7 @@ object frmMain: TfrmMain
     object actInventoryMov: TAction
       Category = 'Manajemen'
       Caption = 'Inventory Movement'
+      ImageIndex = 50
     end
     object actAgingAR: TAction
       Category = 'Manajemen'
@@ -1544,6 +1538,7 @@ object frmMain: TfrmMain
     object actCashFlow: TAction
       Category = 'Manajemen'
       Caption = 'Cash FLow'
+      ImageIndex = 42
     end
     object actSuggestionOrder: TAction
       Category = 'Inventory'
@@ -1580,6 +1575,7 @@ object frmMain: TfrmMain
     object actKKSO: TAction
       Category = 'Inventory'
       Caption = 'Kartu Kerja Stock Opname (KKSO)'
+      ImageIndex = 41
       OnExecute = actKKSOExecute
     end
     object actLog: TAction
@@ -1632,8 +1628,14 @@ object frmMain: TfrmMain
     object actPurchaseReceive: TAction
       Category = 'Inventory'
       Caption = 'Purchase Receive (BTB)'
-      ImageIndex = 31
+      ImageIndex = 22
       OnExecute = actPurchaseReceiveExecute
+    end
+    object actDeliveryOrder: TAction
+      Category = 'Inventory'
+      Caption = 'Surat Jalan / DO'
+      ImageIndex = 31
+      OnExecute = actDeliveryOrderExecute
     end
   end
   object ImageList: TcxImageList

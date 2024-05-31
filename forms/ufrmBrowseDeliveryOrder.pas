@@ -40,7 +40,7 @@ var
 implementation
 
 uses
-  uDXUtils, uDBUtils, uAppUtils, ufrmSalesInvoice, System.DateUtils,
+  uDXUtils, uDBUtils, uAppUtils, ufrmDeliveryOrder, System.DateUtils,
   uTransDetail, uPrintStruk;
 
 {$R *.dfm}
@@ -48,7 +48,7 @@ uses
 procedure TfrmBrowseDeliveryOrder.btnBaruClick(Sender: TObject);
 begin
   inherited;
-  with TfrmSalesInvoice.Create(Application) do
+  with TfrmDeliveryOrder.Create(Application) do
   begin
     Try
       if ShowModalDlg = mrOK then
@@ -62,9 +62,9 @@ end;
 procedure TfrmBrowseDeliveryOrder.btnEditClick(Sender: TObject);
 begin
   inherited;
-  with TfrmSalesInvoice.Create(Application) do
+  with TfrmDeliveryOrder.Create(Application) do
   begin
-    LoadByID(Self.cxGrdMain.GetID, 0, False);
+    LoadByID(Self.cxGrdMain.GetID, False);
     Try
       if ShowModalDlg = mrOK then
         RefreshData;
@@ -79,17 +79,17 @@ begin
   inherited;
   if not TAppUtils.Confirm('Anda yakin menghapus data ini?') then exit;
 
-  with TSalesInvoice.Create do
+  with TDeliveryOrder.Create do
   begin
     if LoadByID(Self.cxGrdMain.GetID) then
     begin
       if not IsValidTransDate(TransDate) then exit;
 
-      if not TfrmAuthUser.Authorize('Autorisasi Hapus Faktur', InvoiceNo, TransDate ) then
-      begin
-        TAppUtils.Warning('User tidak mendapatkan autorisasi hapus faktur');
-        exit;
-      end;
+//      if not TfrmAuthUser.Authorize('Autorisasi Hapus Faktur', InvoiceNo, TransDate ) then
+//      begin
+//        TAppUtils.Warning('User tidak mendapatkan autorisasi hapus faktur');
+//        exit;
+//      end;
 
       if DeleteFromDB then
       begin
@@ -104,9 +104,9 @@ end;
 procedure TfrmBrowseDeliveryOrder.btnLihatClick(Sender: TObject);
 begin
   inherited;
-  with TfrmSalesInvoice.Create(Application) do
+  with TfrmDeliveryOrder.Create(Application) do
   begin
-    LoadByID(Self.cxGrdMain.GetID, 0, True);
+    LoadByID(Self.cxGrdMain.GetID,  True);
     Try
       ShowModalDlg;
     Finally
@@ -117,19 +117,14 @@ end;
 
 procedure TfrmBrowseDeliveryOrder.btnPrintClick(Sender: TObject);
 var
-  lInv: TSalesInvoice;
+  lInv: TDeliveryOrder;
 begin
   inherited;
-  lInv := TSalesInvoice.Create;
+  lInv := TDeliveryOrder.Create;
   Try
     if lInv.LoadByID(Self.cxGrdMain.GetID) then
     begin
-      if lInv.SalesType = SalesType_FrontEnd then
-        TPrintStruk.Print(lInv);
-
-      if lInv.SalesType = SalesType_Salesman then
-        TSalesInvoice.PrintData(lInv.ID);
-
+      TDeliveryOrder.PrintData(lInv.ID);
     end;
   finally
     lInv.Free;
@@ -171,17 +166,11 @@ end;
 
 function TfrmBrowseDeliveryOrder.GetSQL: string;
 begin
-  Result := 'SELECT A.ID, A.INVOICENO, A.TRANSDATE, B.NAMA AS CUSTOMER, A.DUEDATE,'
-           +' CASE WHEN A.PAYMENTFLAG = 1 THEN ''TEMPO'' ELSE ''CASH'' END AS CARABAYAR,'
-           +' CASE WHEN A.SALESTYPE = 1 THEN ''SALESMAN'' '
-           +' ELSE ''FRONT END'' END AS JENIS, E.NAMA AS REKENING,'
-           +' A.SUBTOTAL, A.PPN, A.AMOUNT AS TOTAL, C.NAMA AS GUDANG,'
-           +' D.NAMA AS SALESMAN, A.STATUS, A.CLOSED, A.MODIFIEDBY, A.MODIFIEDDATE'
-           +' FROM TSALESINVOICE A'
-           +' LEFT JOIN TCUSTOMER B ON A.CUSTOMER_ID = B.ID'
-           +' LEFT JOIN TWAREHOUSE C ON A.WAREHOUSE_ID = C.ID'
-           +' LEFT JOIN TSALESMAN D ON A.SALESMAN_ID = D.ID'
-           +' LEFT JOIN TREKENING E ON A.REKENING_ID = E.ID'
+  Result := 'SELECT A.ID, A.DONO, A.TRANSDATE, B.NAMA AS CUSTOMER, A.NOTES,  C.NAMA AS GUDANG, '
+           +' A.STATUS, A.CLOSED, A.MODIFIEDBY, A.MODIFIEDDATE '
+           +' FROM TDELIVERYORDER A '
+           +' LEFT JOIN TCUSTOMER B ON A.CUSTOMER_ID = B.ID '
+           +' LEFT JOIN TWAREHOUSE C ON A.WAREHOUSE_ID = C.ID  '
            +' WHERE A.TRANSDATE BETWEEN ' + TAppUtils.QuotD(StartDate.Date)
            +' AND ' + TAppUtils.QuotD(EndDate.Date);
 

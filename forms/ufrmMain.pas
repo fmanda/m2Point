@@ -221,12 +221,18 @@ type
     dxBarButton97: TdxBarButton;
     actHutangZakat: TAction;
     dxBarButton98: TdxBarButton;
-    dxBarManagerBar15: TdxBar;
     actUangMukaZakat: TAction;
     dxBarButton99: TdxBarButton;
     dxBarButton100: TdxBarButton;
     actPurchaseReceive: TAction;
     dxBarButton101: TdxBarButton;
+    actDeliveryOrder: TAction;
+    dxBarButton102: TdxBarButton;
+    dxBarButton103: TdxBarButton;
+    dxBarButton104: TdxBarButton;
+    dxBarButton105: TdxBarButton;
+    dxBarButton106: TdxBarButton;
+    dxBarButton107: TdxBarButton;
     procedure actAccountExecute(Sender: TObject);
     procedure actAgingARExecute(Sender: TObject);
     procedure actAgingStockExecute(Sender: TObject);
@@ -234,6 +240,7 @@ type
     procedure actCashOutExecute(Sender: TObject);
     procedure actCustomerExecute(Sender: TObject);
     procedure actDeleteEODExecute(Sender: TObject);
+    procedure actDeliveryOrderExecute(Sender: TObject);
     procedure actDetPenjualanExecute(Sender: TObject);
     procedure actEndOfDayExecute(Sender: TObject);
     procedure actExportDataExecute(Sender: TObject);
@@ -331,7 +338,7 @@ uses
   ufrmLapPenjualan, ufrmGantiPassword, ufrmPiutangRetur, ufrmHutangRetur,
   ufrmBrowseKKSO, ufrmExportData, ufrmImportData, ufrmBrowseTransferRequest,
   System.IOUtils, CRUDObject, System.JSON, ufrmDeleteEOD,
-  ufrmBrowseUangMukaZakat;
+  ufrmBrowseUangMukaZakat, ufrmBrowseDeliveryOrder;
 
 {$R *.dfm}
 
@@ -390,6 +397,11 @@ end;
 procedure TfrmMain.actDeleteEODExecute(Sender: TObject);
 begin
   TfrmDeleteEndOfDay(ShowForm(TfrmDeleteEndOfDay)).ShowModalDlg;
+end;
+
+procedure TfrmMain.actDeliveryOrderExecute(Sender: TObject);
+begin
+  ShowForm(TfrmBrowseDeliveryOrder);
 end;
 
 procedure TfrmMain.actDetPenjualanExecute(Sender: TObject);

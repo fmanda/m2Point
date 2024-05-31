@@ -1,60 +1,59 @@
 inherited frmDeliveryOrder: TfrmDeliveryOrder
-  Caption = 'Transaksi Penjualan'
-  ClientHeight = 584
+  Caption = 'Delivery Order / Surat Jalan'
+  ClientHeight = 567
   ClientWidth = 713
   KeyPreview = True
   OnKeyDown = FormKeyDown
-  ExplicitTop = -32
   ExplicitWidth = 729
-  ExplicitHeight = 623
+  ExplicitHeight = 606
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxGroupBox2: TcxGroupBox
-    Top = 549
+    Top = 532
     TabOrder = 1
-    ExplicitTop = 606
-    ExplicitWidth = 984
+    ExplicitTop = 549
+    ExplicitWidth = 713
     Width = 713
     inherited btnCancel: TcxButton
       Left = 628
-      ExplicitLeft = 899
+      ExplicitLeft = 628
     end
     inherited btnPrint: TcxButton
       Left = 542
       Visible = True
       OnClick = btnPrintClick
-      ExplicitLeft = 813
+      ExplicitLeft = 542
     end
     inherited btnSave: TcxButton
       Left = 436
       Width = 100
       OnClick = btnSaveClick
-      ExplicitLeft = 601
+      ExplicitLeft = 436
       ExplicitWidth = 100
     end
   end
   inherited Panel2: TPanel
-    Top = 528
+    Top = 511
     Width = 713
     TabOrder = 2
-    ExplicitTop = 585
-    ExplicitWidth = 984
+    ExplicitTop = 528
+    ExplicitWidth = 713
     inherited lbEscape: TLabel
       Left = 633
       Height = 17
-      ExplicitLeft = 904
+      ExplicitLeft = 633
     end
     inherited lgndSave: TLabel
       Left = 458
       Height = 17
       Margins.Right = 25
-      ExplicitLeft = 450
+      ExplicitLeft = 458
     end
     inherited lgndPrint: TLabel
       Left = 555
       Height = 17
       Visible = True
-      ExplicitLeft = 826
+      ExplicitLeft = 555
     end
     object Label2: TLabel
       AlignWithMargins = True
@@ -79,13 +78,11 @@ inherited frmDeliveryOrder: TfrmDeliveryOrder
     Left = 0
     Top = 113
     Width = 713
-    Height = 415
+    Height = 398
     Align = alClient
     TabOrder = 0
     RootLevelOptions.DetailTabsPosition = dtpTop
-    ExplicitTop = 147
-    ExplicitWidth = 984
-    ExplicitHeight = 280
+    ExplicitTop = 112
     object cxGrdItem: TcxGridDBTableView
       PopupMenu = pmMain
       Navigator.Buttons.CustomButtons = <>
@@ -93,6 +90,7 @@ inherited frmDeliveryOrder: TfrmDeliveryOrder
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <
         item
+          Format = ',0.##;(,0.##)'
           Kind = skSum
           Column = colQty
         end
@@ -109,6 +107,7 @@ inherited frmDeliveryOrder: TfrmDeliveryOrder
       OptionsData.Appending = True
       OptionsSelection.HideSelection = True
       OptionsSelection.InvertSelect = False
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 30
       Styles.ContentOdd = styleOdd
@@ -142,7 +141,7 @@ inherited frmDeliveryOrder: TfrmDeliveryOrder
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Options.Focusing = False
-        Width = 399
+        Width = 372
       end
       object colUOM: TcxGridDBColumn
         Caption = 'Satuan'
@@ -153,7 +152,7 @@ inherited frmDeliveryOrder: TfrmDeliveryOrder
         Properties.OnEditValueChanged = colUOMPropertiesEditValueChanged
         Properties.OnInitPopup = colUOMPropertiesInitPopup
         HeaderAlignmentHorz = taCenter
-        Width = 51
+        Width = 56
       end
       object colQty: TcxGridDBColumn
         DataBinding.FieldName = 'Qty'
@@ -162,7 +161,7 @@ inherited frmDeliveryOrder: TfrmDeliveryOrder
         Properties.DisplayFormat = ',0.##;(,0.##)'
         Properties.OnEditValueChanged = colQtyPropertiesEditValueChanged
         HeaderAlignmentHorz = taCenter
-        Width = 53
+        Width = 71
       end
       object colWarehouse: TcxGridDBColumn
         Caption = 'Gudang'
@@ -194,7 +193,6 @@ inherited frmDeliveryOrder: TfrmDeliveryOrder
     Align = alTop
     Caption = '  Header Invoice [F1] '
     TabOrder = 3
-    ExplicitWidth = 984
     Height = 113
     Width = 713
     object cxLabel1: TcxLabel
@@ -272,8 +270,8 @@ inherited frmDeliveryOrder: TfrmDeliveryOrder
     end
   end
   inherited styleRepo: TcxStyleRepository
-    Left = 296
-    Top = 360
+    Left = 232
+    Top = 424
     PixelsPerInch = 96
     object styleUmum: TcxStyle
       AssignedValues = [svColor]
