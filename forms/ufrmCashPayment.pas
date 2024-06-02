@@ -32,25 +32,13 @@ type
     cxLookupRekening: TcxExtLookupComboBox;
     pgcMain: TcxPageControl;
     tsDetail: TcxTabSheet;
-    tsFee: TcxTabSheet;
     cxGrid1: TcxGrid;
     cxGrdMain: TcxGridDBTableView;
     colCostAccount: TcxGridDBColumn;
     colCostNotes: TcxGridDBColumn;
     colCostAmount: TcxGridDBColumn;
     cxGrid1Level2: TcxGridLevel;
-    cxGrid2: TcxGrid;
-    cxGrdFee: TcxGridDBTableView;
-    cxGridDBColumn1: TcxGridDBColumn;
-    cxGridDBColumn2: TcxGridDBColumn;
-    cxGridDBColumn3: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
-    cxGrdFeeColumn1: TcxGridDBColumn;
     btnLoad: TcxButton;
-    Panel1: TPanel;
-    cxLabel2: TcxLabel;
-    cxLookupAccFee: TcxExtLookupComboBox;
-    cxGrdFeeColumn2: TcxGridDBColumn;
     tsRetur: TcxTabSheet;
     cxGrid3: TcxGrid;
     cxGrdRetur: TcxGridDBTableView;
@@ -74,8 +62,6 @@ type
     FCashPayment: TCashPayment;
     FCDSCloneRetur: TClientDataset;
     FCDSRetur: TClientDataset;
-    FCDSCloneFee: TClientDataset;
-    FCDSFee: TClientDataset;
     procedure CalculateAll;
     procedure CDSAfterDelete(DataSet: TDataSet);
     procedure FocusToGrid;
@@ -84,10 +70,7 @@ type
     function GetCashPayment: TCashPayment;
     function GetCDSCloneRetur: TClientDataset;
     function GetCDSRetur: TClientDataset;
-    function GetCDSCloneFee: TClientDataset;
-    function GetCDSFee: TClientDataset;
     procedure InitView;
-    procedure LookupFee;
     procedure LookupRetur;
     procedure SetReturToGrid(lRetur: TSalesRetur);
     procedure UpdateData;
@@ -97,8 +80,6 @@ type
     property CDSCloneRetur: TClientDataset read GetCDSCloneRetur write
         FCDSCloneRetur;
     property CDSRetur: TClientDataset read GetCDSRetur write FCDSRetur;
-    property CDSCloneFee: TClientDataset read GetCDSCloneFee write FCDSCloneFee;
-    property CDSFee: TClientDataset read GetCDSFee write FCDSFee;
     { Private declarations }
   public
     function GetGroupName: string; override;
@@ -121,10 +102,7 @@ uses
 procedure TfrmCashPayment.btnLoadClick(Sender: TObject);
 begin
   inherited;
-  if pgcMain.ActivePage = tsFee then
-    LookupFee
-  else
-    LookupRetur;
+  LookupRetur;
 end;
 
 procedure TfrmCashPayment.btnSaveClick(Sender: TObject);
@@ -146,14 +124,11 @@ begin
   if CDS.State in [dsInsert, dsEdit] then
     CDS.Post;
 
-  if CDSFee.State in [dsInsert, dsEdit] then
-    CDSFee.Post;
 
   if CDSRetur.State in [dsInsert, dsEdit] then
     CDSRetur.Post;
 
   CDS.DisableControls;
-  CDSFee.DisableControls;
   CDSRetur.DisableControls;
 //  DisableTrigger := True;
   Try
@@ -174,18 +149,11 @@ begin
     end;
 
 
-    CDSCloneFee.First;
-    while not CDSCloneFee.Eof do
-    begin
-      dCash   := dCash + CDSCloneFee.FieldByName('Amount').AsFloat;
-      CDSCloneFee.Next;
-    end;
 
     crCash.Value  := dCash;
 
   Finally
     CDS.EnableControls;
-    CDSFee.EnableControls;
     CDSRetur.EnableControls;
 //    DisableTrigger := False;
   End;
@@ -294,29 +262,6 @@ begin
   Result := FCDSRetur;
 end;
 
-function TfrmCashPayment.GetCDSCloneFee: TClientDataset;
-begin
-  if FCDSCloneFee = nil then
-  begin
-    FCDSCloneFee := CDSFee.ClonedDataset(Self);
-  end;
-  Result := FCDSCloneFee;
-end;
-
-function TfrmCashPayment.GetCDSFee: TClientDataset;
-begin
-  if FCDSFee = nil then
-  begin
-    FCDSFee := TFeePaymentItem.CreateDataSet(Self, False);
-    FCDSFee.AddField('Salesman', ftString);
-    FCDSFee.AddField('RefNo', ftString);
-    FCDSFee.AddField('PaidOffDate', ftDate);
-    FCDSFee.AfterDelete := CDSAfterDelete;
-    FCDSFee.CreateDataSet;
-  end;
-  Result := FCDSFee;
-end;
-
 function TfrmCashPayment.GetGroupName: string;
 begin
   Result := 'Penjualan & Kas';
@@ -327,7 +272,6 @@ var
   S: string;
 begin
   cxGrdMain.PrepareFromCDS(CDS);
-  cxGrdFee.PrepareFromCDS(CDSFee);
   cxGrdRetur.PrepareFromCDS(CDSRetur);
   cxLookupRekening.Properties.LoadFromSQL(Self,
     'select id, nama from trekening','nama');
@@ -337,13 +281,11 @@ begin
   TcxExtLookup(colCostAccount.Properties).LoadFromSQL(Self,
     S,'nama');
 
-  S := 'select id, kode + '' - '' + nama as nama from taccount where isdetail = 1';
-  cxLookupAccFee.LoadFromSQL(S,'id', 'nama', Self);
+
 end;
 
 procedure TfrmCashPayment.LoadByID(aID: Integer; IsReadOnly: Boolean = False);
 var
-  lFee: TFeePaymentItem;
   lItem: TFinancialTransaction;
 begin
   if FCashPayment <> nil then
@@ -372,21 +314,13 @@ begin
   end;
 
   CDS.EmptyDataSet;
-  CDSFee.EmptyDataSet;
   CDSRetur.EmptyDataSet;
   CDS.DisableControls;
-  CDSFee.DisableControls;
   CDSRetur.DisableControls;
   Try
     for lItem in CashPayment.Items do
     begin
       if lItem.CreditAmt > 0 then continue;
-      if lItem.TransType <> 0 then
-      begin
-        if lItem.Account <> nil then
-          cxLookupAccFee.EditValue := lItem.Account.ID;
-        continue;
-      end;
       if lItem.HasRetur then
       begin
         CDSRetur.Append;
@@ -410,70 +344,13 @@ begin
       end;
     end;
 
-    for lFee in CashPayment.FeeItems do
-    begin
-      CDSFee.Append;
-      lFee.UpdateToDataset(CDSFee);
-      if lFee.SalesFee <> nil then
-      begin
-        lFee.SalesFee.ReLoad(False);
-        if lFee.SalesFee.Salesman <> nil then
-        begin
-          lFee.SalesFee.Salesman.ReLoad(False);
-          CDSFee.FieldByName('Salesman').AsString := lFee.SalesFee.Salesman.Nama;
-        end;
-          CDSFee.FieldByName('RefNo').AsString := lFee.SalesFee.RefNo;
-          CDSFee.FieldByName('PaidOffDate').AsDateTime := lFee.SalesFee.PaidOffDate;
-      end;
-      CDSFee.Post;
-    end;
+
     CalculateAll;
   Finally
     CDS.EnableControls;
-    CDSFee.EnableControls;
     CDSRetur.EnableControls;
   End;
   btnSave.Enabled := not IsReadOnly;
-end;
-
-procedure TfrmCashPayment.LookupFee;
-var
-  cxLookup: TfrmCXLookup;
-  S: string;
-begin
-  inherited;
-  S := 'SELECT A.ID, A.REFNO, B.NAMA AS SALESMAN, D.NAMA AS CUSTOMER,'
-      +' (A.SALESAMT - A.RETURAMT) AS NETSALES, A.FEE, A.PAIDOFFDATE AS TGLLUNAS'
-      +' FROM TSALESFEE A'
-      +' INNER JOIN TSALESMAN B ON A.SALESMAN_ID = B.ID'
-      +' INNER JOIN TSALESINVOICE C ON A.SALESINVOICE_ID = C.ID'
-      +' LEFT JOIN TCUSTOMER D ON C.CUSTOMER_ID = D.ID'
-      +' WHERE A.STATUS = 1';
-
-  cxLookup := TfrmCXLookup.Execute(S, True);
-  Try
-    cxLookup.HideFields(['ID']);
-    if cxLookup.ShowModal = mrOK then
-    begin
-      while not cxLookup.Data.Eof do
-      begin
-        if not CDSCloneFee.Locate('SalesFee',cxLookup.Data.FieldByName('ID').AsInteger,[]) then
-        begin
-          CDSFee.Append;
-          CDSFee.FieldByName('SalesFee').AsInteger      := cxLookup.Data.FieldByName('ID').AsInteger;
-          CDSFee.FieldByName('REFNO').AsString          := cxLookup.Data.FieldByName('REFNO').AsString;
-          CDSFee.FieldByName('SALESMAN').AsString       := cxLookup.Data.FieldByName('SALESMAN').AsString;
-          CDSFee.FieldByName('Amount').AsFloat          := cxLookup.Data.FieldByName('FEE').AsFloat;
-          CDSFee.FieldByName('PAIDOFFDATE').AsDateTime  := cxLookup.Data.FieldByName('TGLLUNAS').AsDateTime;
-          CDSFee.Post;
-        end;
-        cxLookup.Data.Next;
-      end;
-      CalculateAll;
-    end;
-  Finally
-    cxLookup.Free;
-  End;
 end;
 
 procedure TfrmCashPayment.LookupRetur;
@@ -517,9 +394,7 @@ begin
   inherited;
   btnLoad.Visible := pgcMain.ActivePage <> tsDetail;
 
-  if pgcMain.ActivePage = tsFee then
-    btnLoad.Caption := 'Daftar Fee Salesman'
-  else if pgcMain.ActivePage = tsRetur then
+  if pgcMain.ActivePage = tsRetur then
     btnLoad.Caption := 'Load Retur Customer';
 end;
 
@@ -541,7 +416,6 @@ end;
 
 procedure TfrmCashPayment.UpdateData;
 var
-  lFee: TFeePaymentItem;
   lItem: TFinancialTransaction;
   lTotalFee: Double;
 begin
@@ -557,7 +431,6 @@ begin
 
   CashPayment.Rekening.LoadByID(VarToInt(cxLookupRekening.EditValue));
   CashPayment.Items.Clear;
-  CashPayment.FeeItems.Clear;
 
   //header credit
   lItem                 := TFinancialTransaction.Create;
@@ -596,23 +469,13 @@ begin
   end;
 
 
-  lTotalFee := 0;
-  CDSFee.First;
-  while not CDSFee.Eof do
-  begin
-    lFee              := TFeePaymentItem.Create;
-    lFee.SetFromDataset(CDSFee);
-    CashPayment.FeeItems.Add(lFee);
-    lTotalFee := lTotalFee + lFee.Amount;
-    CDSFee.Next;
-  end;
 
   //fee
   if lTotalFee > 0 then
   begin
     lItem           := TFinancialTransaction.Create;
     lItem.TransDate := CashPayment.TransDate;
-    lItem.Account   := TAccount.CreateID(VarToInt(cxLookupAccFee.EditValue));
+
     lItem.Amount    := lTotalFee;
     lItem.DebetAmt  := lTotalFee;
     lItem.Notes     := 'Pembayaran Fee : ' + CashPayment.Refno;
@@ -649,14 +512,6 @@ begin
 //    exit;
 //  end;
 
-  if CDSFee.RecordCount > 0 then
-  begin
-    if (VarToInt(cxLookupAccFee.EditValue) = 0) then
-    begin
-      TAppUtils.Warning('Account Fee Salesman wajib dipilih apabila ada pembayaran Fee');
-      exit;
-    end;
-  end;
 
   if not IsValidTransDate(dtTransDate.Date) then exit;
 

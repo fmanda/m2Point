@@ -34,17 +34,14 @@ inherited frmUangMukaZakat: TfrmUangMukaZakat
     ExplicitWidth = 463
     inherited lbEscape: TLabel
       Left = 383
-      Height = 17
       ExplicitLeft = 383
     end
     inherited lgndSave: TLabel
       Left = 218
-      Height = 17
       ExplicitLeft = 218
     end
     inherited lgndPrint: TLabel
       Left = 305
-      Height = 17
       ExplicitLeft = 305
     end
   end

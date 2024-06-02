@@ -8,7 +8,7 @@ uses
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
   Vcl.Menus, cxStyles, cxClasses, Vcl.StdCtrls, cxButtons, cxLabel, cxGroupBox,
   Vcl.ComCtrls, dxCore, cxDateUtils, cxCustomData, cxFilter, cxData,
-  cxDataStorage, cxNavigator,
+  cxDataStorage, cxNavigator, uFinancialTransaction,
   cxDataControllerConditionalFormattingRulesManagerDialog, Data.DB, cxDBData,
   cxCalendar, cxTextEdit, cxCurrencyEdit, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxDropDownEdit,
@@ -85,7 +85,7 @@ implementation
 
 uses
   uDBUtils, uDXUtils, uAppUtils, System.DateUtils,
-  uFinancialTransaction, ufrmCXServerLookup, System.Math;
+  ufrmCXServerLookup, System.Math;
 
 {$R *.dfm}
 

@@ -105,7 +105,7 @@ type
     FModifiedBy: String;
   public
     destructor Destroy; override;
-    function GetHarga(aTipeHarga: Integer): Double;
+    function GetHarga(aTipeHarga: Integer = 0): Double;
     function GetMargin: Double;
     class function GetItemUOM(aItemID, aUOMID: Integer): TItemUOM;
     function UpdateHargaAvg(aNewAvg: Double): Boolean;
@@ -333,7 +333,7 @@ begin
   if FUOM <> nil then FUOM.Free;
 end;
 
-function TItemUOM.GetHarga(aTipeHarga: Integer): Double;
+function TItemUOM.GetHarga(aTipeHarga: Integer = 0): Double;
 begin
   Result := HargaJual;
 end;

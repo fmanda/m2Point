@@ -4,7 +4,7 @@ interface
 
 uses
   System.Classes, System.SysUtils, Winapi.Windows, Printers, Winapi.WinSpool,
-  Vcl.Dialogs, uAppUtils, uTransDetail, System.StrUtils, System.Math;
+  Vcl.Dialogs, uAppUtils, uFinancialTransaction, uTransDetail, System.StrUtils, System.Math;
 
 type
   TPrintStruk = class(TObject)
@@ -90,9 +90,8 @@ end;
 class function TPrintStruk.GenerateStruk(ASalesInv: TSalesInvoice): TStrings;
 var
 //  iCetul: Integer;
-  lDetail: TTransDetail;
+  lDetail: TSalesInvoiceItem;
   lFileName: string;
-  lService: TServiceDetail;
   lSS: TStrings;
   sDir: string;
   sReportPath: string;
@@ -114,9 +113,6 @@ begin
     Result.Add('No#   : ' + TAppUtils.StrPadRight(ASalesInv.InvoiceNo,24,' ')
       + FormatDateTime('HH:nn:ss',Now));
 
-    if Assigned(ASalesInv.Customer) then
-      Result.Add('Cust  : '
-        + TAppUtils.StrPadRight(ASalesInv.Customer.Nama,32,' '));
 
     if ASalesInv.PaymentFlag = PaymentFlag_Credit then
     begin
@@ -129,7 +125,7 @@ begin
     Result.Add(TAppUtils.StrPadRight('',40,'-'));
 
 
-    for lDetail in ASalesInv.Items do
+    for lDetail in ASalesInv.InvItems do
     begin
       if lDetail.Item = nil then
         raise Exception.Create('lDetail.Item = nil');
@@ -173,44 +169,6 @@ begin
 
     end;
 
-    for lService in ASalesInv.Services do
-    begin
-      if lService.Service = nil then
-        raise Exception.Create('lService.Service = nil');
-      if lService.Service.Nama = '' then
-        lService.Service.ReLoad(False);
-
-      if Abs(lService.Qty) = 1 then
-      begin
-        Result.Add(
-          TAppUtils.StrPadRight(LeftStr(lService.Service.Nama,29),29,' ') +' '
-          + TAppUtils.StrPadLeftCut(FormatFloat('#,##0',lService.Harga),10,' ')
-        );
-      end
-      else
-      begin
-        Result.Add(LeftStr(lService.Service.Nama,40));
-        sTemp :=
-              TAppUtils.StrPadLeftCut(FloatToStr(Abs(lService.Qty)),10,' ') + ' '
-            + TAppUtils.StrPadRight('PCS',5,' ') + 'x'
-            + TAppUtils.StrPadLeftCut(FormatFloat('#,##0',lService.Harga),10,' ')
-            + TAppUtils.StrPadLeftCut(FormatFloat('#,##0',Abs(lService.Qty*lService.Harga)),13,' ');
-
-        Result.Add(sTemp);
-      end;
-
-      if lService.Discount > 0 then
-      begin
-        Result.Add(
-           TAppUtils.StrPadLeftCut(RightStr('Diskon ',20),20,' ')
-          +TAppUtils.StrPadRight(' ',9,' ')
-          +TAppUtils.StrPadRight(' (',3,' ')
-          +TAppUtils.StrPadLeftCut(FormatFloat('#,##0',Abs(lService.Qty* lService.Discount)),7,' ')
-          +TAppUtils.StrPadRight(')',1,' ')
-        );
-      end
-
-    end;
 
     sTemp := '';
     Result.Add(TAppUtils.StrPadRight('',40,'-'));
@@ -222,32 +180,6 @@ begin
 //      + TAppUtils.StrPadLeftCut(FormatFloat('#,##0',Ceil(ASalesInv.PPN)),13,' '));
     Result.Add(TAppUtils.StrPadLeftCut('TOTAL BELANJA:',27,' ')
       + TAppUtils.StrPadLeftCut(FormatFloat('#,##0',Ceil(ASalesInv.Amount)),13,' '));
-
-
-    if ASalesInv.HasRetur then
-    begin
-      ASalesInv.SalesRetur.ReLoad(False);
-
-      Result.Add(TAppUtils.StrPadLeftCut('RETUR:',27,' ')
-        + TAppUtils.StrPadLeftCut(FormatFloat('#,##0',ASalesInv.SalesRetur.Amount),13,' '));
-      Result.Add(TAppUtils.StrPadRight('',27,' ') + TAppUtils.StrPadRight('',13,'-'));
-      Result.Add(TAppUtils.StrPadLeftCut('TOTAL BAYAR:',27,' ')
-        + TAppUtils.StrPadLeftCut(FormatFloat('#,##0',ASalesInv.Amount - ASalesInv.SalesRetur.Amount),13,' '));
-
-    end;
-
-    if ASalesInv.CardAmount > 0 then
-    begin
-      Result.Add(TAppUtils.StrPadRight('',27,' ') + TAppUtils.StrPadRight('',13,'-'));
-      Result.Add(TAppUtils.StrPadLeftCut('BAYAR KARTU:',27,' ')
-        + TAppUtils.StrPadLeftCut(FormatFloat('#,##0',ASalesInv.CardAmount),13,' '));
-      Result.Add(TAppUtils.StrPadLeftCut('BAYAR TUNAI:',27,' ')
-        + TAppUtils.StrPadLeftCut(FormatFloat('#,##0',ASalesInv.CashAmount),13,' '));
-      Result.Add(TAppUtils.StrPadRight('',27,' ') + TAppUtils.StrPadRight('',13,'-'));
-      Result.Add(TAppUtils.StrPadLeftCut('KEMBALI:',27,' ')
-        + TAppUtils.StrPadLeftCut(FormatFloat('#,##0',ASalesInv.CashAmount + ASalesInv.CardAmount - ASalesInv.Amount),13,' '));
-
-    end;
 
     //update 2019/7/28 => bengkel terima uang setelah cetak faktur
 //    if ASalesInv.CashAmount > 0 then

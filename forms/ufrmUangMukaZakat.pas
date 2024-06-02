@@ -142,7 +142,7 @@ begin
 
   CashPayment.Rekening.LoadByID(VarToInt(cxLookupRekening.EditValue));
   CashPayment.Items.Clear;
-  CashPayment.FeeItems.Clear;
+
 
   //header credit
   lItem                 := TFinancialTransaction.Create;

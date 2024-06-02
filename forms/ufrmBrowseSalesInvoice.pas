@@ -11,7 +11,7 @@ uses
   Vcl.Menus, Vcl.ComCtrls, dxCore, cxDateUtils, cxClasses, cxLabel, cxTextEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.StdCtrls, cxButtons, cxGroupBox,
   cxGridLevel, cxGridCustomView, cxGridCustomTableView, cxGridTableView,
-  cxGridServerModeTableView, cxGrid, ufrmAuthUser;
+  cxGridServerModeTableView, cxGrid, ufrmAuthUser, uFinancialTransaction;
 
 type
   TfrmBrowseSalesInvoice = class(TfrmDefaultServerBrowse)
@@ -64,7 +64,7 @@ begin
   inherited;
   with TfrmSalesInvoice.Create(Application) do
   begin
-    LoadByID(Self.cxGrdMain.GetID, 0, False);
+    LoadByID(Self.cxGrdMain.GetID, False);
     Try
       if ShowModalDlg = mrOK then
         RefreshData;
@@ -106,7 +106,7 @@ begin
   inherited;
   with TfrmSalesInvoice.Create(Application) do
   begin
-    LoadByID(Self.cxGrdMain.GetID, 0, True);
+    LoadByID(Self.cxGrdMain.GetID, True);
     Try
       ShowModalDlg;
     Finally
@@ -124,11 +124,8 @@ begin
   Try
     if lInv.LoadByID(Self.cxGrdMain.GetID) then
     begin
-      if lInv.SalesType = SalesType_FrontEnd then
-        TPrintStruk.Print(lInv);
 
-      if lInv.SalesType = SalesType_Salesman then
-        TSalesInvoice.PrintData(lInv.ID);
+      TSalesInvoice.PrintData(lInv.ID);
 
     end;
   finally

@@ -14,7 +14,7 @@ uses
   cxClasses, cxGridCustomView, cxGrid, cxCheckBox, cxRadioGroup, cxDropDownEdit,
   cxLookupEdit, cxDBLookupEdit, cxMaskEdit, cxCalendar, cxMemo, cxLabel,
   cxGridDBDataDefinitions, Datasnap.DBClient, uItem, uTransDetail, cxDataUtils,
-  uDBUtils, uApputils, ufrmAuthUser;
+  uDBUtils, uApputils, ufrmAuthUser, uFinancialTransaction;
 
 type
   TfrmSalesRetur = class(TfrmDefaultInput)
@@ -147,7 +147,6 @@ type
     { Private declarations }
   public
     function GetGroupName: string; override;
-    function GetItemPriceType(aItemID: Integer): Integer;
     procedure LoadByID(aID: Integer; IsReadOnly: Boolean);
     { Public declarations }
   end;
@@ -166,14 +165,6 @@ uses
 procedure TfrmSalesRetur.btnPrintClick(Sender: TObject);
 begin
   inherited;
-  if SalesRetur.Invoice <> nil then
-  begin
-    if SalesRetur.Invoice.SalesType = SalesType_FrontEnd then
-    begin
-      TPrintStruk.Print(SalesRetur);
-      exit;
-    end;
-  end;
   TSalesRetur.PrintData(SalesRetur.ID);
 end;
 
@@ -326,7 +317,7 @@ end;
 procedure TfrmSalesRetur.colKodePropertiesValidate(Sender: TObject; var
     DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
 var
-  lDetail: TTransDetail;
+  lDetail: TSalesInvoiceItem;
   lFound: Boolean;
   lItem: TItem;
 begin
@@ -358,7 +349,7 @@ begin
           SalesRetur.Invoice.ReLoad(True);
 
         lFound := False;
-        for lDetail in SalesRetur.Invoice.Items do
+        for lDetail in SalesRetur.Invoice.InvItems do
         begin
           lFound := lDetail.Item.ID = lItem.ID;
           if lFound then break;
@@ -421,7 +412,6 @@ begin
   if lItemUOM = nil then
     raise Exception.Create('lItemUOM = nil');
 
-  aTipeHarga := GetItemPriceType(lItemUOM.Item.ID);
 
   if lItemUOM = nil then exit;
   Try
@@ -639,26 +629,6 @@ begin
   Result := 'Penjualan & Kas';
 end;
 
-function TfrmSalesRetur.GetItemPriceType(aItemID: Integer): Integer;
-var
-  lItem: TTransDetail;
-begin
-  Result := 0;
-  if SalesRetur = nil then exit;
-  if SalesRetur.Invoice = nil then exit;
-  if SalesRetur.Invoice.Items.Count = 0 then
-    SalesRetur.Invoice.ReLoad(True);
-
-  for lItem in SalesRetur.Invoice.Items do
-  begin
-    if lItem.Item.ID = aItemID then
-    begin
-      Result := lItem.PriceType;
-      break;
-    end;
-  end;
-end;
-
 function TfrmSalesRetur.GetSalesRetur: TSalesRetur;
 begin
   if FSalesRetur = nil then
@@ -681,20 +651,32 @@ end;
 
 procedure TfrmSalesRetur.LoadAllInvoiceItem;
 var
-  lItem: TTransDetail;
+  lItem: TSalesInvoiceItem;
 begin
-  for lItem in SalesRetur.Invoice.Items do
+  for lItem in SalesRetur.Invoice.InvItems do
   begin
     CDS.Append;
-    lItem.MakePositive;
-    lItem.UpdateToDataset(CDS);
+//    lItem.UpdateToDataset(CDS);
+
+
+    CDS.FieldByName('Item').AsInteger     := lItem.Item.ID;
+    CDS.FieldByName('UOM').AsInteger      := lItem.UOM.ID;
     lItem.Item.ReLoad(False);
+    CDS.FieldByName('Kode').AsString      := lItem.Item.Kode;
+    CDS.FieldByName('Nama').AsString      := lItem.Item.Nama;
+    CDS.FieldByName('Qty').AsFloat        := lItem.Qty;
+    CDS.FieldByName('Harga').AsFloat      := lItem.Harga;
+    CDS.FieldByName('discount').AsFloat   := lItem.discount;
 
-    if lItem.Harga <> 0 then
-      CDS.FieldByName('DiscP').AsFloat := lItem.Discount / lItem.Harga * 100;
 
-    CDS.FieldByName('Kode').AsString := lItem.Item.Kode;
-    CDS.FieldByName('Nama').AsString := lItem.Item.Nama;
+
+    if lItem.harga > 0 then
+      CDS.FieldByName('DiscP').AsFloat :=
+        (CDS.FieldByName('discount').AsFloat )
+          /CDS.FieldByName('harga').AsFloat*100;
+
+    CDS.Post;
+
     CDS.Post;
   end;
   CalculateAll;
@@ -822,10 +804,8 @@ begin
       edInv.Text := SalesRetur.Invoice.InvoiceNo;
       dtInvoice.Date := SalesRetur.Invoice.TransDate;
 //      edSupp.Text := SalesRetur.Supplier.Nama;
-      cxLookupGudang.EditValue := SalesRetur.Invoice.Warehouse.ID;
+//      cxLookupGudang.EditValue := SalesRetur.Invoice.Warehouse.ID;
 
-      if SalesRetur.Invoice.Items.Count > 0 then
-        rbHarga.ItemIndex := SalesRetur.Invoice.Items[0].PriceType;
 
       CDS.EmptyDataSet;
 
@@ -991,7 +971,7 @@ begin
       VarToInt(cxGrdMain.Controller.FocusedRecord.Values[colUOM.Index])
     );
 
-    aTipeHarga := GetItemPriceType(lItemUOM.Item.ID);
+
     if lItemUOM = nil then exit;
     Try
       DC.SetEditValue(colKonversi.Index, lItemUOM.Konversi, evsValue);
@@ -1179,7 +1159,7 @@ end;
 
 function TfrmSalesRetur.ValidateItem: Boolean;
 var
-  lItem: TTransDetail;
+  lItem: TSalesInvoiceItem;
 begin
 //  Result := ;
 
@@ -1213,7 +1193,7 @@ begin
   if SalesRetur.Invoice.Items.Count = 0 then
     SalesRetur.Invoice.ReLoad(True);
 
-  for lItem in SalesRetur.Invoice.Items do
+  for lItem in SalesRetur.Invoice.InvItems do
   begin
     if not CDSValidate.Locate('ItemID',lItem.Item.ID,[]) then
       continue;

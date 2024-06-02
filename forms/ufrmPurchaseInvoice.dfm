@@ -11,22 +11,22 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
   inherited cxGroupBox2: TcxGroupBox
     Top = 596
     TabOrder = 2
-    ExplicitTop = 552
-    ExplicitWidth = 978
+    ExplicitTop = 596
+    ExplicitWidth = 967
     Width = 967
     inherited btnCancel: TcxButton
       Left = 882
-      ExplicitLeft = 893
+      ExplicitLeft = 882
     end
     inherited btnPrint: TcxButton
       Left = 796
       OnClick = btnPrintClick
-      ExplicitLeft = 807
+      ExplicitLeft = 796
     end
     inherited btnSave: TcxButton
       Left = 710
       OnClick = btnSaveClick
-      ExplicitLeft = 721
+      ExplicitLeft = 710
     end
     object btnLoadRec: TcxButton
       AlignWithMargins = True
@@ -329,8 +329,6 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
     Align = alClient
     TabOrder = 1
     RootLevelOptions.DetailTabsPosition = dtpTop
-    ExplicitTop = 120
-    ExplicitHeight = 454
     object cxGrdMain: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       OnEditKeyDown = cxGrdMainEditKeyDown
@@ -558,22 +556,22 @@ inherited frmPurchaseInvoice: TfrmPurchaseInvoice
     Top = 575
     Width = 967
     TabOrder = 3
-    ExplicitTop = 531
-    ExplicitWidth = 978
+    ExplicitTop = 575
+    ExplicitWidth = 967
     inherited lbEscape: TLabel
       Left = 887
       Height = 17
-      ExplicitLeft = 898
+      ExplicitLeft = 887
     end
     inherited lgndSave: TLabel
       Left = 722
       Height = 17
-      ExplicitLeft = 733
+      ExplicitLeft = 722
     end
     inherited lgndPrint: TLabel
       Left = 809
       Height = 17
-      ExplicitLeft = 820
+      ExplicitLeft = 809
     end
     object Label2: TLabel
       AlignWithMargins = True

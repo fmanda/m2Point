@@ -5,14 +5,15 @@ interface
 uses
   CRUDObject, uDBUtils, Sysutils, uItem, System.Generics.Collections,
   uWarehouse, uSupplier, uCustomer, uSalesman, uAccount, uTransDetail,
-  uSalesFee, uDMReport, uVariable;
+  uDMReport, uVariable;
 
 type
   TFinancialTransaction = class;
-  TFeePaymentItem = class;
   TPurchaseInvoice = class;
   TPurchaseRetur = class;
   TPurchaseInvoiceItem = class;
+  TSalesInvoice = class;
+  TSalesRetur = class;
 
   TCRUDFinance = class(TCRUDObject)
   private
@@ -125,10 +126,8 @@ type
 
   TCashPayment = class(TCRUDFinance)
   private
-    FFeeItems: TObjectList<TFeePaymentItem>;
     FRekening: TRekening;
     FTahunZakat: Integer;
-    function GetFeeItems: TObjectList<TFeePaymentItem>;
     function UpdateFee(aIsRevert: Boolean = False): Boolean;
   protected
     function AfterSaveToDB: Boolean; override;
@@ -139,8 +138,6 @@ type
     function GenerateNo: String; override;
     function GetHeaderFlag: Integer; override;
     function UpdateRemain(aIsRevert: Boolean = False): Boolean;
-    property FeeItems: TObjectList<TFeePaymentItem> read GetFeeItems write
-        FFeeItems;
   published
     property Rekening: TRekening read FRekening write FRekening;
     property TahunZakat: Integer read FTahunZakat write FTahunZakat;
@@ -161,7 +158,6 @@ type
   public
     destructor Destroy; override;
     function GetHeaderFlag: Integer; override;
-    class function CreateOrGetFromInv(aSalesInvoice: TSalesInvoice): TSalesPayment;
     class function CreateOrGetFromRetur(aSalesRetur: TSalesRetur): TSalesPayment;
     function GenerateNo: string; override;
     function UpdateRemain(aIsRevert: Boolean = False): Boolean;
@@ -205,18 +201,6 @@ type
     property ReturAmount: Double read FReturAmount write FReturAmount;
   end;
 
-
-  TFeePaymentItem = class(TCRUDObject)
-  private
-    FAmount: Double;
-    FSalesFee: TSalesFee;
-    FCashPayment: TCashPayment;
-  published
-    property Amount: Double read FAmount write FAmount;
-    property SalesFee: TSalesFee read FSalesFee write FSalesFee;
-    [AttributeOfHeader]
-    property CashPayment: TCashPayment read FCashPayment write FCashPayment;
-  end;
 
   TPurchaseInvoice = class(TCRUDFinance)
   private
@@ -335,6 +319,128 @@ type
     property Konversi: Double read FKonversi write FKonversi;
     property Total: Double read FTotal write FTotal;
     property UOM: TUOM read FUOM write FUOM;
+  end;
+
+
+  TSalesInvoiceItem = class(TCRUDObject)
+  private
+    FDiscount: Double;
+    FHarga: Double;
+    FItem: TItem;
+    FPPN: Double;
+    FDeliveryOrder: TDeliveryOrder;
+    FSalesInvoice: TSalesInvoice;
+    FQty: Double;
+    FKonversi: Double;
+    FTotal: Double;
+    FUOM: TUOM;
+  published
+    property Discount: Double read FDiscount write FDiscount;
+    property Harga: Double read FHarga write FHarga;
+    property Item: TItem read FItem write FItem;
+    property PPN: Double read FPPN write FPPN;
+    property DeliveryOrder: TDeliveryOrder read FDeliveryOrder write FDeliveryOrder;
+    [AttributeOfHeader]
+    property SalesInvoice: TSalesInvoice read FSalesInvoice write FSalesInvoice;
+    property Qty: Double read FQty write FQty;
+    property Konversi: Double read FKonversi write FKonversi;
+    property Total: Double read FTotal write FTotal;
+    property UOM: TUOM read FUOM write FUOM;
+  end;
+
+
+  TSalesInvoice = class(TCRUDFinance)
+  private
+    FSubTotal: Double;
+    FPPN: Double;
+    FCustomer: TCustomer;
+    FInvItems: TObjectList<TSalesInvoiceItem>;
+    FInvoiceNo: String;
+    FSalesman: TSalesman;
+    FPaidOff: Integer;
+    FPaidAmount: Double;
+    FPaidOffDate: TDatetime;
+    FPaymentFlag: Integer;
+    FRekening: TRekening;
+    FReturAmount: Double;
+    FStatus: Integer;
+    function GetInvItems: TObjectList<TSalesInvoiceItem>;
+  protected
+    function AfterSaveToDB: Boolean; override;
+    function BeforeDeleteFromDB: Boolean; override;
+    function BeforeSaveToDB: Boolean; override;
+    function GetRefno: String; override;
+    function LogLevel: Integer; override;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function GenerateNo: String; override;
+    function GetHeaderFlag: Integer; override;
+    function GetRemain: Double;
+    function GetTotalBayar: Double;
+    class procedure PrintData(aInvoiceID: Integer);
+    function UpdateRemain(aDate: TDateTime = 0; AddedPaidAmt: Double = 0;
+        AddedReturAmt: Double = 0): Boolean;
+    property InvItems: TObjectList<TSalesInvoiceItem> read GetInvItems write
+        FInvItems;
+  published
+    property SubTotal: Double read FSubTotal write FSubTotal;
+    property PPN: Double read FPPN write FPPN;
+    property Customer: TCustomer read FCustomer write FCustomer;
+    property InvoiceNo: String read FInvoiceNo write FInvoiceNo;
+    property Salesman: TSalesman read FSalesman write FSalesman;
+    property PaidOff: Integer read FPaidOff write FPaidOff;
+    property PaidAmount: Double read FPaidAmount write FPaidAmount;
+    property PaidOffDate: TDatetime read FPaidOffDate write FPaidOffDate;
+    property PaymentFlag: Integer read FPaymentFlag write FPaymentFlag;
+    property Rekening: TRekening read FRekening write FRekening;
+    property ReturAmount: Double read FReturAmount write FReturAmount;
+    property Status: Integer read FStatus write FStatus;
+  end;
+
+
+  TSalesRetur = class(TCRUDTransDetail)
+  private
+    FAmount: Double;
+    FPaidAmount: Double;
+    FInvoice: TSalesInvoice;
+    FNotes: string;
+    FPPN: Double;
+    FRefno: string;
+    FReturFlag: Integer;
+    FStatus: Integer;
+    FSubTotal: Double;
+    FCustomer: TCustomer;
+    FSalesman: TSalesman;
+    FWarehouse: TWarehouse;
+  protected
+    function AfterSaveToDB: Boolean; override;
+    function BeforeDeleteFromDB: Boolean; override;
+    function BeforeSaveToDB: Boolean; override;
+    function GetRefno: String; override;
+  public
+    procedure ClearInvoice;
+    procedure ClearCustomer;
+    function GenerateNo: String; override;
+    function GetHeaderFlag: Integer; override;
+    function GetRemain: Double;
+    class procedure PrintData(aReturID: Integer);
+    procedure SetGenerateNo; override;
+    function UpdateRemain(AddedPaidAmt: Double = 0): Boolean;
+  published
+    property Amount: Double read FAmount write FAmount;
+    property PaidAmount: Double read FPaidAmount write FPaidAmount;
+    property Invoice: TSalesInvoice read FInvoice write FInvoice;
+    property Notes: string read FNotes write FNotes;
+    property PPN: Double read FPPN write FPPN;
+    [AttributeOfCode]
+    property Refno: string read FRefno write FRefno;
+    property ReturFlag: Integer read FReturFlag write FReturFlag;
+    property Status: Integer read FStatus write FStatus;
+    property SubTotal: Double read FSubTotal write FSubTotal;
+    property Customer: TCustomer read FCustomer write FCustomer;
+    property Salesman: TSalesman read FSalesman write FSalesman;
+    property Warehouse: TWarehouse read FWarehouse write FWarehouse;
   end;
 
 
@@ -515,7 +621,7 @@ end;
 destructor TCashPayment.Destroy;
 begin
   inherited;
-  if FFeeItems <> nil then FreeAndNil(FFeeItems);
+//  if FFeeItems <> nil then FreeAndNil(FFeeItems);
 //  if Frekening <> nil then FreeAndNil(Frekening);
 end;
 
@@ -589,15 +695,6 @@ end;
 function TCashPayment.GetHeaderFlag: Integer;
 begin
   Result := HeaderFlag_CashPayment;
-end;
-
-function TCashPayment.GetFeeItems: TObjectList<TFeePaymentItem>;
-begin
-  if FFeeItems = nil then
-  begin
-    FFeeItems := TObjectList<TFeePaymentItem>.Create();
-  end;
-  Result := FFeeItems;
 end;
 
 function TCashPayment.UpdateFee(aIsRevert: Boolean = False): Boolean;
@@ -745,81 +842,6 @@ begin
   Finally
     lOldPayment.Free;
   End;
-end;
-
-class function TSalesPayment.CreateOrGetFromInv(aSalesInvoice: TSalesInvoice):
-    TSalesPayment;
-var
-  lItem: TFinancialTransaction;
-  lReturAmt: Double;
-begin
-  if aSalesInvoice.Rekening = nil then
-    raise Exception.Create('aSalesInvoice.Rekening = nil');
-
-  Result := TSalesPayment.Create;
-
-  lReturAmt := 0;
-  if aSalesInvoice.HasRetur then
-  begin
-    if aSalesInvoice.SalesRetur.Amount = 0 then
-      aSalesInvoice.SalesRetur.ReLoad(False);
-
-    lReturAmt := aSalesInvoice.SalesRetur.Amount;
-  end;
-
-  //load from inv , header
-  Result.LoadByCode(aSalesInvoice.InvoiceNo);
-  Result.Refno        := aSalesInvoice.InvoiceNo;
-  Result.TransDate    := aSalesInvoice.TransDate;
-  Result.DueDate      := Result.TransDate;
-  Result.Amount       := aSalesInvoice.Amount - lReturAmt; // - aSalesInvoice.CardAmount;
-  Result.PaymentFlag  := PaymentFlag_Cash;
-  Result.ReturAmount  := lReturAmt;
-                 
-
-  Result.Rekening     := TRekening.CreateID(aSalesInvoice.Rekening.ID);
-  Result.Items.Clear;
-
-  //debet cash in kas
-  lItem               := TFinancialTransaction.Create;
-  lItem.Rekening      := TRekening.CreateID(aSalesInvoice.Rekening.ID);
-  lItem.DebetAmt      := Result.Amount - aSalesInvoice.CardAmount;
-  lItem.Amount        := lItem.DebetAmt;
-  lItem.TransDate     := aSalesInvoice.TransDate;
-  lItem.Notes         := 'Penjualan Cash No : ' + aSalesInvoice.InvoiceNo;
-  lItem.TransType     := Result.PaymentFlag;
-  Result.Items.Add(lItem);
-
-  //kartu
-  if (aSalesInvoice.CardAmount > 0) and (aSalesInvoice.CardRekening <> nil) then
-  begin
-    lItem               := TFinancialTransaction.Create;
-    lItem.Rekening      := TRekening.CreateID(aSalesInvoice.CardRekening.ID);
-    lItem.DebetAmt      := aSalesInvoice.CardAmount;
-    lItem.Amount        := lItem.DebetAmt;
-    lItem.TransDate     := aSalesInvoice.TransDate;
-    lItem.Notes         := 'Penjualan Cash No : ' + aSalesInvoice.InvoiceNo;
-    lItem.TransType     := Result.PaymentFlag;
-    Result.Items.Add(lItem);
-  end;
-
-  //credit piutang
-  lItem               := TFinancialTransaction.Create;
-  lItem.SalesInvoice  := TSalesInvoice.CreateID(aSalesInvoice.ID);
-  lItem.CreditAmt     := Result.Amount;   //cash +  card
-  lItem.Amount        := lItem.CreditAmt;
-  lItem.ReturAmt      := lReturAmt;
-  lItem.TransDate     := aSalesInvoice.TransDate;
-  lItem.Notes         := 'Penjualan Cash No : ' + aSalesInvoice.InvoiceNo;
-  lItem.TransType     := Result.PaymentFlag;
-
-  if aSalesInvoice.HasRetur then
-  begin
-    lItem.SalesRetur := TSalesRetur.CreateID(aSalesInvoice.SalesRetur.ID);    
-  end;
-  Result.Items.Add(lItem);
-  Result.ModifiedBy   := UserLogin;
-  Result.ModifiedDate := Now();
 end;
 
 class function TSalesPayment.CreateOrGetFromRetur(aSalesRetur: TSalesRetur):
@@ -1428,6 +1450,301 @@ begin
     S := S + ',PaidOff = 1, PaidOffDate = ' + TAppUtils.QuotD(Now())
   else
     S := S + ',PaidOff = 0, PaidOffDate = NULL';
+
+  S := S + ' where id = ' + IntToStr(Self.ID);
+
+  Result := TDBUtils.ExecuteSQL(S, False);
+end;
+
+constructor TSalesInvoice.Create;
+begin
+  inherited;
+  Self.PaidOff := 0;
+end;
+
+destructor TSalesInvoice.Destroy;
+begin
+  inherited;
+  if FCustomer <> nil then FreeAndNil(FCustomer);
+  if FInvItems <> nil then FreeAndNil(FInvItems);
+end;
+
+function TSalesInvoice.AfterSaveToDB: Boolean;
+begin
+  Result := True;
+end;
+
+function TSalesInvoice.BeforeDeleteFromDB: Boolean;
+var
+  lPurchasePayment: TPurchasePayment;
+begin
+
+
+  Result := True;
+  lPurchasePayment := TPurchasePayment.Create;
+  Try
+    if lPurchasePayment.LoadByCode(Self.InvoiceNo) then
+      Result := lPurchasePayment.DeleteFromDB(False);
+  Finally
+    lPurchasePayment.Free;
+  End;
+
+//  Result := True;
+end;
+
+function TSalesInvoice.BeforeSaveToDB: Boolean;
+var
+  lPurchasePayment: TPurchasePayment;
+begin
+  Result := True;
+
+//  if Self.PaymentFlag = PaymentFlag_Cash then
+  if Self.ID = 0 then  exit;
+
+  Self.PaidAmount   := 0; //reset , value ini hanya boleh diupdate di method UpdateRemain
+  Self.ReturAmount  := 0;
+  Self.PaidOff      := 0;
+  Self.PaidOffDate  := 0;
+
+  //hanya edit
+  lPurchasePayment :=  TPurchasePayment.Create;
+  Try
+    if lPurchasePayment.LoadByCode(Self.InvoiceNo) then
+      Result := lPurchasePayment.DeleteFromDB(False);
+  Finally
+    lPurchasePayment.Free;
+  End;
+end;
+
+function TSalesInvoice.GenerateNo: String;
+var
+  aDigitCount: Integer;
+  aPrefix: string;
+  lNum: Integer;
+  S: string;
+begin
+  lNum := 0;
+  aDigitCount := 5;
+  aPrefix := Cabang + '.FB' + FormatDateTime('yymm',Now()) + '.';
+
+
+  S := 'SELECT MAX(InvoiceNo) FROM TSalesInvoice where InvoiceNo LIKE ' + QuotedStr(aPrefix + '%');
+
+  with TDBUtils.OpenQuery(S) do
+  begin
+    Try
+      if not eof then
+        TryStrToInt(RightStr(Fields[0].AsString, aDigitCount), lNum);
+    Finally
+      Free;
+    End;
+  end;
+
+  inc(lNum);
+  Result := aPrefix + RightStr('00000' + IntToStr(lNum), aDigitCount);
+end;
+
+function TSalesInvoice.GetInvItems: TObjectList<TSalesInvoiceItem>;
+begin
+  if FInvItems = nil then
+  begin
+    FInvItems := TObjectList<TSalesInvoiceItem>.Create();
+  end;
+  Result := FInvItems;
+end;
+
+function TSalesInvoice.GetHeaderFlag: Integer;
+begin
+  Result := HeaderFlag_PurchaseInvoice;
+end;
+
+function TSalesInvoice.GetRefno: String;
+begin
+  Result := InvoiceNO;
+end;
+
+function TSalesInvoice.GetRemain: Double;
+begin
+  Result := Self.Amount - Self.PaidAmount - Self.ReturAmount;
+end;
+
+function TSalesInvoice.GetTotalBayar: Double;
+begin
+  Result := Self.PaidAmount + Self.ReturAmount;
+end;
+
+function TSalesInvoice.LogLevel: Integer;
+begin
+  Result := 2; //0 : no log
+  //1 : all
+  //2 : update and delete only
+ end;
+
+class procedure TSalesInvoice.PrintData(aInvoiceID: Integer);
+var
+  S: string;
+begin
+  S := 'SELECT * FROM FN_SLIP_PURCHASEINVOICE(' + IntToStr(aInvoiceID) + ')';
+  DMReport.ExecuteReport('SlipPurchaseInvoice', S);
+end;
+
+function TSalesInvoice.UpdateRemain(aDate: TDateTime = 0; AddedPaidAmt:
+    Double = 0; AddedReturAmt: Double = 0): Boolean;
+var
+  S: string;
+begin
+  if aDate = 0 then aDate := Now();
+
+  Self.PaidAmount := Self.PaidAmount + AddedPaidAmt;   //utk update / revert remain dari collection
+  Self.ReturAmount := Self.ReturAmount + AddedReturAmt;
+
+  S := 'Update TSalesInvoice set PaidAmount = ' + FloatToStr(Self.PaidAmount)
+  + ', ReturAmount = ' + FloatToSTr(Self.ReturAmount);
+
+  if (Self.Amount - Self.GetTotalBayar) <=  AppVariable.Toleransi_Piutang then
+    S := S + ',PaidOff = 1, PaidOffDate = ' + TAppUtils.QuotD(aDate)
+  else
+    S := S + ',PaidOff = 0, PaidOffDate = NULL';
+
+
+  S := S + ' where id = ' + IntToStr(Self.ID);
+
+  Result := TDBUtils.ExecuteSQL(S, False);
+end;
+
+function TSalesRetur.AfterSaveToDB: Boolean;
+var
+  lSalesPayment: TSalesPayment;
+begin
+//  Result := UpdateReturAmt(False);
+//  if not Result then exit;
+
+  if Self.ReturFlag = ReturFlag_Cancel then
+  begin
+    lSalesPayment := TSalesPayment.CreateOrGetFromRetur(Self);
+    Result := lSalesPayment.SaveToDB(False);
+  end else
+    Result := True;
+end;
+
+function TSalesRetur.BeforeDeleteFromDB: Boolean;
+var
+  lSalesPayment: TSalesPayment;
+begin
+  Result := True;
+
+  lSalesPayment := TSalesPayment.Create;
+  Try
+    if lSalesPayment.LoadByCode(Self.Refno) then
+      Result := lSalesPayment.DeleteFromDB(False);
+  Finally
+    lSalesPayment.Free;
+  End;
+
+//  Result := True;
+end;
+
+function TSalesRetur.BeforeSaveToDB: Boolean;
+var
+  litem: TTransDetail;
+  lSalesPayment: TSalesPayment;
+begin
+  Result := True;
+  for lItem in Self.Items do
+    lItem.SetAvgCost;
+
+  if Self.ID = 0 then  exit;
+
+  Self.PaidAmount   := 0; //reset , value ini hanya boleh diupdate di method UpdateRemain
+
+  lSalesPayment := TSalesPayment.Create;
+  Try
+    if lSalesPayment.LoadByCode(Self.Refno) then
+      Result := lSalesPayment.DeleteFromDB(False);
+  Finally
+    lSalesPayment.Free;
+  End;
+end;
+
+procedure TSalesRetur.ClearInvoice;
+begin
+  FreeAndNil(FInvoice);
+end;
+
+procedure TSalesRetur.ClearCustomer;
+begin
+  FreeAndNil(FCustomer);
+end;
+
+function TSalesRetur.GenerateNo: String;
+var
+  aDigitCount: Integer;
+  aPrefix: string;
+  lNum: Integer;
+  S: string;
+begin
+  lNum := 0;
+  aDigitCount := 5;
+  aPrefix := Cabang + '.RP' + FormatDateTime('yymm',Now()) + '.';
+
+
+  S := 'SELECT MAX(Refno) FROM TSalesRetur where Refno LIKE ' + QuotedStr(aPrefix + '%');
+
+  with TDBUtils.OpenQuery(S) do
+  begin
+    Try
+      if not eof then
+        TryStrToInt(RightStr(Fields[0].AsString, aDigitCount), lNum);
+    Finally
+      Free;
+    End;
+  end;
+
+  inc(lNum);
+  Result := aPrefix + RightStr('00000' + IntToStr(lNum), aDigitCount);
+end;
+
+function TSalesRetur.GetHeaderFlag: Integer;
+begin
+  Result := HeaderFlag_SalesRetur;
+end;
+
+function TSalesRetur.GetRefno: String;
+begin
+  Result := Refno;
+end;
+
+function TSalesRetur.GetRemain: Double;
+begin
+  Result := Self.Amount - Self.PaidAmount;
+end;
+
+class procedure TSalesRetur.PrintData(aReturID: Integer);
+var
+  S: string;
+begin
+  S := 'SELECT * FROM FN_SLIP_SALESRETUR(' + IntToStr(aReturID) + ')';
+  DMReport.ExecuteReport('SlipSalesRetur', S);
+end;
+
+procedure TSalesRetur.SetGenerateNo;
+begin
+  if Self.ID = 0 then Self.Refno := Self.GenerateNo;
+end;
+
+function TSalesRetur.UpdateRemain(AddedPaidAmt: Double = 0): Boolean;
+var
+  S: string;
+begin
+  Self.PaidAmount := Self.PaidAmount + AddedPaidAmt;   //utk update / revert remain dari collection
+
+  S := 'Update TSalesRetur set PaidAmount = ' + FloatToStr(Self.PaidAmount);
+
+  if (Self.Amount - Self.PaidAmount) <=  AppVariable.Toleransi_Piutang then
+    S := S + ',PaidOff = 1, PaidOffDate = ' + TAppUtils.QuotD(Now())
+  else
+    S := S + ',PaidOff = 0, PaidOffDate = NULL';
+
 
   S := S + ' where id = ' + IntToStr(Self.ID);
 

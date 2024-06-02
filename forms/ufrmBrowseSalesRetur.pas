@@ -11,7 +11,7 @@ uses
   Vcl.Menus, Vcl.ComCtrls, dxCore, cxDateUtils, cxClasses, cxLabel, cxTextEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.StdCtrls, cxButtons, cxGroupBox,
   cxGridLevel, cxGridCustomView, cxGridCustomTableView, cxGridTableView,
-  cxGridServerModeTableView, cxGrid;
+  cxGridServerModeTableView, cxGrid, uFinancialTransaction;
 
 type
   TfrmBrowseSalesRetur = class(TfrmDefaultServerBrowse)

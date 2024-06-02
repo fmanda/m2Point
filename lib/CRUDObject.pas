@@ -752,7 +752,7 @@ begin
       Raise Exception.Create('Save ObjectList Failed');
 
     if not AfterSaveTODB then
-      Raise Exception.Create('Before Save To DB Failed');
+      Raise Exception.Create('After Save To DB Failed');
 
     //save Log
 

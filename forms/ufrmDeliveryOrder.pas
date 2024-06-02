@@ -571,7 +571,6 @@ procedure TfrmDeliveryOrder.LoadByID(aID: Integer; IsReadOnly: Boolean = True);
 var
   lEditedVal: Double;
   lItem: TTransDetail;
-  lService: TServiceDetail;
 begin
   if FDevOrder <> nil then
     FreeAndNil(FDevOrder);
@@ -851,7 +850,6 @@ end;
 procedure TfrmDeliveryOrder.UpdateData;
 var
   lItem: TTransDetail;
-  lService: TServiceDetail;
 begin
 
   DevOrder.DONo := edNoDO.Text;

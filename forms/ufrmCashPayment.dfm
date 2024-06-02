@@ -171,7 +171,7 @@ inherited frmCashPayment: TfrmCashPayment
     Height = 352
     Align = alClient
     TabOrder = 3
-    Properties.ActivePage = tsFee
+    Properties.ActivePage = tsDetail
     Properties.CustomButtons.Buttons = <>
     OnChange = pgcMainChange
     ClientRectBottom = 352
@@ -225,100 +225,6 @@ inherited frmCashPayment: TfrmCashPayment
         object cxGrid1Level2: TcxGridLevel
           Caption = 'Detail Pengeluaran [F2]'
           GridView = cxGrdMain
-        end
-      end
-    end
-    object tsFee: TcxTabSheet
-      Caption = 'Pembayaran Fee Salesman'
-      ImageIndex = 1
-      object cxGrid2: TcxGrid
-        Left = 0
-        Top = 33
-        Width = 737
-        Height = 295
-        Align = alClient
-        TabOrder = 0
-        object cxGrdFee: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00;(,0.00)'
-              Kind = skSum
-              Column = cxGridDBColumn3
-            end>
-          DataController.Summary.SummaryGroups = <>
-          OptionsBehavior.FocusCellOnTab = True
-          OptionsBehavior.FocusFirstCellOnNewRecord = True
-          OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsBehavior.FocusCellOnCycle = True
-          OptionsData.CancelOnExit = False
-          OptionsData.Editing = False
-          OptionsData.Inserting = False
-          OptionsView.Footer = True
-          OptionsView.GroupByBox = False
-          OptionsView.HeaderHeight = 30
-          object cxGrdFeeColumn2: TcxGridDBColumn
-            Caption = 'No'
-            OnGetDisplayText = cxGrdFeeColumn2GetDisplayText
-            HeaderAlignmentHorz = taCenter
-            Width = 38
-          end
-          object cxGridDBColumn1: TcxGridDBColumn
-            DataBinding.FieldName = 'Salesman'
-            PropertiesClassName = 'TcxTextEditProperties'
-            HeaderAlignmentHorz = taCenter
-            Width = 209
-          end
-          object cxGridDBColumn2: TcxGridDBColumn
-            Caption = 'Nomor Faktur'
-            DataBinding.FieldName = 'RefNo'
-            PropertiesClassName = 'TcxTextEditProperties'
-            HeaderAlignmentHorz = taCenter
-            Width = 142
-          end
-          object cxGrdFeeColumn1: TcxGridDBColumn
-            Caption = 'Tgl Lunas'
-            DataBinding.FieldName = 'PaidOffDate'
-            PropertiesClassName = 'TcxDateEditProperties'
-            HeaderAlignmentHorz = taCenter
-            Width = 89
-          end
-          object cxGridDBColumn3: TcxGridDBColumn
-            Caption = 'Nilai'
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;(,0.00)'
-            Properties.OnEditValueChanged = colCostAmountPropertiesEditValueChanged
-            HeaderAlignmentHorz = taCenter
-            Width = 113
-          end
-        end
-        object cxGridLevel1: TcxGridLevel
-          Caption = 'Detail Pengeluaran [F2]'
-          GridView = cxGrdFee
-        end
-      end
-      object Panel1: TPanel
-        Left = 0
-        Top = 0
-        Width = 737
-        Height = 33
-        Align = alTop
-        TabOrder = 1
-        object cxLabel2: TcxLabel
-          Left = 11
-          Top = 6
-          Caption = 'Account Biaya'
-          Properties.Alignment.Horz = taRightJustify
-          AnchorX = 83
-        end
-        object cxLookupAccFee: TcxExtLookupComboBox
-          Left = 84
-          Top = 5
-          Properties.ImmediatePost = True
-          TabOrder = 1
-          Width = 259
         end
       end
     end
