@@ -233,11 +233,14 @@ type
     dxBarButton105: TdxBarButton;
     dxBarButton106: TdxBarButton;
     dxBarButton107: TdxBarButton;
+    actCashReceiptDP: TAction;
+    dxBarButton108: TdxBarButton;
     procedure actAccountExecute(Sender: TObject);
     procedure actAgingARExecute(Sender: TObject);
     procedure actAgingStockExecute(Sender: TObject);
     procedure actCashInExecute(Sender: TObject);
     procedure actCashOutExecute(Sender: TObject);
+    procedure actCashReceiptDPExecute(Sender: TObject);
     procedure actCustomerExecute(Sender: TObject);
     procedure actDeleteEODExecute(Sender: TObject);
     procedure actDeliveryOrderExecute(Sender: TObject);
@@ -338,7 +341,7 @@ uses
   ufrmLapPenjualan, ufrmGantiPassword, ufrmPiutangRetur, ufrmHutangRetur,
   ufrmBrowseKKSO, ufrmExportData, ufrmImportData, ufrmBrowseTransferRequest,
   System.IOUtils, CRUDObject, System.JSON, ufrmDeleteEOD,
-  ufrmBrowseUangMukaZakat, ufrmBrowseDeliveryOrder;
+  ufrmBrowseUangMukaZakat, ufrmBrowseDeliveryOrder, ufrmBrowseCashReceiptDP;
 
 {$R *.dfm}
 
@@ -387,6 +390,11 @@ end;
 procedure TfrmMain.actCashOutExecute(Sender: TObject);
 begin
   ShowForm(TfrmBrowseCashPayment);
+end;
+
+procedure TfrmMain.actCashReceiptDPExecute(Sender: TObject);
+begin
+  ShowForm(TfrmBrowseCashReceiptDP);
 end;
 
 procedure TfrmMain.actCustomerExecute(Sender: TObject);

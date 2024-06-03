@@ -1,5 +1,5 @@
-inherited frmBrowseCashReceipt: TfrmBrowseCashReceipt
-  Caption = 'Browse Penerimaan Kas / Bank'
+inherited frmBrowseCashReceiptDP: TfrmBrowseCashReceiptDP
+  Caption = 'Browse Penerimaan Kas'
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxGroupBox2: TcxGroupBox
@@ -35,7 +35,6 @@ inherited frmBrowseCashReceipt: TfrmBrowseCashReceipt
     end
   end
   inherited styleRepo: TcxStyleRepository
-    Top = 232
     PixelsPerInch = 96
   end
 end

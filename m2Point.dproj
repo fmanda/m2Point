@@ -405,12 +405,12 @@
             <Form>frmBrowseCashPayment</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="forms\ufrmCashReceipt.pas">
-            <Form>frmCashReceipt</Form>
+        <DCCReference Include="forms\ufrmCashReceiptDP.pas">
+            <Form>frmCashReceiptDP</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="forms\ufrmBrowseCashReceipt.pas">
-            <Form>frmBrowseCashReceipt</Form>
+        <DCCReference Include="forms\ufrmBrowseCashReceiptDP.pas">
+            <Form>frmBrowseCashReceiptDP</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="forms\ufrmStockOpname.pas">
@@ -564,6 +564,14 @@
         </DCCReference>
         <DCCReference Include="forms\ufrmPurchaseInvoice.pas">
             <Form>frmPurchaseInvoice</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="forms\ufrmBrowseCashReceipt.pas">
+            <Form>frmBrowseCashReceipt</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="forms\ufrmCashReceipt.pas">
+            <Form>frmCashReceipt</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

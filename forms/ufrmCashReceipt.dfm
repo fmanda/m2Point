@@ -1,10 +1,10 @@
 inherited frmCashReceipt: TfrmCashReceipt
-  Caption = '='
+  Caption = 'Cash Receipt - Penerimaan Kas/Bank'
   ClientHeight = 507
-  ClientWidth = 735
+  ClientWidth = 710
   KeyPreview = True
   OnKeyDown = FormKeyDown
-  ExplicitWidth = 751
+  ExplicitWidth = 726
   ExplicitHeight = 546
   PixelsPerInch = 96
   TextHeight = 13
@@ -12,42 +12,39 @@ inherited frmCashReceipt: TfrmCashReceipt
     Top = 472
     TabOrder = 2
     ExplicitTop = 472
-    ExplicitWidth = 735
-    Width = 735
+    ExplicitWidth = 710
+    Width = 710
     inherited btnCancel: TcxButton
-      Left = 650
+      Left = 625
       ExplicitLeft = 650
     end
     inherited btnPrint: TcxButton
-      Left = 564
+      Left = 539
       ExplicitLeft = 564
     end
     inherited btnSave: TcxButton
-      Left = 478
+      Left = 453
       OnClick = btnSaveClick
       ExplicitLeft = 478
     end
   end
   inherited Panel2: TPanel
     Top = 451
-    Width = 735
+    Width = 710
     TabOrder = 3
     ExplicitTop = 451
     ExplicitWidth = 735
     inherited lbEscape: TLabel
-      Left = 655
-      Height = 17
-      ExplicitLeft = 655
+      Left = 630
+      ExplicitLeft = 630
     end
     inherited lgndSave: TLabel
-      Left = 490
-      Height = 17
-      ExplicitLeft = 490
+      Left = 465
+      ExplicitLeft = 465
     end
     inherited lgndPrint: TLabel
-      Left = 577
-      Height = 17
-      ExplicitLeft = 577
+      Left = 552
+      ExplicitLeft = 552
     end
   end
   object cxGroupBox1: TcxGroupBox [2]
@@ -57,10 +54,10 @@ inherited frmCashReceipt: TfrmCashReceipt
     Caption = '  Header Invoice [F1] '
     TabOrder = 0
     DesignSize = (
-      735
-      115)
-    Height = 115
-    Width = 735
+      710
+      129)
+    Height = 129
+    Width = 710
     object cxLabel1: TcxLabel
       Left = 52
       Top = 23
@@ -102,7 +99,7 @@ inherited frmCashReceipt: TfrmCashReceipt
       Caption = 'Tanggal'
     end
     object cxLabel5: TcxLabel
-      Left = 506
+      Left = 481
       Top = 25
       Anchors = [akTop, akRight]
       Caption = 'Cash'
@@ -114,10 +111,10 @@ inherited frmCashReceipt: TfrmCashReceipt
       Style.Font.Style = []
       Style.IsFontAssigned = True
       Properties.Alignment.Horz = taRightJustify
-      AnchorX = 546
+      AnchorX = 521
     end
     object crCash: TcxCurrencyEdit
-      Left = 548
+      Left = 523
       Top = 22
       TabStop = False
       Anchors = [akTop, akRight]
@@ -134,12 +131,13 @@ inherited frmCashReceipt: TfrmCashReceipt
       Style.Font.Style = []
       Style.IsFontAssigned = True
       TabOrder = 4
+      ExplicitLeft = 548
       Width = 170
     end
     object lbRekening: TcxLabel
-      Left = 27
+      Left = 14
       Top = 43
-      Caption = 'Rekening Asal'
+      Caption = 'Rekening Tujuan'
       Properties.Alignment.Horz = taRightJustify
       AnchorX = 98
     end
@@ -153,12 +151,15 @@ inherited frmCashReceipt: TfrmCashReceipt
   end
   object cxGrid1: TcxGrid [3]
     Left = 0
-    Top = 115
-    Width = 735
-    Height = 336
+    Top = 129
+    Width = 710
+    Height = 322
     Align = alClient
     TabOrder = 1
     RootLevelOptions.DetailTabsPosition = dtpTop
+    ExplicitTop = 115
+    ExplicitWidth = 735
+    ExplicitHeight = 336
     object cxGrdMain: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -175,7 +176,7 @@ inherited frmCashReceipt: TfrmCashReceipt
         DataBinding.FieldName = 'Account'
         PropertiesClassName = 'TcxExtLookupComboBoxProperties'
         HeaderAlignmentHorz = taCenter
-        Width = 205
+        Width = 170
       end
       object colCostNotes: TcxGridDBColumn
         Caption = 'Deskripsi'

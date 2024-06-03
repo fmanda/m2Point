@@ -1,4 +1,4 @@
-unit ufrmBrowseCashReceipt;
+unit ufrmBrowseCashReceiptDP;
 
 interface
 
@@ -14,7 +14,7 @@ uses
   cxGridServerModeTableView, cxGrid;
 
 type
-  TfrmBrowseCashReceipt = class(TfrmDefaultServerBrowse)
+  TfrmBrowseCashReceiptDP = class(TfrmDefaultServerBrowse)
     procedure btnBaruClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure btnHapusClick(Sender: TObject);
@@ -31,20 +31,20 @@ type
   end;
 
 var
-  frmBrowseCashReceipt: TfrmBrowseCashReceipt;
+  frmBrowseCashReceiptDP: TfrmBrowseCashReceiptDP;
 
 implementation
 
 uses
-  uAppUtils, ufrmCashReceipt, uDXUtils, System.DateUtils,
+  uAppUtils, ufrmCashReceiptDP, uDXUtils, System.DateUtils,
   uFinancialTransaction, uDBUtils;
 
 {$R *.dfm}
 
-procedure TfrmBrowseCashReceipt.btnBaruClick(Sender: TObject);
+procedure TfrmBrowseCashReceiptDP.btnBaruClick(Sender: TObject);
 begin
   inherited;
-  with TfrmCashReceipt.Create(Application) do
+  with TfrmCashReceiptDP.Create(Application) do
   begin
     Try
       if ShowModalDlg = mrOK then
@@ -55,10 +55,10 @@ begin
   end;
 end;
 
-procedure TfrmBrowseCashReceipt.btnEditClick(Sender: TObject);
+procedure TfrmBrowseCashReceiptDP.btnEditClick(Sender: TObject);
 begin
   inherited;
-  with TfrmCashReceipt.Create(Application) do
+  with TfrmCashReceiptDP.Create(Application) do
   begin
     LoadByID(Self.cxGrdMain.GetID, False);
     Try
@@ -70,7 +70,7 @@ begin
   end;
 end;
 
-procedure TfrmBrowseCashReceipt.btnHapusClick(Sender: TObject);
+procedure TfrmBrowseCashReceiptDP.btnHapusClick(Sender: TObject);
 begin
   inherited;
   if not TAppUtils.Confirm('Anda yakin menghapus data ini?') then exit;
@@ -90,10 +90,10 @@ begin
   end;
 end;
 
-procedure TfrmBrowseCashReceipt.btnLihatClick(Sender: TObject);
+procedure TfrmBrowseCashReceiptDP.btnLihatClick(Sender: TObject);
 begin
   inherited;
-  with TfrmCashReceipt.Create(Application) do
+  with TfrmCashReceiptDP.Create(Application) do
   begin
     LoadByID(Self.cxGrdMain.GetID, True);
     Try
@@ -104,29 +104,29 @@ begin
   end;
 end;
 
-procedure TfrmBrowseCashReceipt.FormCreate(Sender: TObject);
+procedure TfrmBrowseCashReceiptDP.FormCreate(Sender: TObject);
 begin
   StartDate.Date := StartOfTheMonth(Now());
   EndDate.Date := EndOfTheMonth(Now());
   inherited;
 end;
 
-function TfrmBrowseCashReceipt.GetGroupName: string;
+function TfrmBrowseCashReceiptDP.GetGroupName: string;
 begin
   Result := 'Penjualan & Kas';
 end;
 
-function TfrmBrowseCashReceipt.GetKeyField: string;
+function TfrmBrowseCashReceiptDP.GetKeyField: string;
 begin
   Result := 'id';
 end;
 
-function TfrmBrowseCashReceipt.GetSQL: string;
+function TfrmBrowseCashReceiptDP.GetSQL: string;
 begin
   Result := 'SELECT A.ID, A.REFNO, A.TRANSDATE, B.NAMA AS REKENING_ASAL, A.AMOUNT, A.NOTES, A.MODIFIEDDATE, A.MODIFIEDBY'
            +' FROM TCASHRECEIPT A'
            +' LEFT JOIN TREKENING B ON A.REKENING_ID = B.ID'
-           +' WHERE A.IS_DOWNPAYMENT=0 AND A.TRANSDATE BETWEEN ' + TAppUtils.QuotD(StartDate.Date)
+           +' WHERE A.IS_DOWNPAYMENT=1 AND A.TRANSDATE BETWEEN ' + TAppUtils.QuotD(StartDate.Date)
            +' AND ' + TAppUtils.QuotD(EndDate.Date);
 
 end;

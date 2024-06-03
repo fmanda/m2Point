@@ -1,3 +1,1 @@
-SET NOCOUNT ON
-Insert Into TSalesInvoiceItem(Discount,Harga,Item_ID,PPN,DeliveryOrder_ID,SalesInvoice_ID,Qty,Konversi,Total,UOM_ID) values(0,1800,1,0,1,2,1,0,0,1);
-Select Scope_Identity() as ID
+update c set c.HARGA = b.HARGA  from TSALESINVOICE a  inner join TSALESINVOICEITEM b on a.id = b.SalesInvoice_ID  inner join TTRANSDETAIL c on b.TRANSDETAIL_ID = c.ID  where id = 8

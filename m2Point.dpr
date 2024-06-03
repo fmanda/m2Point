@@ -91,8 +91,8 @@ uses
   ufrmBrowseAccount in 'forms\ufrmBrowseAccount.pas' {frmBrowseAccount},
   ufrmCashPayment in 'forms\ufrmCashPayment.pas' {frmCashPayment},
   ufrmBrowseCashPayment in 'forms\ufrmBrowseCashPayment.pas' {frmBrowseCashPayment},
-  ufrmCashReceipt in 'forms\ufrmCashReceipt.pas' {frmCashReceipt},
-  ufrmBrowseCashReceipt in 'forms\ufrmBrowseCashReceipt.pas' {frmBrowseCashReceipt},
+  ufrmCashReceiptDP in 'forms\ufrmCashReceiptDP.pas' {frmCashReceiptDP},
+  ufrmBrowseCashReceiptDP in 'forms\ufrmBrowseCashReceiptDP.pas' {frmBrowseCashReceiptDP},
   ufrmStockOpname in 'forms\ufrmStockOpname.pas' {frmStockOpname},
   ufrmBrowseStockOpname in 'forms\ufrmBrowseStockOpname.pas' {frmBrowseStockOpname},
   ufrmStockAdjustment in 'forms\ufrmStockAdjustment.pas' {frmStockAdjustment},
@@ -135,7 +135,9 @@ uses
   ufrmSalesInvoice in 'forms\ufrmSalesInvoice.pas' {frmSalesInvoice},
   ufrmBrowsePurchaseInvoice in 'forms\ufrmBrowsePurchaseInvoice.pas' {frmBrowsePurchaseInvoice},
   ufrmBrowseSalesInvoice in 'forms\ufrmBrowseSalesInvoice.pas' {frmBrowseSalesInvoice},
-  ufrmPurchaseInvoice in 'forms\ufrmPurchaseInvoice.pas' {frmPurchaseInvoice};
+  ufrmPurchaseInvoice in 'forms\ufrmPurchaseInvoice.pas' {frmPurchaseInvoice},
+  ufrmBrowseCashReceipt in 'forms\ufrmBrowseCashReceipt.pas' {frmBrowseCashReceipt},
+  ufrmCashReceipt in 'forms\ufrmCashReceipt.pas' {frmCashReceipt};
 
 {$R *.res}
 
