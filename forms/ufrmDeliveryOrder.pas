@@ -50,6 +50,7 @@ type
     edCustomer: TcxButtonEdit;
     cxLabel7: TcxLabel;
     cxLookupGudang: TcxExtLookupComboBox;
+    colHarga: TcxGridDBColumn;
     procedure edCustomerKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure edNotesKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -839,6 +840,7 @@ begin
     );
     if lItemUOM = nil then exit;
     Try
+      DC.SetEditValue(colHarga.Index, lItemUOM.Konversi, evsValue);
       DC.SetEditValue(colKonversi.Index, lItemUOM.Konversi, evsValue);
 
     Finally

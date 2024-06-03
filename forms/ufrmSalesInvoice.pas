@@ -843,11 +843,15 @@ begin
 
       if lItem.Item <> nil  then
       begin
-        CDS.FieldByName('Item').AsInteger := lItem.Item.ID;
+        CDS.FieldByName('TransDetail_ID').AsInteger   := lItem.ID;
+        CDS.FieldByName('Item').AsInteger     := lItem.Item.ID;
         lItem.Item.ReLoad();
-        CDS.FieldByName('Kode').AsString  := lItem.Item.Kode;
-        CDS.FieldByName('Nama').AsString  := lItem.Item.Nama;
-        CDS.FieldByName('PPN').AsFloat    := lItem.Item.PPN;
+        CDS.FieldByName('Kode').AsString      := lItem.Item.Kode;
+        CDS.FieldByName('Nama').AsString      := lItem.Item.Nama;
+        CDS.FieldByName('PPN').AsFloat        := lItem.Item.PPN;
+
+        CDS.FieldByName('HargaAvg').AsFloat   := lItem.HargaAvg;
+        CDS.FieldByName('LastCost').AsFloat   := lItem.LastCost;
       end;
 
       if lItem.UOM <> nil  then

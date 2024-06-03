@@ -329,9 +329,12 @@ type
     FItem: TItem;
     FPPN: Double;
     FDeliveryOrder: TDeliveryOrder;
+    FHargaAvg: Double;
+    FLastCost: Double;
     FSalesInvoice: TSalesInvoice;
     FQty: Double;
     FKonversi: Double;
+    FTransDetail_ID: Integer;
     FTotal: Double;
     FUOM: TUOM;
   published
@@ -340,10 +343,13 @@ type
     property Item: TItem read FItem write FItem;
     property PPN: Double read FPPN write FPPN;
     property DeliveryOrder: TDeliveryOrder read FDeliveryOrder write FDeliveryOrder;
+    property HargaAvg: Double read FHargaAvg write FHargaAvg;
+    property LastCost: Double read FLastCost write FLastCost;
     [AttributeOfHeader]
     property SalesInvoice: TSalesInvoice read FSalesInvoice write FSalesInvoice;
     property Qty: Double read FQty write FQty;
     property Konversi: Double read FKonversi write FKonversi;
+    property TransDetail_ID: Integer read FTransDetail_ID write FTransDetail_ID;
     property Total: Double read FTotal write FTotal;
     property UOM: TUOM read FUOM write FUOM;
   end;
@@ -365,6 +371,7 @@ type
     FReturAmount: Double;
     FStatus: Integer;
     function GetInvItems: TObjectList<TSalesInvoiceItem>;
+    function UpdateHargaDO: Boolean;
   protected
     function AfterSaveToDB: Boolean; override;
     function BeforeDeleteFromDB: Boolean; override;
@@ -1471,7 +1478,7 @@ end;
 
 function TSalesInvoice.AfterSaveToDB: Boolean;
 begin
-  Result := True;
+  Result := UpdateHargaDO;
 end;
 
 function TSalesInvoice.BeforeDeleteFromDB: Boolean;
@@ -1608,6 +1615,19 @@ begin
 
 
   S := S + ' where id = ' + IntToStr(Self.ID);
+
+  Result := TDBUtils.ExecuteSQL(S, False);
+end;
+
+function TSalesInvoice.UpdateHargaDO: Boolean;
+var
+  S: string;
+begin
+  S := 'update c set c.HARGA = b.HARGA '
+    +' from TSALESINVOICE a '
+    +' inner join TSALESINVOICEITEM b on a.id = b.SalesInvoice_ID '
+    +' inner join TTRANSDETAIL c on b.TRANSDETAIL_ID = c.ID '
+    +' where id = ' + IntToStr(Self.ID);
 
   Result := TDBUtils.ExecuteSQL(S, False);
 end;
