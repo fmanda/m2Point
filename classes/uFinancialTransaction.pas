@@ -156,14 +156,11 @@ type
     property TahunZakat: Integer read FTahunZakat write FTahunZakat;
   end;
 
-  TSalesPayment = class(TCRUDFinance)
+  TARSettlement = class(TCRUDFinance)
   private
-    FMedia: Integer;
-    FMediaNo: string;
     FReturAmount: Double;
-    FPaymentFlag: Integer;
-    FRekening: TRekening;
-    FSalesman: TSalesman;
+    FCustomer: TCustomer;
+    FCashReceipt: TCashReceipt;
   protected
     function AfterSaveToDB: Boolean; override;
     function BeforeDeleteFromDB: Boolean; override;
@@ -171,15 +168,12 @@ type
   public
     destructor Destroy; override;
     function GetHeaderFlag: Integer; override;
-    class function CreateOrGetFromRetur(aSalesRetur: TSalesRetur): TSalesPayment;
+    class function CreateOrGetFromRetur(aSalesRetur: TSalesRetur): TARSettlement;
     function GenerateNo: string; override;
     function UpdateRemain(aIsRevert: Boolean = False): Boolean;
-    property PaymentFlag: Integer read FPaymentFlag write FPaymentFlag;
   published
-    property Media: Integer read FMedia write FMedia;
-    property MediaNo: string read FMediaNo write FMediaNo;
-    property Rekening: TRekening read FRekening write FRekening;
-    property Salesman: TSalesman read FSalesman write FSalesman;
+    property Customer: TCustomer read FCustomer write FCustomer;
+    property CashReceipt: TCashReceipt read FCashReceipt write FCashReceipt;
     property ReturAmount: Double read FReturAmount write FReturAmount;
   end;
 
@@ -491,7 +485,7 @@ const
   HeaderFlag_PurchasePayment : Integer = 110;
 
   HeaderFlag_SalesInvoice : Integer = 200;
-  HeaderFlag_SalesPayment : Integer = 210;
+  HeaderFlag_ARSettlement : Integer = 210;
 
   HeaderFlag_CashTransfer : Integer = 300;
   HeaderFlag_CashReceipt : Integer = 400;
@@ -925,30 +919,30 @@ begin
   Result := HeaderFlag_CashTransfer;
 end;
 
-destructor TSalesPayment.Destroy;
+destructor TARSettlement.Destroy;
 begin
   inherited;
-//  if FSupplier <> nil then FreeAndNil(FSupplier);
+  if FCashReceipt <> nil then FreeAndNil(FCashReceipt);
 end;
 
-function TSalesPayment.AfterSaveToDB: Boolean;
+function TARSettlement.AfterSaveToDB: Boolean;
 begin
   Result := Self.UpdateRemain;
 end;
 
-function TSalesPayment.BeforeDeleteFromDB: Boolean;
+function TARSettlement.BeforeDeleteFromDB: Boolean;
 begin
   Result := Self.UpdateRemain(True);
 end;
 
-function TSalesPayment.BeforeSaveToDB: Boolean;
+function TARSettlement.BeforeSaveToDB: Boolean;
 var
-  lOldPayment: TSalesPayment;
+  lOldPayment: TARSettlement;
 begin
   Result := True;
   if Self.ID = 0 then exit;
 
-  lOldPayment := TSalesPayment.Create;
+  lOldPayment := TARSettlement.Create;
   Try
     lOldPayment.LoadByID(Self.ID);
     lOldPayment.UpdateRemain(True);
@@ -957,8 +951,8 @@ begin
   End;
 end;
 
-class function TSalesPayment.CreateOrGetFromRetur(aSalesRetur: TSalesRetur):
-    TSalesPayment;
+class function TARSettlement.CreateOrGetFromRetur(aSalesRetur: TSalesRetur):
+    TARSettlement;
 var
   lItem: TFinancialTransaction;
 begin
@@ -969,12 +963,12 @@ begin
 
   if aSalesRetur.Invoice = nil then
   begin
-    raise Exception.Create('[TSalesPayment.CreateOrGetFromRetur] PurchaseRetur.Invoice = nil');
+    raise Exception.Create('[TARSettlement.CreateOrGetFromRetur] PurchaseRetur.Invoice = nil');
   end;
 
 //  if aSalesRetur.Rekening = nil then
 //    raise Exception.Create('aSalesRetur.Rekening = nil');
-  Result := TSalesPayment.Create;
+  Result := TARSettlement.Create;
 
   //load from inv
   Result.LoadByCode(aSalesRetur.Refno);
@@ -982,7 +976,6 @@ begin
   Result.TransDate        := aSalesRetur.TransDate;
   Result.DueDate          := Result.TransDate;
   Result.Amount           := 0;
-  Result.PaymentFlag      := PaymentFlag_Cash;
   Result.ReturAmount      := aSalesRetur.Amount;
   Result.Items.Clear;
 
@@ -995,13 +988,12 @@ begin
   lItem.SalesRetur        := TSalesRetur.CreateID(aSalesRetur.ID);
   lItem.TransDate         := aSalesRetur.TransDate;
   lItem.Notes             := 'Retur Batal No : ' + aSalesRetur.Refno;
-  lItem.TransType         := Result.PaymentFlag;
   Result.Items.Add(lItem);
 
   //debet retur penjualan : tidak perlu
 end;
 
-function TSalesPayment.GenerateNo: string;
+function TARSettlement.GenerateNo: string;
 var
   aDigitCount: Integer;
   aPrefix: string;
@@ -1013,7 +1005,7 @@ begin
   aPrefix := Cabang + '.SP' + FormatDateTime('yymm',Now()) + '.';
 
 
-  S := 'SELECT MAX(Refno) FROM TSalesPayment where Refno LIKE ' + QuotedStr(aPrefix + '%');
+  S := 'SELECT MAX(Refno) FROM TARSettlement where Refno LIKE ' + QuotedStr(aPrefix + '%');
 
   with TDBUtils.OpenQuery(S) do
   begin
@@ -1029,12 +1021,12 @@ begin
   Result := aPrefix + RightStr('00000' + IntToStr(lNum), aDigitCount);
 end;
 
-function TSalesPayment.GetHeaderFlag: Integer;
+function TARSettlement.GetHeaderFlag: Integer;
 begin
-  Result := HeaderFlag_SalesPayment;
+  Result := HeaderFlag_ARSettlement;
 end;
 
-function TSalesPayment.UpdateRemain(aIsRevert: Boolean = False): Boolean;
+function TARSettlement.UpdateRemain(aIsRevert: Boolean = False): Boolean;
 var
   lItem: TFinancialTransaction;
   iFactor: Integer;
@@ -1740,14 +1732,14 @@ end;
 
 function TSalesRetur.AfterSaveToDB: Boolean;
 var
-  lSalesPayment: TSalesPayment;
+  lSalesPayment: TARSettlement;
 begin
 //  Result := UpdateReturAmt(False);
 //  if not Result then exit;
 
   if Self.ReturFlag = ReturFlag_Cancel then
   begin
-    lSalesPayment := TSalesPayment.CreateOrGetFromRetur(Self);
+    lSalesPayment := TARSettlement.CreateOrGetFromRetur(Self);
     Result := lSalesPayment.SaveToDB(False);
   end else
     Result := True;
@@ -1755,11 +1747,11 @@ end;
 
 function TSalesRetur.BeforeDeleteFromDB: Boolean;
 var
-  lSalesPayment: TSalesPayment;
+  lSalesPayment: TARSettlement;
 begin
   Result := True;
 
-  lSalesPayment := TSalesPayment.Create;
+  lSalesPayment := TARSettlement.Create;
   Try
     if lSalesPayment.LoadByCode(Self.Refno) then
       Result := lSalesPayment.DeleteFromDB(False);
@@ -1773,7 +1765,7 @@ end;
 function TSalesRetur.BeforeSaveToDB: Boolean;
 var
   litem: TTransDetail;
-  lSalesPayment: TSalesPayment;
+  lSalesPayment: TARSettlement;
 begin
   Result := True;
   for lItem in Self.Items do
@@ -1783,7 +1775,7 @@ begin
 
   Self.PaidAmount   := 0; //reset , value ini hanya boleh diupdate di method UpdateRemain
 
-  lSalesPayment := TSalesPayment.Create;
+  lSalesPayment := TARSettlement.Create;
   Try
     if lSalesPayment.LoadByCode(Self.Refno) then
       Result := lSalesPayment.DeleteFromDB(False);

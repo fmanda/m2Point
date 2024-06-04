@@ -14,7 +14,8 @@ uses
   cxGridCustomView, cxGrid, cxLookupEdit, cxDBLookupEdit, cxDBExtLookupComboBox,
   cxDropDownEdit, cxMaskEdit, cxMemo, cxTextEdit, cxLabel,
   uFinancialTransaction, Datasnap.DBClient, uTransDetail,
-  cxGridDBDataDefinitions, uItem, cxDataUtils, uAppUtils, cxSpinEdit, cxCheckBox;
+  cxGridDBDataDefinitions, uItem, cxDataUtils, uAppUtils, cxSpinEdit,
+  cxCheckBox, uCustomer;
 type
   TfrmSalesPayment = class(TfrmDefaultInput)
     cxGroupBox1: TcxGroupBox;
@@ -25,20 +26,11 @@ type
     edNotes: TcxMemo;
     dtTransDate: TcxDateEdit;
     cxLabel8: TcxLabel;
-    dtDueDate: TcxDateEdit;
-    cxLabel9: TcxLabel;
-    crRetur: TcxCurrencyEdit;
+    crOthers: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
     cxLabel3: TcxLabel;
-    crTotal: TcxCurrencyEdit;
-    cxLabel5: TcxLabel;
-    crCash: TcxCurrencyEdit;
-    cbMedia: TcxComboBox;
-    cxLabel10: TcxLabel;
-    lbRekening: TcxLabel;
-    cxLookupRekening: TcxExtLookupComboBox;
+    crBayar: TcxCurrencyEdit;
     lbNoMedia: TcxLabel;
-    edNoMedia: TcxTextEdit;
     cxGrid1: TcxGrid;
     cxGrdMain: TcxGridDBTableView;
     colInvoiceNo: TcxGridDBColumn;
@@ -59,10 +51,18 @@ type
     cxGrid1Level2: TcxGridLevel;
     Label1: TLabel;
     Label2: TLabel;
-    cxLookupSalesman: TcxExtLookupComboBox;
+    cxLookupCustomer: TcxExtLookupComboBox;
     colCustomer: TcxGridDBColumn;
-    ckFilterSalesman: TcxCheckBox;
     colCustomerID: TcxGridDBColumn;
+    edCashReceipt: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    crRemain: TcxCurrencyEdit;
+    crTotal: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    cxDateEdit1: TcxDateEdit;
+    cxLabel9: TcxLabel;
+    ckFilterSalesman: TcxCheckBox;
+    crRetur: TcxCurrencyEdit;
     procedure btnSaveClick(Sender: TObject);
     procedure cxGrdMainEditKeyDown(Sender: TcxCustomGridTableView; AItem:
         TcxCustomGridTableItem; AEdit: TcxCustomEdit; var Key: Word; Shift:
@@ -70,7 +70,6 @@ type
     procedure dtDueDateKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure cbMediaPropertiesEditValueChanged(Sender: TObject);
     procedure colCostAmountPropertiesEditValueChanged(Sender: TObject);
     procedure colInvoiceNoPropertiesButtonClick(Sender: TObject; AButtonIndex:
         Integer);
@@ -87,7 +86,8 @@ type
     FCDSClone: TClientDataset;
     FCDSCloneCost: TClientDataset;
     FCDSCost: TClientDataset;
-    FPayment: TSalesPayment;
+    FARSettlement: TARSettlement;
+    FCashReceipt: TCashReceipt;
     procedure CalculateAll;
     procedure CDSAfterDelete(DataSet: TDataSet);
     function DC: TcxGridDBDataController;
@@ -98,14 +98,17 @@ type
     function GetCDSClone: TClientDataset;
     function GetCDSCloneCost: TClientDataset;
     function GetCDSCost: TClientDataset;
-    function GetPayment: TSalesPayment;
+    function GetARSettlement: TARSettlement;
+    function GetCashReceipt: TCashReceipt;
     procedure InitView;
+    procedure LoadCashReceipt(aID: Integer);
     procedure LookupInvoice(sKey: string = '');
     procedure LookupRetur;
     procedure SetInvoiceToGrid(AInvoice: TSalesInvoice);
     procedure SetReturToGrid(aRetur: TSalesRetur);
     procedure UpdateData;
     function ValidateData: Boolean;
+    property CashReceipt: TCashReceipt read GetCashReceipt write FCashReceipt;
     property CDS: TClientDataset read GetCDS write FCDS;
     property CDSClone: TClientDataset read GetCDSClone write FCDSClone;
     property CDSCloneCost: TClientDataset read GetCDSCloneCost write FCDSCloneCost;
@@ -114,7 +117,7 @@ type
   public
     function GetGroupName: string; override;
     procedure LoadByID(aID: Integer; IsReadOnly: Boolean = False);
-    property Payment: TSalesPayment read GetPayment write FPayment;
+    property ARSettlement: TARSettlement read GetARSettlement write FARSettlement;
     { Public declarations }
   end;
 
@@ -134,7 +137,7 @@ begin
   inherited;
   if not ValidateData then exit;
   UpdateData;
-  if Payment.SaveRepeat() then
+  if ARSettlement.SaveRepeat() then
   begin
 //    TAppUtils.InformationBerhasilSimpan;
     Self.ModalResult := mrOK;
@@ -143,8 +146,9 @@ end;
 
 procedure TfrmSalesPayment.CalculateAll;
 var
+  dOthers: Double;
+  dPaid: Double;
   dRetur: Double;
-  dCash: Double;
 begin
   if CDS.State in [dsInsert, dsEdit] then
     CDS.Post;
@@ -153,13 +157,14 @@ begin
   CDSCost.DisableControls;
 //  DisableTrigger := True;
   Try
-    dCash := 0;
+    dPaid := 0;
+    dOthers := 0;
     dRetur := 0;
 
     CDSClone.First;
     while not CDSClone.Eof do
     begin
-      dCash   := dCash +  CDSClone.FieldByName('Amount').AsFloat;
+      dPaid   := dPaid +  CDSClone.FieldByName('Amount').AsFloat;
       dRetur  := dRetur +  CDSClone.FieldByName('ReturAmt').AsFloat;
       CDSClone.Next;
     end;
@@ -167,13 +172,14 @@ begin
     CDSCloneCost.First;
     while not CDSCloneCost.Eof do
     begin
-      dCash   := dCash +  CDSCloneCost.FieldByName('Amount').AsFloat;
+      dOthers   := dOthers +  CDSCloneCost.FieldByName('Amount').AsFloat;
       CDSCloneCost.Next;
     end;
 
-    crCash.Value  := dCash;
-    crRetur.Value := dRetur;
-    crTotal.Value := crCash.Value + crRetur.Value;
+    crBayar.Value   := dPaid;
+    crRetur.Value   := dRetur;
+    crOthers.Value  := dOthers;
+    crTotal.Value   := dPaid + dOthers;
   Finally
     CDS.EnableControls;
     CDSCost.EnableControls;
@@ -182,53 +188,6 @@ begin
 end;
 
 
-
-procedure TfrmSalesPayment.cbMediaPropertiesEditValueChanged(Sender: TObject);
-begin
-  inherited;
-  if cbMedia.ItemIndex = Media_Cash then
-  begin
-    edNoMedia.Enabled := False;
-    dtDueDate.Enabled := False;
-    edNoMedia.Clear;
-    dtDueDate.Clear;
-    lbNoMedia.Caption := 'Referensi';
-    lbRekening.Caption := 'Rekening Asal';
-
-    if Payment.Rekening = nil then
-      Payment.Rekening := TRekening.Create;
-
-    Payment.Rekening.LoadByCode(AppVariable.Def_Rekening);
-    cxLookupRekening.EditValue := Payment.Rekening.ID;
-    cxLookupRekening.CDS.Filtered := True;
-    cxLookupRekening.CDS.Filter := 'Jenis = 0';
-
-  end;
-  if cbMedia.ItemIndex = Media_Tranfer then
-  begin
-    edNoMedia.Enabled := True;
-    dtDueDate.Enabled := False;
-    edNoMedia.Clear;
-    dtDueDate.Clear;
-    lbNoMedia.Caption := 'No Referensi';
-    lbRekening.Caption := 'Rekening Asal';
-
-    cxLookupRekening.CDS.Filtered := True;
-    cxLookupRekening.CDS.Filter := 'Jenis = 1';
-  end;
-  if cbMedia.ItemIndex = Media_Cek then
-  begin
-    edNoMedia.Enabled := True;
-    dtDueDate.Enabled := True;
-    edNoMedia.Clear;
-    dtDueDate.Clear;
-    lbNoMedia.Caption := 'No BG/Cek';
-    lbRekening.Caption := 'Bank';
-
-    cxLookupRekening.CDS.Filtered := True;
-    cxLookupRekening.CDS.Filter := 'Jenis = 1';
-  end;
-end;
 
 procedure TfrmSalesPayment.CDSAfterDelete(DataSet: TDataSet);
 begin
@@ -438,21 +397,27 @@ begin
   Result := 'Hutang & Piutang';
 end;
 
-function TfrmSalesPayment.GetPayment: TSalesPayment;
+function TfrmSalesPayment.GetARSettlement: TARSettlement;
 begin
-  if FPayment = nil then
-    FPayment := TSalesPayment.Create;
-  Result := FPayment;
+  if FARSettlement = nil then
+    FARSettlement := TARSettlement.Create;
+  Result := FARSettlement;
+end;
+
+function TfrmSalesPayment.GetCashReceipt: TCashReceipt;
+begin
+  if FCashReceipt = nil then
+    FCashReceipt := TCashReceipt.Create;
+  Result := FCashReceipt;
 end;
 
 procedure TfrmSalesPayment.InitView;
 begin
   cxGrdMain.PrepareFromCDS(CDS);
   cxGrdCost.PrepareFromCDS(CDSCost);
-  cxLookupRekening.Properties.LoadFromSQL(Self,
-    'select id, nama, jenis from trekening','nama');
-  cxLookupSalesman.Properties.LoadFromSQL(Self,
-    'select id, nama from tsalesman','nama');
+
+  cxLookupCustomer.Properties.LoadFromSQL(Self,
+    'select id, kode,  nama, alamat from tcustomer','nama');
   TcxExtLookup(colCostAccount.Properties).LoadFromSQL(Self,
     'select id, kode + '' - '' + nama as nama from taccount where isdetail = 1','nama');
 end;
@@ -463,44 +428,36 @@ var
   lSalesInv: TSalesInvoice;
   lSalesRet: TSalesRetur;
 begin
-  if FPayment <> nil then
-    FreeAndNil(FPayment);
+  if FARSettlement <> nil then
+    FreeAndNil(FARSettlement);
 
-  Payment.LoadByID(aID);
+  ARSettlement.LoadByID(aID);
 
   if aID = 0 then
   begin
-    Payment.TransDate := Now();
-    Payment.Refno     := Payment.GenerateNo;
-    Payment.Media     := -1;
+    ARSettlement.TransDate := Now();
+    ARSettlement.Refno     := ARSettlement.GenerateNo;
+//    ARSettlement.Media     := -1;
   end;
 
   if (aID <> 0) and (not IsReadOnly) then
   begin
-    IsReadOnly := not IsValidTransDate(Payment.TransDate);
+    IsReadOnly := not IsValidTransDate(ARSettlement.TransDate);
   end;
 
-  edRefno.Text        := Payment.Refno;
-  cbMedia.ItemIndex   := Payment.Media;
-  cbMediaPropertiesEditValueChanged(Self);
+  edRefno.Text        := ARSettlement.Refno;
 
-  dtTransDate.Date    := Payment.TransDate;
+  dtTransDate.Date    := ARSettlement.TransDate;
 
   if dtTransDate.Date <= 0 then dtTransDate.Clear;
 
-  cxLookupSalesman.Clear;
-  if Payment.Salesman <> nil then
-    cxLookupSalesman.EditValue := Payment.Salesman.ID;
+  cxLookupCustomer.Clear;
+  if ARSettlement.Customer <> nil then
+    cxLookupCustomer.EditValue := ARSettlement.Customer.ID;
 
-  edNotes.Text        := Payment.Notes;
-  edNoMedia.Text      := Payment.MediaNo;
-  dtDueDate.Date      := Payment.DueDate;
+  edNotes.Text        := ARSettlement.Notes;
 
-  cxLookupRekening.Clear;
-  if Payment.Rekening <> nil then
-  begin
-    cxLookupRekening.EditValue := Payment.Rekening.ID;
-  end;
+
 
   CDS.EmptyDataSet;
   CDSCost.EmptyDataSet;
@@ -510,7 +467,7 @@ begin
   lSalesInv := TSalesInvoice.Create;
   lSalesRet := TSalesRetur.Create;
   Try
-    for lItem in Payment.Items do
+    for lItem in ARSettlement.Items do
     begin
       if lItem.DebetAmt > 0 then continue;
       if lItem.SalesInvoice = nil then
@@ -560,13 +517,31 @@ begin
   btnSave.Enabled := not IsReadOnly;
 end;
 
+procedure TfrmSalesPayment.LoadCashReceipt(aID: Integer);
+var
+  lDP: TCashReceiptDP;
+begin
+  CashReceipt.LoadByID(aID);
+  lDP := TCashReceiptDP.Create;
+  Try
+    lDP.LoadByCashReceipt(aID);
+    if lDP.Customer<>nil then
+      CashReceipt.DPCustomer_ID := lDP.Customer.ID;
+    if lDP.Customer<>nil then
+      CashReceipt.DPAccount_ID := lDP.Account.ID;
+  Finally
+    lDP.Free;
+  End;
+
+end;
+
 procedure TfrmSalesPayment.LookupInvoice(sKey: string = '');
 var
   cxLookup: TfrmCXLookup;
   lInvoice: TSalesInvoice;
   S: string;
 begin
-  if (ckFilterSalesman.Checked) and (VarToInt(cxLookupSalesman.EditValue) = 0) then
+  if (ckFilterSalesman.Checked) and (VarToInt(cxLookupCustomer.EditValue) = 0) then
   begin
     TAppUtils.Warning('Salesman harus dipilih terlebih dahulu'
       +#13 + 'Atau non aktifkan [Filter Faktur atas Salesman] agar bisa memilih faktur tanpa salesman'
@@ -575,18 +550,17 @@ begin
   end;
 
   S := 'SELECT A.ID, A.INVOICENO, B.NAMA AS CUSTOMER,'
-      +' A.TRANSDATE, A.DUEDATE, B.NAMA AS SUPPLIER,'
+      +' A.TRANSDATE, A.DUEDATE, '
       +' A.AMOUNT, A.PAIDAMOUNT, A.RETURAMOUNT, A.NOTES,'
       +' (A.AMOUNT - A.PAIDAMOUNT - A.RETURAMOUNT) AS REMAIN,'
       +' C.NAMA AS SALESMAN'
       +' FROM TSALESINVOICE A'
       +' INNER JOIN TCUSTOMER B ON A.CUSTOMER_ID = B.ID'
-      +' LEFT JOIN TSALESMAN C ON A.SALESMAN_ID = C.ID'
       +' WHERE (A.AMOUNT - ISNULL(A.PAIDAMOUNT,0) - ISNULL(A.RETURAMOUNT,0)) > '
       + FloatToStr(AppVariable.Toleransi_Piutang);
 
   if ckFilterSalesman.Checked then
-    S := S + ' and a.salesman_id = ' + IntToStr(VarToInt(cxLookupSalesman.EditValue));
+    S := S + ' and a.customer_id = ' + IntToStr(VarToInt(cxLookupCustomer.EditValue));
 
 //  cxLookup := TfrmCXServerLookup.Execute(S, 'ID', 0, 0 );
   cxLookup := TfrmCXLookup.Execute(S, True );
@@ -700,38 +674,35 @@ procedure TfrmSalesPayment.UpdateData;
 var
   lItem: TFinancialTransaction;
 begin
-  Payment.Refno         := edRefno.Text;
-  Payment.TransDate     := dtTransDate.Date;
-  Payment.DueDate       := dtDueDate.Date;
-  Payment.Media         := cbMedia.ItemIndex;
-  Payment.MediaNo       := edNoMedia.Text;
-  Payment.PaymentFlag   := PaymentFlag_Credit; //
-  Payment.Amount        := crCash.Value;
-  Payment.ReturAmount   := crRetur.Value;
-  Payment.Notes         := edNotes.Text;
-  Payment.ModifiedBy    := UserLogin;
-  Payment.ModifiedDate  := Now();
+  ARSettlement.Refno         := edRefno.Text;
+  ARSettlement.TransDate     := dtTransDate.Date;
+  ARSettlement.DueDate       := dtTransDate.Date;
+//  ARSettlement.Media         := cbMedia.ItemIndex;
+//  ARSettlement.MediaNo       := edNoMedia.Text;
+  ARSettlement.CashReceipt   := TCashReceipt.CreateID(CashReceipt.ID);
+  ARSettlement.Amount        := crTotal.Value;
+  ARSettlement.ReturAmount   := crRetur.Value;
+  ARSettlement.Notes         := edNotes.Text;
+  ARSettlement.ModifiedBy    := UserLogin;
+  ARSettlement.ModifiedDate  := Now();
 
-  if Payment.Salesman = nil then
-    Payment.Salesman := TSalesman.Create;
+  if ARSettlement.Customer = nil then
+    ARSettlement.Customer := TCustomer.Create;
 
-  if Payment.Rekening = nil then
-    Payment.Rekening    := TRekening.Create;
 
-  Payment.Salesman.ID := VarToInt(cxLookupSalesman.EditValue);
-  Payment.Rekening.ID := VarToInt(cxLookupRekening.EditValue);
-  Payment.Items.Clear;
+  ARSettlement.Customer.ID := VarToInt(cxLookupCustomer.EditValue);
+  ARSettlement.Items.Clear;
 
-  //header credit
+  //header debet
   lItem                 := TFinancialTransaction.Create;
-  lItem.DebetAmt        := Payment.Amount;
+  lItem.DebetAmt        := ARSettlement.Amount;
   lItem.CreditAmt       := 0;
-  lItem.Amount          := Payment.Amount;
-  lItem.TransDate       := Payment.TransDate;
-  lItem.Notes           := 'Sales Payment : ' + Payment.Refno;
-  lItem.TransType       := Payment.PaymentFlag;
-  lItem.Rekening        := TRekening.CreateID(Payment.Rekening.ID);
-  Payment.Items.Add(lItem);
+  lItem.Amount          := ARSettlement.Amount;
+  lItem.TransDate       := ARSettlement.TransDate;
+  lItem.Notes           := 'ARSettlement : ' + ARSettlement.Refno;
+//  lItem.Rekening        := TRekening.CreateID(ARSettlement.Rekening.ID);
+  lItem.Account         := TAccount.CreateID(CashReceipt.DPAccount_ID);
+  ARSettlement.Items.Add(lItem);
 
   CDS.First;
   while not CDS.Eof do
@@ -739,10 +710,9 @@ begin
     lItem               := TFinancialTransaction.Create;
     lItem.SetFromDataset(CDS);
     lItem.SetToCredit; //pembayaran piutang
-    lItem.TransType     := Payment.PaymentFlag;
-    lItem.TransDate     := Payment.TransDate;
-    lItem.Notes         := 'Sales Payment : ' + Payment.Refno;
-    Payment.Items.Add(lItem);
+    lItem.TransDate     := ARSettlement.TransDate;
+    lItem.Notes         := 'ARSettlement : ' + ARSettlement.Refno;
+    ARSettlement.Items.Add(lItem);
     CDS.Next;
   end;
 
@@ -752,10 +722,9 @@ begin
     lItem               := TFinancialTransaction.Create;
     lItem.SetFromDataset(CDSCost);
     lItem.SetToCredit; //pembayaran biaya (sebagai pendapatan)
-    lItem.TransType     := Payment.PaymentFlag;
-    lItem.TransDate     := Payment.TransDate;
-//    lItem.Notes         := 'Sales Payment : ' + Payment.Refno;
-    Payment.Items.Add(lItem);
+    lItem.TransDate     := ARSettlement.TransDate;
+//    lItem.Notes         := 'Sales ARSettlement : ' + ARSettlement.Refno;
+    ARSettlement.Items.Add(lItem);
     CDSCost.Next;
   end;
 end;
@@ -764,38 +733,20 @@ function TfrmSalesPayment.ValidateData: Boolean;
 begin
   Result := False;
 
-  if (ckFilterSalesman.Checked) and (VarToInt(cxLookupSalesman.EditValue) = 0) then
+  if (ckFilterSalesman.Checked) and (VarToInt(cxLookupCustomer.EditValue) = 0) then
   begin
-    TAppUtils.Warning('Salesman harus dipilih terlebih dahulu'
-      +#13 + 'Atau non aktifkan [Filter Faktur atas Salesman] agar bisa menyimpan data'
+    TAppUtils.Warning('Customer harus dipilih terlebih dahulu'
+      +#13 + 'Atau non aktifkan [Filter Faktur atas Customer] agar bisa menyimpan data'
     );
     exit;
   end;
 
-  if cbMedia.ItemIndex < 0 then
-  begin
-    TAppUtils.Warning('Jenis Media belum dipilih');
-    exit;
-  end;
 
   if crTotal.Value <= 0 then
   begin
     TAppUtils.Warning('Total <= 0');
     exit;
   end;
-
-  if (VarToInt(cxLookupRekening.EditValue) = 0) then
-  begin
-    TAppUtils.Warning('Rekening Kas / Bank belum diisi');
-    exit;
-  end;
-
-  if (cbMedia.ItemIndex = Media_Cek) and (edNoMedia.Text = '') then
-  begin
-    TAppUtils.Warning('Untuk Media BG / Cek, nomor BG / Cek wajib diisi');
-    exit;
-  end;
-
 
 //  if CDS.RecordCount = 0 then
 //  begin
@@ -813,6 +764,13 @@ begin
     TAppUtils.Warning('Invoice tidak boleh kosong' + #13 + 'Baris : ' +IntTostr(CDS.RecNo));
     exit;
   end;
+
+  if Abs(crRemain.Value - crTotal.Value)> AppVariable.Toleransi_Piutang then
+  begin
+    TAppUtils.Warning('Nilai Total Pembayaran melebih Sisan Remain Cash Receipt');
+    exit;
+  end;
+
 
   CDS.First;
   while not CDS.Eof do
@@ -869,10 +827,11 @@ begin
       );
       exit;
     end;
-
-
     CDS.Next;
   end;
+
+
+
 
   if not IsValidTransDate(dtTransDate.Date) then exit;
 

@@ -1,57 +1,57 @@
 inherited frmSalesPayment: TfrmSalesPayment
-  Caption = 'Pembayaran Faktur Penjualan'
-  ClientHeight = 561
-  ClientWidth = 984
+  Caption = 'AR Settlement'
+  ClientHeight = 550
+  ClientWidth = 911
   KeyPreview = True
   OnKeyDown = FormKeyDown
-  ExplicitWidth = 1000
-  ExplicitHeight = 600
+  ExplicitWidth = 927
+  ExplicitHeight = 589
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxGroupBox2: TcxGroupBox
-    Top = 526
+    Top = 515
     TabOrder = 2
     ExplicitTop = 526
     ExplicitWidth = 984
-    Width = 984
+    Width = 911
     inherited btnCancel: TcxButton
-      Left = 899
+      Left = 826
       ExplicitLeft = 899
     end
     inherited btnPrint: TcxButton
-      Left = 813
+      Left = 740
       ExplicitLeft = 813
     end
     inherited btnSave: TcxButton
-      Left = 727
+      Left = 654
       OnClick = btnSaveClick
       ExplicitLeft = 727
     end
   end
   inherited Panel2: TPanel
-    Top = 505
-    Width = 984
+    Top = 494
+    Width = 911
     TabOrder = 3
     ExplicitTop = 505
     ExplicitWidth = 984
     inherited lbEscape: TLabel
-      Left = 904
+      Left = 831
       Height = 17
       ExplicitLeft = 904
     end
     inherited lgndSave: TLabel
-      Left = 739
+      Left = 666
       Height = 17
       ExplicitLeft = 739
     end
     inherited lgndPrint: TLabel
-      Left = 826
+      Left = 753
       Height = 17
       ExplicitLeft = 826
     end
     object Label1: TLabel
       AlignWithMargins = True
-      Left = 3
+      Left = 219
       Top = 1
       Width = 187
       Height = 17
@@ -66,11 +66,12 @@ inherited frmSalesPayment: TfrmSalesPayment
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
+      ExplicitLeft = 3
       ExplicitHeight = 16
     end
     object Label2: TLabel
       AlignWithMargins = True
-      Left = 206
+      Left = 422
       Top = 1
       Width = 84
       Height = 17
@@ -85,7 +86,21 @@ inherited frmSalesPayment: TfrmSalesPayment
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
+      ExplicitLeft = 206
       ExplicitHeight = 16
+    end
+    object ckFilterSalesman: TcxCheckBox
+      Left = 0
+      Top = 0
+      Align = alLeft
+      Caption = 'Filter Faktur Atas Customer Terpilih [F4]'
+      ParentBackground = False
+      ParentColor = False
+      State = cbsChecked
+      Style.Color = clInfoBk
+      TabOrder = 0
+      ExplicitLeft = -16
+      ExplicitTop = -6
     end
   end
   object cxGroupBox1: TcxGroupBox [2]
@@ -94,84 +109,238 @@ inherited frmSalesPayment: TfrmSalesPayment
     Align = alTop
     Caption = '  Header Invoice [F1] '
     TabOrder = 0
-    DesignSize = (
-      984
-      127)
-    Height = 127
-    Width = 984
+    Height = 105
+    Width = 911
     object cxLabel1: TcxLabel
-      Left = 26
-      Top = 25
+      Left = 38
+      Top = 21
       Caption = 'No. Bukti'
       Properties.Alignment.Horz = taRightJustify
-      AnchorX = 73
+      AnchorX = 85
     end
     object edRefno: TcxTextEdit
-      Left = 74
-      Top = 24
+      Left = 86
+      Top = 21
       TabStop = False
       Properties.CharCase = ecUpperCase
       TabOrder = 0
-      Width = 118
+      Width = 102
     end
     object cxLabel4: TcxLabel
-      Left = 24
-      Top = 45
-      Caption = 'Salesman'
+      Left = 331
+      Top = 42
+      Caption = 'Customer'
       Properties.Alignment.Horz = taRightJustify
-      AnchorX = 73
+      AnchorX = 381
     end
     object cxLabel6: TcxLabel
-      Left = 30
-      Top = 66
+      Left = 42
+      Top = 44
       Caption = 'Catatan'
       Properties.Alignment.Horz = taRightJustify
-      AnchorX = 73
+      AnchorX = 85
     end
     object edNotes: TcxMemo
-      Left = 74
-      Top = 64
+      Left = 86
+      Top = 42
       TabOrder = 3
-      Height = 39
-      Width = 252
+      Height = 48
+      Width = 206
     end
     object dtTransDate: TcxDateEdit
-      Left = 236
-      Top = 24
+      Left = 208
+      Top = 21
       TabStop = False
       Properties.ImmediatePost = True
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 90
+      Width = 84
     end
     object cxLabel8: TcxLabel
-      Left = 194
-      Top = 25
-      Caption = 'Tanggal'
+      Left = 189
+      Top = 22
+      Caption = 'Tgl'
     end
-    object dtDueDate: TcxDateEdit
-      Left = 443
-      Top = 84
+    object crOthers: TcxCurrencyEdit
+      Left = 694
+      Top = 40
+      TabStop = False
+      EditValue = 0.000000000000000000
+      ParentFont = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DisplayFormat = ',0.##;(,0.##)'
+      Properties.ReadOnly = True
+      Style.Color = clCream
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -15
+      Style.Font.Name = 'Consolas'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+      TabOrder = 4
+      Width = 200
+    end
+    object cxLabel2: TcxLabel
+      Left = 621
+      Top = 18
+      Caption = 'Nilai Bayar'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -15
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+      Properties.Alignment.Horz = taRightJustify
+      AnchorX = 692
+    end
+    object cxLabel3: TcxLabel
+      Left = 644
+      Top = 41
+      Caption = 'Others'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -15
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+      Properties.Alignment.Horz = taRightJustify
+      AnchorX = 692
+    end
+    object crBayar: TcxCurrencyEdit
+      Left = 694
+      Top = 17
+      TabStop = False
+      EditValue = 0.000000000000000000
+      ParentFont = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DisplayFormat = ',0.##;(,0.##)'
+      Properties.ReadOnly = True
+      Style.Color = clCream
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -15
+      Style.Font.Name = 'Consolas'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+      TabOrder = 5
+      Width = 200
+    end
+    object lbNoMedia: TcxLabel
+      Left = 314
+      Top = 21
+      Caption = 'Cash Receipt'
+      Properties.Alignment.Horz = taRightJustify
+      AnchorX = 381
+    end
+    object cxLookupCustomer: TcxExtLookupComboBox
+      Left = 382
+      Top = 42
+      Enabled = False
+      Properties.ImmediatePost = True
+      TabOrder = 2
+      Width = 200
+    end
+    object edCashReceipt: TcxButtonEdit
+      Left = 382
+      Top = 21
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 13
+      Width = 97
+    end
+    object cxLabel7: TcxLabel
+      Left = 329
+      Top = 62
+      Caption = 'Sisa CR'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -15
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+      Properties.Alignment.Horz = taRightJustify
+      AnchorX = 381
+    end
+    object crRemain: TcxCurrencyEdit
+      Left = 382
+      Top = 63
+      TabStop = False
+      EditValue = 0.000000000000000000
+      ParentFont = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DisplayFormat = ',0.##;(,0.##)'
+      Properties.ReadOnly = True
+      Style.Color = clCream
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -15
+      Style.Font.Name = 'Consolas'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+      TabOrder = 15
+      Width = 200
+    end
+    object crTotal: TcxCurrencyEdit
+      Left = 694
+      Top = 63
+      TabStop = False
+      EditValue = 0.000000000000000000
+      ParentFont = False
+      Properties.Alignment.Horz = taRightJustify
+      Properties.DisplayFormat = ',0.##;(,0.##)'
+      Properties.ReadOnly = True
+      Style.Color = clCream
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -15
+      Style.Font.Name = 'Consolas'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+      TabOrder = 16
+      Width = 200
+    end
+    object cxLabel5: TcxLabel
+      Left = 626
+      Top = 64
+      Caption = 'Nilai Total'
+      ParentFont = False
+      Style.Font.Charset = DEFAULT_CHARSET
+      Style.Font.Color = clWindowText
+      Style.Font.Height = -15
+      Style.Font.Name = 'Tahoma'
+      Style.Font.Style = []
+      Style.IsFontAssigned = True
+      Properties.Alignment.Horz = taRightJustify
+      AnchorX = 692
+    end
+    object cxDateEdit1: TcxDateEdit
+      Left = 504
+      Top = 21
+      TabStop = False
+      Enabled = False
       Properties.ImmediatePost = True
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 7
-      OnKeyDown = dtDueDateKeyDown
-      Width = 90
+      TabOrder = 18
+      Width = 78
     end
     object cxLabel9: TcxLabel
-      Left = 390
-      Top = 85
-      Caption = 'Jt. Tempo'
-      Properties.Alignment.Horz = taRightJustify
-      AnchorX = 442
+      Left = 485
+      Top = 21
+      Caption = 'Tgl'
     end
     object crRetur: TcxCurrencyEdit
-      Left = 799
-      Top = 54
+      Left = 668
+      Top = 183
       TabStop = False
-      Anchors = [akTop, akRight]
       EditValue = 0.000000000000000000
       ParentFont = False
       Properties.Alignment.Horz = taRightJustify
@@ -180,170 +349,25 @@ inherited frmSalesPayment: TfrmSalesPayment
       Style.Color = clCream
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clWindowText
-      Style.Font.Height = -16
-      Style.Font.Name = 'Consolas'
-      Style.Font.Style = []
-      Style.IsFontAssigned = True
-      TabOrder = 8
-      Width = 170
-    end
-    object cxLabel2: TcxLabel
-      Left = 760
-      Top = 81
-      Anchors = [akTop, akRight]
-      Caption = 'Total'
-      ParentFont = False
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clWindowText
       Style.Font.Height = -15
-      Style.Font.Name = 'Tahoma'
-      Style.Font.Style = []
-      Style.IsFontAssigned = True
-      Properties.Alignment.Horz = taRightJustify
-      AnchorX = 797
-    end
-    object cxLabel3: TcxLabel
-      Left = 758
-      Top = 55
-      Anchors = [akTop, akRight]
-      Caption = 'Retur'
-      ParentFont = False
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clWindowText
-      Style.Font.Height = -15
-      Style.Font.Name = 'Tahoma'
-      Style.Font.Style = []
-      Style.IsFontAssigned = True
-      Properties.Alignment.Horz = taRightJustify
-      AnchorX = 797
-    end
-    object crTotal: TcxCurrencyEdit
-      Left = 799
-      Top = 80
-      TabStop = False
-      Anchors = [akTop, akRight]
-      EditValue = 0.000000000000000000
-      ParentFont = False
-      Properties.Alignment.Horz = taRightJustify
-      Properties.DisplayFormat = ',0.##;(,0.##)'
-      Properties.ReadOnly = True
-      Style.Color = clCream
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clWindowText
-      Style.Font.Height = -16
       Style.Font.Name = 'Consolas'
       Style.Font.Style = []
       Style.IsFontAssigned = True
-      TabOrder = 9
-      Width = 170
-    end
-    object cxLabel5: TcxLabel
-      Left = 757
-      Top = 24
-      Anchors = [akTop, akRight]
-      Caption = 'Cash'
-      ParentFont = False
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clWindowText
-      Style.Font.Height = -17
-      Style.Font.Name = 'Tahoma'
-      Style.Font.Style = []
-      Style.IsFontAssigned = True
-      Properties.Alignment.Horz = taRightJustify
-      AnchorX = 797
-    end
-    object crCash: TcxCurrencyEdit
-      Left = 799
-      Top = 19
-      TabStop = False
-      Anchors = [akTop, akRight]
-      EditValue = 0.000000000000000000
-      ParentFont = False
-      Properties.Alignment.Horz = taRightJustify
-      Properties.DisplayFormat = ',0.##;(,0.##)'
-      Properties.ReadOnly = True
-      Style.Color = clMoneyGreen
-      Style.Font.Charset = DEFAULT_CHARSET
-      Style.Font.Color = clWindowText
-      Style.Font.Height = -24
-      Style.Font.Name = 'Consolas'
-      Style.Font.Style = []
-      Style.IsFontAssigned = True
-      TabOrder = 10
-      Width = 170
-    end
-    object cbMedia: TcxComboBox
-      Left = 443
-      Top = 24
-      Properties.CharCase = ecUpperCase
-      Properties.DropDownListStyle = lsEditFixedList
-      Properties.ImmediatePost = True
-      Properties.Items.Strings = (
-        'CASH / TUNAI'
-        'TRANSFER'
-        'BG / CEK')
-      Properties.OnEditValueChanged = cbMediaPropertiesEditValueChanged
-      TabOrder = 4
-      Text = 'CASH / TUNAI'
-      Width = 90
-    end
-    object cxLabel10: TcxLabel
-      Left = 383
-      Top = 25
-      Caption = 'Jenis Media'
-    end
-    object lbRekening: TcxLabel
-      Left = 358
-      Top = 65
-      Caption = 'Rekening Tujuan'
-      Properties.Alignment.Horz = taRightJustify
-      AnchorX = 442
-    end
-    object cxLookupRekening: TcxExtLookupComboBox
-      Left = 443
-      Top = 64
-      Properties.ImmediatePost = True
-      TabOrder = 6
-      Width = 202
-    end
-    object lbNoMedia: TcxLabel
-      Left = 394
-      Top = 45
-      Caption = 'No Media'
-      Properties.Alignment.Horz = taRightJustify
-      AnchorX = 442
-    end
-    object edNoMedia: TcxTextEdit
-      Left = 443
-      Top = 44
-      Properties.CharCase = ecUpperCase
-      TabOrder = 5
-      Width = 202
-    end
-    object cxLookupSalesman: TcxExtLookupComboBox
-      Left = 74
-      Top = 44
-      Properties.ImmediatePost = True
-      TabOrder = 2
-      Width = 252
-    end
-    object ckFilterSalesman: TcxCheckBox
-      Left = 6
-      Top = 103
-      Anchors = [akLeft, akBottom]
-      Caption = 'Filter Faktur Atas Salesman Terpilih [F4]'
-      State = cbsChecked
-      TabOrder = 22
+      TabOrder = 20
+      Visible = False
+      Width = 200
     end
   end
   object cxGrid1: TcxGrid [3]
     Left = 0
-    Top = 127
-    Width = 984
-    Height = 378
+    Top = 105
+    Width = 911
+    Height = 389
     Align = alClient
     TabOrder = 1
     RootLevelOptions.DetailTabsPosition = dtpTop
+    ExplicitTop = 99
+    ExplicitHeight = 394
     object cxGrdMain: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       OnEditKeyDown = cxGrdMainEditKeyDown
@@ -379,7 +403,7 @@ inherited frmSalesPayment: TfrmSalesPayment
         Properties.OnButtonClick = colInvoiceNoPropertiesButtonClick
         Properties.OnValidate = colInvoiceNoPropertiesValidate
         HeaderAlignmentHorz = taCenter
-        Width = 115
+        Width = 128
       end
       object colInvoiceDate: TcxGridDBColumn
         Caption = 'Tgl Faktur'
@@ -389,12 +413,12 @@ inherited frmSalesPayment: TfrmSalesPayment
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
         Options.Focusing = False
-        Width = 70
+        Width = 81
       end
       object colCustomer: TcxGridDBColumn
         DataBinding.FieldName = 'Customer'
         HeaderAlignmentHorz = taCenter
-        Width = 239
+        Width = 153
       end
       object colInvoiceAmt: TcxGridDBColumn
         Caption = 'Nilai Faktur'
@@ -424,7 +448,7 @@ inherited frmSalesPayment: TfrmSalesPayment
         Properties.DisplayFormat = ',0.##;(,0.##)'
         Properties.OnEditValueChanged = colPaidAmtPropertiesEditValueChanged
         HeaderAlignmentHorz = taCenter
-        Width = 107
+        Width = 106
       end
       object colReturNo: TcxGridDBColumn
         Caption = 'No. Retur'
@@ -439,7 +463,7 @@ inherited frmSalesPayment: TfrmSalesPayment
         Properties.OnButtonClick = colReturNoPropertiesButtonClick
         Properties.OnValidate = colReturNoPropertiesValidate
         HeaderAlignmentHorz = taCenter
-        Width = 83
+        Width = 68
       end
       object colReturRemain: TcxGridDBColumn
         Caption = 'Sisa Retur'
@@ -450,7 +474,7 @@ inherited frmSalesPayment: TfrmSalesPayment
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 93
+        Width = 74
       end
       object colReturAmt: TcxGridDBColumn
         Caption = 'Potong Retur'
@@ -483,13 +507,19 @@ inherited frmSalesPayment: TfrmSalesPayment
     object cxGrdCost: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.00;(,0.00)'
+          Kind = skSum
+          Column = colCostAmount
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.FocusCellOnTab = True
       OptionsBehavior.FocusFirstCellOnNewRecord = True
       OptionsBehavior.GoToNextCellOnEnter = True
       OptionsBehavior.FocusCellOnCycle = True
       OptionsData.Appending = True
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 30
       Styles.ContentOdd = styleOdd
@@ -526,6 +556,8 @@ inherited frmSalesPayment: TfrmSalesPayment
     end
   end
   inherited styleRepo: TcxStyleRepository
+    Left = 640
+    Top = 376
     PixelsPerInch = 96
   end
 end

@@ -15,7 +15,6 @@ uses
 
 type
   TfrmBrowseSalesPayment = class(TfrmDefaultServerBrowse)
-    chkFrontEnd: TcxCheckBox;
     procedure btnBaruClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure btnHapusClick(Sender: TObject);
@@ -79,7 +78,7 @@ begin
   inherited;
   if not TAppUtils.Confirm('Anda yakin menghapus data ini?') then exit;
 
-  with TSalesPayment.Create do
+  with TARSettlement.Create do
   begin
     if LoadByID(Self.cxGrdMain.GetID) then
     begin
@@ -144,17 +143,13 @@ end;
 function TfrmBrowseSalesPayment.GetSQL: string;
 begin
   Result := 'SELECT A.ID, A.REFNO, A.TRANSDATE, A.NOTES,'
-           +' B.NAMA AS SALESMAN, C.NAMA AS REKENING, A.AMOUNT, A.RETURAMOUNT,'
-           +' CASE WHEN A.MEDIA=1 THEN ''TRANSFER'' WHEN A.MEDIA = 2 THEN ''BG/CEK'' ELSE ''TUNAI'' END AS MEDIA,'
-           +' A.MEDIANO, A.DUEDATE'
-           +' FROM TSALESPAYMENT A'
-           +' LEFT JOIN TSALESMAN B ON A.SALESMAN_ID = B.ID'
-           +' LEFT JOIN TREKENING C ON A.REKENING_ID = C.ID'
+           +' B.NAMA AS CUSTOMER, A.AMOUNT, A.RETURAMOUNT'
+           +' FROM TARSettlement A'
+           +' LEFT JOIN TCUSTOMER B ON A.CUSTOMER_ID = B.ID'
            +' WHERE A.TRANSDATE BETWEEN ' + TAppUtils.QuotD(StartDate.Date)
            +' AND ' + TAppUtils.QuotD(EndDate.Date);
 
-  if not chkFrontEnd.Checked then
-    Result := Result + ' AND (A.REFNO NOT LIKE ''%FK%'' AND  A.REFNO NOT LIKE ''%FT%'')';
+ 
 
 end;
 
