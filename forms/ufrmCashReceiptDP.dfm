@@ -11,43 +11,43 @@ inherited frmCashReceiptDP: TfrmCashReceiptDP
   inherited cxGroupBox2: TcxGroupBox
     Top = 305
     TabOrder = 1
-    ExplicitTop = 472
-    ExplicitWidth = 735
+    ExplicitTop = 305
+    ExplicitWidth = 464
     Width = 464
     inherited btnCancel: TcxButton
       Left = 379
-      ExplicitLeft = 650
+      ExplicitLeft = 379
     end
     inherited btnPrint: TcxButton
       Left = 293
-      ExplicitLeft = 564
+      ExplicitLeft = 293
     end
     inherited btnSave: TcxButton
       Left = 207
       OnClick = btnSaveClick
-      ExplicitLeft = 478
+      ExplicitLeft = 207
     end
   end
   inherited Panel2: TPanel
     Top = 284
     Width = 464
     TabOrder = 2
-    ExplicitTop = 451
-    ExplicitWidth = 735
+    ExplicitTop = 284
+    ExplicitWidth = 464
     inherited lbEscape: TLabel
       Left = 384
       Height = 17
-      ExplicitLeft = 655
+      ExplicitLeft = 384
     end
     inherited lgndSave: TLabel
       Left = 219
       Height = 17
-      ExplicitLeft = 490
+      ExplicitLeft = 219
     end
     inherited lgndPrint: TLabel
       Left = 306
       Height = 17
-      ExplicitLeft = 577
+      ExplicitLeft = 306
     end
   end
   object cxGroupBox1: TcxGroupBox [2]
@@ -56,8 +56,6 @@ inherited frmCashReceiptDP: TfrmCashReceiptDP
     Align = alClient
     Caption = '  Data  [F1] '
     TabOrder = 0
-    ExplicitWidth = 710
-    ExplicitHeight = 129
     Height = 284
     Width = 464
     object cxLabel1: TcxLabel

@@ -395,7 +395,6 @@ end;
 
 procedure TfrmSalesRetur.colUOMPropertiesEditValueChanged(Sender: TObject);
 var
-  aTipeHarga: Integer;
   lItemUOM: TItemUOM;
 begin
   inherited;
@@ -418,11 +417,10 @@ begin
     DC.SetEditValue(colKonversi.Index, lItemUOM.Konversi, evsValue);
     DC.SetEditValue(
       colHrgJual.Index,
-      lItemUOM.GetHarga(aTipeharga),
+      lItemUOM.GetHarga(),
       evsValue
     );
 
-    DC.SetEditValue(colPriceType.Index, aTipeHarga, evsValue);
 
     CalculateAll;
     colQty.FocusWithSelection;
@@ -938,7 +936,6 @@ end;
 
 procedure TfrmSalesRetur.SetItemToGrid(aItem: TItem);
 var
-  aTipeHarga: Integer;
   lItemUOM: TItemUOM;
 begin
   if SalesRetur.Invoice = nil then
@@ -976,9 +973,8 @@ begin
     Try
       DC.SetEditValue(colKonversi.Index, lItemUOM.Konversi, evsValue);
       DC.SetEditValue(colHrgJual.Index,
-        lItemUOM.GetHarga(aTipeHarga),
+        lItemUOM.GetHarga(),
         evsValue);
-      DC.SetEditValue(colPriceType.Index, aTipeHarga, evsValue);
     Finally
       FreeAndNil(lItemUOM);
     End;

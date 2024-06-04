@@ -1,4 +1,4 @@
-inherited frmSalesPayment: TfrmSalesPayment
+inherited frmARSettlement: TfrmARSettlement
   Caption = 'AR Settlement'
   ClientHeight = 550
   ClientWidth = 911
@@ -252,6 +252,7 @@ inherited frmSalesPayment: TfrmSalesPayment
           Kind = bkEllipsis
         end>
       Properties.ReadOnly = True
+      Properties.OnButtonClick = edCashReceiptPropertiesButtonClick
       TabOrder = 13
       Width = 97
     end

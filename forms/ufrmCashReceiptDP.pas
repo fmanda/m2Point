@@ -117,7 +117,6 @@ end;
 procedure TfrmCashReceiptDP.LoadByID(aID: Integer; IsReadOnly: Boolean = False);
 var
   lDP: TCashReceiptDP;
-  lItem: TFinancialTransaction;
 begin
   if FCashReceipt <> nil then
     FreeAndNil(FCashReceipt);

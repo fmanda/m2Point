@@ -1525,8 +1525,6 @@ begin
 end;
 
 function TPurchaseReceive.BeforeSaveToDB: Boolean;
-var
-  lPurchasePayment: TPurchasePayment;
 begin
   GenerateAvgCost;
   Result := True;

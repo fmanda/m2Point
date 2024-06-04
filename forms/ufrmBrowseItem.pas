@@ -68,7 +68,7 @@ var
   I: TIdIcmpClient;
   Rec: Integer;
 begin
-  Result:= False;
+//  Result:= False;
   I:= TIdIcmpClient.Create(nil);
   try
     I.Host:= aIPAddr;

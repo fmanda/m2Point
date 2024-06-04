@@ -417,7 +417,6 @@ end;
 procedure TfrmCashPayment.UpdateData;
 var
   lItem: TFinancialTransaction;
-  lTotalFee: Double;
 begin
   CashPayment.Refno         := edRefno.Text;
   CashPayment.TransDate     := dtTransDate.Date;
@@ -469,19 +468,6 @@ begin
   end;
 
 
-
-  //fee
-  if lTotalFee > 0 then
-  begin
-    lItem           := TFinancialTransaction.Create;
-    lItem.TransDate := CashPayment.TransDate;
-
-    lItem.Amount    := lTotalFee;
-    lItem.DebetAmt  := lTotalFee;
-    lItem.Notes     := 'Pembayaran Fee : ' + CashPayment.Refno;
-    lItem.TransType := 210;
-    CashPayment.Items.Add(lItem);
-  end;
 
 end;
 

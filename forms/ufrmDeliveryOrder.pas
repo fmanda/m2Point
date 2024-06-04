@@ -86,7 +86,6 @@ type
     DisableTrigger: Boolean;
     FCDS: TClientDataset;
     FCDSClone: TClientDataset;
-    FCDSDummy: TClientDataset;
     FCDSUOM: TClientDataset;
     FCDSValidate: TClientDataset;
     FDevOrder: TDeliveryOrder;
@@ -98,7 +97,6 @@ type
     procedure FocusToGrid;
     function GetCDS: TClientDataset;
     function GetCDSClone: TClientDataset;
-    function GetCDSDummy: TClientDataset;
     function GetCDSUOM: TClientDataset;
     function GetDevOrder: TDeliveryOrder;
     procedure InitView;
@@ -107,13 +105,11 @@ type
     procedure LookupItem(aKey: string = '');
     procedure LookupCustomer(sKey: string = '');
     procedure SetCDSValidate(const Value: TClientDataset);
-    procedure SetDefaultValueTipeHarga;
     procedure SetItemToGrid(aItem: TItem; IsFromLookup: Boolean = False);
     procedure UpdateData;
     function ValidateData(WithPaymentDlg: Boolean = False): Boolean;
     property CDS: TClientDataset read GetCDS write FCDS;
     property CDSClone: TClientDataset read GetCDSClone write FCDSClone;
-    property CDSDummy: TClientDataset read GetCDSDummy write FCDSDummy;
     property CDSUOM: TClientDataset read GetCDSUOM write FCDSUOM;
     property DevOrder: TDeliveryOrder read GetDevOrder write FDevOrder;
     { Private declarations }
@@ -188,7 +184,7 @@ end;
 
 function TfrmDeliveryOrder.CheckCreditLimit: Boolean;
 begin
-
+  Result := True;
 end;
 
 function TfrmDeliveryOrder.CheckStock: Boolean;
@@ -523,15 +519,6 @@ begin
   Result := FCDSClone;
 end;
 
-function TfrmDeliveryOrder.GetCDSDummy: TClientDataset;
-begin
-  if FCDSDummy = nil then
-  begin
-    FCDSDummy := TDBUtils.OpenDataset('select * from titem where nama like ''oli%'' ',Self);
-  end;
-  Result := FCDSDummy;
-end;
-
 function TfrmDeliveryOrder.GetCDSUOM: TClientDataset;
 begin
   if FCDSUOM = nil then
@@ -570,7 +557,6 @@ end;
 
 procedure TfrmDeliveryOrder.LoadByID(aID: Integer; IsReadOnly: Boolean = True);
 var
-  lEditedVal: Double;
   lItem: TTransDetail;
 begin
   if FDevOrder <> nil then
@@ -629,7 +615,7 @@ begin
     DevOrder.Customer.ReLoad(False);
     edCustomer.Text := DevOrder.Customer.Nama;
 
-    lEditedVal := 0;
+
 
   end;
 
@@ -778,11 +764,6 @@ begin
   FCDSValidate := Value;
 end;
 
-procedure TfrmDeliveryOrder.SetDefaultValueTipeHarga;
-begin
- 
-end;
-
 procedure TfrmDeliveryOrder.SetItemToGrid(aItem: TItem; IsFromLookup: Boolean =
     False);
 var
@@ -888,12 +869,6 @@ end;
 
 function TfrmDeliveryOrder.ValidateData(WithPaymentDlg: Boolean = False):
     Boolean;
-//var
-//  lCashAmt: Double;
-var
-  lCardAmt: Double;
-  lCardRekID: Integer;
-  lCashAmt: Double;
 begin
   Result := False;
 
@@ -977,12 +952,6 @@ begin
 //    edCustomer.SetFocus;
     exit;
   end;
-
-
-  lCashAmt := 0;
-  lCardAmt := 0;
-  lCardRekID := 0;
-//
 
   Result := TAppUtils.Confirm('Anda yakin data sudah sesuai?');
 

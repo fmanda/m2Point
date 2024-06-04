@@ -332,7 +332,7 @@ uses
   uVariable, ufrmSalesInvoiceHistory, ufrmPurchaseInvoiceHistory,
   ufrmBrowseSettingFee, ufrmSaldoRekening, ufrmBrowseSalesRetur,
   ufrmMutasiRekening, ufrmBrowsePurchasePayment, ufrmPurchaseReturHistory,
-  ufrmBrowseSalesPayment, ufrmSalesReturHistory, ufrmLapHutang, ufrmLapPiutang,
+  ufrmBrowseARSettlement, ufrmSalesReturHistory, ufrmLapHutang, ufrmLapPiutang,
   ufrmBrowseCashTransfer, ufrmBrowsePriceQuotation, ufrmBrowseAccount,
   ufrmBrowseCashPayment, ufrmBrowseCashReceipt, ufrmBrowseStockOpname,
   ufrmBrowseStockAdjustment, ufrmEndOfDay, ufrmLapCashOpname,
@@ -708,7 +708,7 @@ end;
 
 procedure TfrmMain.actSalesPaymentExecute(Sender: TObject);
 begin
-  ShowForm(TfrmBrowseSalesPayment);
+  ShowForm(TfrmBrowseARSettlement);
 end;
 
 procedure TfrmMain.actSalesReturExecute(Sender: TObject);

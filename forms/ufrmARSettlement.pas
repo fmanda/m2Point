@@ -1,4 +1,4 @@
-unit ufrmSalesPayment;
+unit ufrmARSettlement;
 
 interface
 
@@ -17,7 +17,7 @@ uses
   cxGridDBDataDefinitions, uItem, cxDataUtils, uAppUtils, cxSpinEdit,
   cxCheckBox, uCustomer;
 type
-  TfrmSalesPayment = class(TfrmDefaultInput)
+  TfrmARSettlement = class(TfrmDefaultInput)
     cxGroupBox1: TcxGroupBox;
     cxLabel1: TcxLabel;
     edRefno: TcxTextEdit;
@@ -81,6 +81,8 @@ type
         Integer);
     procedure colReturNoPropertiesValidate(Sender: TObject; var DisplayValue:
         Variant; var ErrorText: TCaption; var Error: Boolean);
+    procedure edCashReceiptPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
   private
     FCDS: TClientDataset;
     FCDSClone: TClientDataset;
@@ -104,7 +106,7 @@ type
     procedure LoadCashReceipt(aID: Integer);
     procedure LookupInvoice(sKey: string = '');
     procedure LookupRetur;
-    procedure LookupCashReceipt(sKey: string = '');
+    procedure LookupCashReceipt;
     procedure SetInvoiceToGrid(AInvoice: TSalesInvoice);
     procedure SetReturToGrid(aRetur: TSalesRetur);
     procedure UpdateData;
@@ -123,7 +125,7 @@ type
   end;
 
 var
-  frmSalesPayment: TfrmSalesPayment;
+  frmARSettlement: TfrmARSettlement;
 
 implementation
 
@@ -133,7 +135,7 @@ uses
 
 {$R *.dfm}
 
-procedure TfrmSalesPayment.btnSaveClick(Sender: TObject);
+procedure TfrmARSettlement.btnSaveClick(Sender: TObject);
 begin
   inherited;
   if not ValidateData then exit;
@@ -145,7 +147,7 @@ begin
   end;
 end;
 
-procedure TfrmSalesPayment.CalculateAll;
+procedure TfrmARSettlement.CalculateAll;
 var
   dOthers: Double;
   dPaid: Double;
@@ -190,13 +192,13 @@ end;
 
 
 
-procedure TfrmSalesPayment.CDSAfterDelete(DataSet: TDataSet);
+procedure TfrmARSettlement.CDSAfterDelete(DataSet: TDataSet);
 begin
   inherited;
   CalculateAll;
 end;
 
-procedure TfrmSalesPayment.colCostAmountPropertiesEditValueChanged(Sender:
+procedure TfrmARSettlement.colCostAmountPropertiesEditValueChanged(Sender:
     TObject);
 begin
   inherited;
@@ -204,14 +206,14 @@ begin
   CalculateAll;
 end;
 
-procedure TfrmSalesPayment.colInvoiceNoPropertiesButtonClick(Sender: TObject;
+procedure TfrmARSettlement.colInvoiceNoPropertiesButtonClick(Sender: TObject;
     AButtonIndex: Integer);
 begin
   inherited;
   LookupInvoice;
 end;
 
-procedure TfrmSalesPayment.colInvoiceNoPropertiesValidate(Sender: TObject; var
+procedure TfrmARSettlement.colInvoiceNoPropertiesValidate(Sender: TObject; var
     DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
 var
   lSales: TSalesInvoice;
@@ -226,14 +228,14 @@ begin
   End;
 end;
 
-procedure TfrmSalesPayment.colPaidAmtPropertiesEditValueChanged(Sender:
+procedure TfrmARSettlement.colPaidAmtPropertiesEditValueChanged(Sender:
     TObject);
 begin
   inherited;
   CalculateAll;
 end;
 
-procedure TfrmSalesPayment.colReturAmtPropertiesEditValueChanged(Sender:
+procedure TfrmARSettlement.colReturAmtPropertiesEditValueChanged(Sender:
     TObject);
 begin
   inherited;
@@ -241,14 +243,14 @@ begin
   CalculateAll;
 end;
 
-procedure TfrmSalesPayment.colReturNoPropertiesButtonClick(Sender: TObject;
+procedure TfrmARSettlement.colReturNoPropertiesButtonClick(Sender: TObject;
     AButtonIndex: Integer);
 begin
   inherited;
   LookupRetur();
 end;
 
-procedure TfrmSalesPayment.colReturNoPropertiesValidate(Sender: TObject; var
+procedure TfrmARSettlement.colReturNoPropertiesValidate(Sender: TObject; var
     DisplayValue: Variant; var ErrorText: TCaption; var Error: Boolean);
 //var
 //  lRet: TPurchaseRetur;
@@ -263,7 +265,7 @@ begin
 //  End;
 end;
 
-procedure TfrmSalesPayment.cxGrdMainEditKeyDown(Sender: TcxCustomGridTableView;
+procedure TfrmARSettlement.cxGrdMainEditKeyDown(Sender: TcxCustomGridTableView;
     AItem: TcxCustomGridTableItem; AEdit: TcxCustomEdit; var Key: Word; Shift:
     TShiftState);
 begin
@@ -278,17 +280,17 @@ begin
   end;
 end;
 
-function TfrmSalesPayment.DC: TcxGridDBDataController;
+function TfrmARSettlement.DC: TcxGridDBDataController;
 begin
   Result := cxGrdMain.DataController;
 end;
 
-function TfrmSalesPayment.DCCost: TcxGridDBDataController;
+function TfrmARSettlement.DCCost: TcxGridDBDataController;
 begin
   Result := cxGrdCost.DataController;
 end;
 
-procedure TfrmSalesPayment.dtDueDateKeyDown(Sender: TObject; var Key: Word;
+procedure TfrmARSettlement.dtDueDateKeyDown(Sender: TObject; var Key: Word;
     Shift: TShiftState);
 begin
   inherited;
@@ -298,7 +300,14 @@ begin
   end;
 end;
 
-procedure TfrmSalesPayment.FocusToGrid;
+procedure TfrmARSettlement.edCashReceiptPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+  inherited;
+  LookupCashReceipt;
+end;
+
+procedure TfrmARSettlement.FocusToGrid;
 begin
   cxGrid1.SetFocus;
   cxGrid1.FocusedView := cxGrdMain;
@@ -309,7 +318,7 @@ begin
   end;
 end;
 
-procedure TfrmSalesPayment.FocusToGridCost;
+procedure TfrmARSettlement.FocusToGridCost;
 begin
   cxGrid1.SetFocus;
   cxGrid1.FocusedView := cxGrdCost;
@@ -320,7 +329,7 @@ begin
   end;
 end;
 
-procedure TfrmSalesPayment.FormCreate(Sender: TObject);
+procedure TfrmARSettlement.FormCreate(Sender: TObject);
 begin
   inherited;
   Self.AssignKeyDownEvent;
@@ -329,7 +338,7 @@ begin
   LoadByID(0);
 end;
 
-procedure TfrmSalesPayment.FormKeyDown(Sender: TObject; var Key: Word; Shift:
+procedure TfrmARSettlement.FormKeyDown(Sender: TObject; var Key: Word; Shift:
     TShiftState);
 begin
   inherited;
@@ -345,7 +354,7 @@ begin
 
 end;
 
-function TfrmSalesPayment.GetCDS: TClientDataset;
+function TfrmARSettlement.GetCDS: TClientDataset;
 begin
   if FCDS = nil then
   begin
@@ -364,7 +373,7 @@ begin
   Result := FCDS;
 end;
 
-function TfrmSalesPayment.GetCDSClone: TClientDataset;
+function TfrmARSettlement.GetCDSClone: TClientDataset;
 begin
   if FCDSClone = nil then
   begin
@@ -373,7 +382,7 @@ begin
   Result := FCDSClone;
 end;
 
-function TfrmSalesPayment.GetCDSCloneCost: TClientDataset;
+function TfrmARSettlement.GetCDSCloneCost: TClientDataset;
 begin
   if FCDSCloneCost = nil then
   begin
@@ -382,7 +391,7 @@ begin
   Result := FCDSCloneCost;
 end;
 
-function TfrmSalesPayment.GetCDSCost: TClientDataset;
+function TfrmARSettlement.GetCDSCost: TClientDataset;
 begin
   if FCDSCost = nil then
   begin
@@ -393,26 +402,26 @@ begin
   Result := FCDSCost;
 end;
 
-function TfrmSalesPayment.GetGroupName: string;
+function TfrmARSettlement.GetGroupName: string;
 begin
   Result := 'Hutang & Piutang';
 end;
 
-function TfrmSalesPayment.GetARSettlement: TARSettlement;
+function TfrmARSettlement.GetARSettlement: TARSettlement;
 begin
   if FARSettlement = nil then
     FARSettlement := TARSettlement.Create;
   Result := FARSettlement;
 end;
 
-function TfrmSalesPayment.GetCashReceipt: TCashReceipt;
+function TfrmARSettlement.GetCashReceipt: TCashReceipt;
 begin
   if FCashReceipt = nil then
     FCashReceipt := TCashReceipt.Create;
   Result := FCashReceipt;
 end;
 
-procedure TfrmSalesPayment.InitView;
+procedure TfrmARSettlement.InitView;
 begin
   cxGrdMain.PrepareFromCDS(CDS);
   cxGrdCost.PrepareFromCDS(CDSCost);
@@ -423,7 +432,7 @@ begin
     'select id, kode + '' - '' + nama as nama from taccount where isdetail = 1','nama');
 end;
 
-procedure TfrmSalesPayment.LoadByID(aID: Integer; IsReadOnly: Boolean = False);
+procedure TfrmARSettlement.LoadByID(aID: Integer; IsReadOnly: Boolean = False);
 var
   lItem: TFinancialTransaction;
   lSalesInv: TSalesInvoice;
@@ -520,7 +529,7 @@ begin
   btnSave.Enabled := not IsReadOnly;
 end;
 
-procedure TfrmSalesPayment.LoadCashReceipt(aID: Integer);
+procedure TfrmARSettlement.LoadCashReceipt(aID: Integer);
 var
   lDP: TCashReceiptDP;
 begin
@@ -542,7 +551,7 @@ begin
   End;
 end;
 
-procedure TfrmSalesPayment.LookupInvoice(sKey: string = '');
+procedure TfrmARSettlement.LookupInvoice(sKey: string = '');
 var
   cxLookup: TfrmCXLookup;
   lInvoice: TSalesInvoice;
@@ -603,7 +612,7 @@ begin
   End;
 end;
 
-procedure TfrmSalesPayment.LookupRetur;
+procedure TfrmARSettlement.LookupRetur;
 var
   aCustomerID: Integer;
   cxLookup: TfrmCXServerLookup;
@@ -645,7 +654,7 @@ begin
   End;
 end;
 
-procedure TfrmSalesPayment.LookupCashReceipt(sKey: string = '');
+procedure TfrmARSettlement.LookupCashReceipt;
 var
   cxLookup: TfrmCXServerLookup;
   S: string;
@@ -653,7 +662,6 @@ begin
   S := 'select * from VW_REMAINCASHRECEIPTDP';
   cxLookup := TfrmCXServerLookup.Execute(S, 'ID');
   Try
-    cxLookup.PreFilter('Nama', sKey);
     if cxLookup.ShowModal = mrOK then
     begin
       LoadCashReceipt(cxLookup.FieldValue('id'));
@@ -663,7 +671,7 @@ begin
   End;
 end;
 
-procedure TfrmSalesPayment.SetInvoiceToGrid(AInvoice: TSalesInvoice);
+procedure TfrmARSettlement.SetInvoiceToGrid(AInvoice: TSalesInvoice);
 begin
   if AInvoice = nil then exit;
   DC.SetEditValue(colInvoiceID.Index, AInvoice.ID, evsValue);
@@ -685,7 +693,7 @@ begin
   CalculateAll;
 end;
 
-procedure TfrmSalesPayment.SetReturToGrid(aRetur: TSalesRetur);
+procedure TfrmARSettlement.SetReturToGrid(aRetur: TSalesRetur);
 begin
   if aRetur = nil then exit;
   DC.SetEditValue(colReturID.Index, aRetur.ID, evsValue);
@@ -695,7 +703,7 @@ begin
   CalculateAll;
 end;
 
-procedure TfrmSalesPayment.UpdateData;
+procedure TfrmARSettlement.UpdateData;
 var
   lItem: TFinancialTransaction;
 begin
@@ -754,7 +762,7 @@ begin
   end;
 end;
 
-function TfrmSalesPayment.ValidateData: Boolean;
+function TfrmARSettlement.ValidateData: Boolean;
 begin
   Result := False;
 

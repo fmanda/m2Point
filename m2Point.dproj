@@ -354,12 +354,12 @@
             <Form>frmLapHutang</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="forms\ufrmSalesPayment.pas">
-            <Form>frmSalesPayment</Form>
+        <DCCReference Include="forms\ufrmARSettlement.pas">
+            <Form>frmARSettlement</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="forms\ufrmBrowseSalesPayment.pas">
-            <Form>frmBrowseSalesPayment</Form>
+        <DCCReference Include="forms\ufrmBrowseARSettlement.pas">
+            <Form>frmBrowseARSettlement</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="forms\ufrmSalesReturHistory.pas">

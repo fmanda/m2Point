@@ -469,6 +469,7 @@ type
   public
     destructor Destroy; override;
     function LoadByCashReceipt(CashReceipt_ID: Integer): Boolean;
+    function Remain: Double;
   published
     property DP_No: String read FDP_No write FDP_No;
     property Customer: TCustomer read FCustomer write FCustomer;
@@ -1893,6 +1894,11 @@ begin
   Finally
     FreeAndNil(Q);
   End;
+end;
+
+function TCashReceiptDP.Remain: Double;
+begin
+  Result := Amount-PaidAmount;
 end;
 
 

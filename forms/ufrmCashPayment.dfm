@@ -231,6 +231,9 @@ inherited frmCashPayment: TfrmCashPayment
     object tsRetur: TcxTabSheet
       Caption = 'Pembayaran Retur Customer'
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGrid3: TcxGrid
         Left = 0
         Top = 0

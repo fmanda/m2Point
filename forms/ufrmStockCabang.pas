@@ -11,7 +11,7 @@ uses
   cxContainer, Vcl.Menus, cxTextEdit, cxMemo, Vcl.StdCtrls, cxButtons,
   cxGroupBox, cxClasses, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxCurrencyEdit, uDXUtils,
-  uDBUtils, uVariable, uAppUtils;
+  uDBUtils, uVariable, uAppUtils, System.UITypes;
 
 type
   TfrmStockCabang = class(TForm)
@@ -78,7 +78,7 @@ var
   lProjName: string;
   lUser: string;
   QProj: TFDQUery;
-  T: TDatabaseThread;
+//  T: TDatabaseThread;
 begin
   inherited;
 

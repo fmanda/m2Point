@@ -450,7 +450,7 @@ object frmMain: TfrmMain
     object dxBarManagerBar10: TdxBar
       Caption = 'Laporan'
       CaptionButtons = <>
-      DockedLeft = 332
+      DockedLeft = 333
       DockedTop = 0
       FloatLeft = 901
       FloatTop = 8

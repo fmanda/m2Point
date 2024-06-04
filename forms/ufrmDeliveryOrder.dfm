@@ -40,18 +40,15 @@ inherited frmDeliveryOrder: TfrmDeliveryOrder
     ExplicitWidth = 713
     inherited lbEscape: TLabel
       Left = 633
-      Height = 17
       ExplicitLeft = 633
     end
     inherited lgndSave: TLabel
       Left = 458
-      Height = 17
       Margins.Right = 25
       ExplicitLeft = 458
     end
     inherited lgndPrint: TLabel
       Left = 555
-      Height = 17
       Visible = True
       ExplicitLeft = 555
     end
@@ -60,7 +57,7 @@ inherited frmDeliveryOrder: TfrmDeliveryOrder
       Left = 3
       Top = 1
       Width = 90
-      Height = 17
+      Height = 16
       Margins.Top = 1
       Margins.Bottom = 1
       Align = alLeft
@@ -71,7 +68,6 @@ inherited frmDeliveryOrder: TfrmDeliveryOrder
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
-      ExplicitHeight = 16
     end
   end
   object cxGridItem: TcxGrid [2]
