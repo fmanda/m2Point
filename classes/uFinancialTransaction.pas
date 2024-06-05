@@ -115,8 +115,8 @@ type
   TCashReceipt = class(TCRUDFinance)
   private
     FAccount: TAccount;
-    FCustomer: TCustomer;
     FRekening: TRekening;
+    FCustomer: TCustomer;
     FIs_DownPayment: Integer;
     FPaidAmount: Double;
   protected
@@ -129,8 +129,8 @@ type
     function Remain: Double;
   published
     property Account: TAccount read FAccount write FAccount;
-    property Customer: TCustomer read FCustomer write FCustomer;
     property Rekening: TRekening read FRekening write FRekening;
+    property Customer: TCustomer read FCustomer write FCustomer;
     property Is_DownPayment: Integer read FIs_DownPayment write FIs_DownPayment;
     property PaidAmount: Double read FPaidAmount write FPaidAmount;
   end;
@@ -750,7 +750,9 @@ end;
 destructor TCashReceipt.Destroy;
 begin
   inherited;
-//  if FSupplier <> nil then FreeAndNil(FSupplier);
+  if FCustomer <> nil then FreeAndNil(FCustomer);
+  if FAccount <> nil then FreeAndNil(FAccount);
+  if FRekening <> nil then FreeAndNil(FRekening);
 end;
 
 function TCashReceipt.GenerateNo: String;

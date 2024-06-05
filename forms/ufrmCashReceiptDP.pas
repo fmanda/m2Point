@@ -130,6 +130,7 @@ begin
     IsReadOnly := not IsValidTransDate(CashReceipt.TransDate);
   end;
 
+  crCash.Value        := CashReceipt.Amount;
   edRefno.Text        := CashReceipt.Refno;
   dtTransDate.Date    := CashReceipt.TransDate;
   if dtTransDate.Date <= 0 then dtTransDate.Clear;
@@ -160,13 +161,21 @@ begin
   CashReceipt.Notes         := edNotes.Text;
   CashReceipt.ModifiedBy    := UserLogin;
   CashReceipt.ModifiedDate  := Now();
-  CashReceipt.Account       := TAccount.CreateID(VarToInt(cxLookupAcc.EditValue));
-  CashReceipt.Customer      := TCustomer.CreateID(VarToInt(cxLookupCustomer.EditValue));
+
+  if CashReceipt.Customer = nil then
+    CashReceipt.Customer    := TCustomer.Create;
+
+  if CashReceipt.Account = nil then
+    CashReceipt.Account     := TAccount.Create;
 
   if CashReceipt.Rekening = nil then
     CashReceipt.Rekening    := TRekening.Create;
 
+  CashReceipt.Customer.LoadByID(VarToInt(cxLookupCustomer.EditValue));
+  CashReceipt.Account.LoadByID(VarToInt(cxLookupAcc.EditValue));
   CashReceipt.Rekening.LoadByID(VarToInt(cxLookupRekening.EditValue));
+
+
   CashReceipt.Items.Clear;
 
   //header debet

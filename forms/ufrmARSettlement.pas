@@ -560,8 +560,7 @@ begin
   S := 'SELECT A.ID, A.INVOICENO, B.NAMA AS CUSTOMER,'
       +' A.TRANSDATE, A.DUEDATE, '
       +' A.AMOUNT, A.PAIDAMOUNT, A.RETURAMOUNT, A.NOTES,'
-      +' (A.AMOUNT - A.PAIDAMOUNT - A.RETURAMOUNT) AS REMAIN,'
-      +' C.NAMA AS SALESMAN'
+      +' (A.AMOUNT - A.PAIDAMOUNT - A.RETURAMOUNT) AS REMAIN'
       +' FROM TSALESINVOICE A'
       +' INNER JOIN TCUSTOMER B ON A.CUSTOMER_ID = B.ID'
       +' WHERE (A.AMOUNT - ISNULL(A.PAIDAMOUNT,0) - ISNULL(A.RETURAMOUNT,0)) > '
@@ -651,7 +650,14 @@ var
   cxLookup: TfrmCXServerLookup;
   S: string;
 begin
-  S := 'select * from tcashreceipt ';
+  S := 'select A.ID, A.REFNO, A.AMOUNT, A.PAIDAMOUNT, A.AMOUNT-A.PAIDAMOUNT AS REMAIN,'
+      +' A.TRANSDATE, C.NAMA AS CUSTOMER, A.NOTES'
+      +' from TCASHRECEIPT a'
+      +' LEFT JOIN TCUSTOMER C ON A.CUSTOMER_ID = C.ID '
+      +' WHERE a.IS_DOWNPAYMENT=1 AND (A.AMOUNT - ISNULL(A.PAIDAMOUNT,0) ) > '
+      + FloatToStr(AppVariable.Toleransi_Piutang);
+
+
   cxLookup := TfrmCXServerLookup.Execute(S, 'ID');
   Try
     if cxLookup.ShowModal = mrOK then
@@ -726,7 +732,9 @@ begin
   lItem.TransDate       := ARSettlement.TransDate;
   lItem.Notes           := 'ARSettlement : ' + ARSettlement.Refno;
 //  lItem.Rekening        := TRekening.CreateID(ARSettlement.Rekening.ID);
-  lItem.Account         := TAccount.CreateID(CashReceipt.DPAccount_ID);
+
+  if CashReceipt.Account<>nil then
+    lItem.Account         := TAccount.CreateID(CashReceipt.Account.ID);
   ARSettlement.Items.Add(lItem);
 
   CDS.First;
@@ -790,7 +798,7 @@ begin
     exit;
   end;
 
-  if Abs(crRemain.Value - crTotal.Value)> AppVariable.Toleransi_Piutang then
+  if (crTotal.Value-crRemain.Value)> AppVariable.Toleransi_Piutang then
   begin
     TAppUtils.Warning('Nilai Total Pembayaran melebih Sisan Remain Cash Receipt');
     exit;
