@@ -11,43 +11,43 @@ inherited frmARSettlement: TfrmARSettlement
   inherited cxGroupBox2: TcxGroupBox
     Top = 515
     TabOrder = 2
-    ExplicitTop = 526
-    ExplicitWidth = 984
+    ExplicitTop = 515
+    ExplicitWidth = 911
     Width = 911
     inherited btnCancel: TcxButton
       Left = 826
-      ExplicitLeft = 899
+      ExplicitLeft = 826
     end
     inherited btnPrint: TcxButton
       Left = 740
-      ExplicitLeft = 813
+      ExplicitLeft = 740
     end
     inherited btnSave: TcxButton
       Left = 654
       OnClick = btnSaveClick
-      ExplicitLeft = 727
+      ExplicitLeft = 654
     end
   end
   inherited Panel2: TPanel
     Top = 494
     Width = 911
     TabOrder = 3
-    ExplicitTop = 505
-    ExplicitWidth = 984
+    ExplicitTop = 494
+    ExplicitWidth = 911
     inherited lbEscape: TLabel
       Left = 831
       Height = 17
-      ExplicitLeft = 904
+      ExplicitLeft = 831
     end
     inherited lgndSave: TLabel
       Left = 666
       Height = 17
-      ExplicitLeft = 739
+      ExplicitLeft = 666
     end
     inherited lgndPrint: TLabel
       Left = 753
       Height = 17
-      ExplicitLeft = 826
+      ExplicitLeft = 753
     end
     object Label1: TLabel
       AlignWithMargins = True
@@ -66,7 +66,6 @@ inherited frmARSettlement: TfrmARSettlement
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
-      ExplicitLeft = 3
       ExplicitHeight = 16
     end
     object Label2: TLabel
@@ -86,7 +85,6 @@ inherited frmARSettlement: TfrmARSettlement
       Font.Name = 'Trebuchet MS'
       Font.Style = []
       ParentFont = False
-      ExplicitLeft = 206
       ExplicitHeight = 16
     end
     object ckFilterSalesman: TcxCheckBox
@@ -99,8 +97,6 @@ inherited frmARSettlement: TfrmARSettlement
       State = cbsChecked
       Style.Color = clInfoBk
       TabOrder = 0
-      ExplicitLeft = -16
-      ExplicitTop = -6
     end
   end
   object cxGroupBox1: TcxGroupBox [2]
@@ -367,8 +363,6 @@ inherited frmARSettlement: TfrmARSettlement
     Align = alClient
     TabOrder = 1
     RootLevelOptions.DetailTabsPosition = dtpTop
-    ExplicitTop = 99
-    ExplicitHeight = 394
     object cxGrdMain: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       OnEditKeyDown = cxGrdMainEditKeyDown

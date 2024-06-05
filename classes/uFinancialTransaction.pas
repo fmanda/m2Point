@@ -114,27 +114,25 @@ type
 
   TCashReceipt = class(TCRUDFinance)
   private
-    FDPAccount_ID: Integer;
-    FDPCustomer_ID: Integer;
+    FAccount: TAccount;
+    FCustomer: TCustomer;
     FRekening: TRekening;
     FIs_DownPayment: Integer;
-    function DeleteDP: Boolean;
-    function SaveDP: Boolean;
+    FPaidAmount: Double;
   protected
-    function AfterSaveToDB: Boolean; override;
-    function BeforeDeleteFromDB: Boolean; override;
-    function BeforeSaveToDB: Boolean; override;
   public
     destructor Destroy; override;
     function GenerateNo: String; override;
     function GetCodeTrans: string;
     function GetHeaderFlag: Integer; override;
     function IsDownPayment: Boolean;
-    property DPAccount_ID: Integer read FDPAccount_ID write FDPAccount_ID;
-    property DPCustomer_ID: Integer read FDPCustomer_ID write FDPCustomer_ID;
+    function Remain: Double;
   published
+    property Account: TAccount read FAccount write FAccount;
+    property Customer: TCustomer read FCustomer write FCustomer;
     property Rekening: TRekening read FRekening write FRekening;
     property Is_DownPayment: Integer read FIs_DownPayment write FIs_DownPayment;
+    property PaidAmount: Double read FPaidAmount write FPaidAmount;
   end;
 
   TCashPayment = class(TCRUDFinance)
@@ -457,28 +455,6 @@ type
     property Warehouse: TWarehouse read FWarehouse write FWarehouse;
   end;
 
-  TCashReceiptDP = class(TCRUDObject)
-  private
-    FDP_No: String;
-    FCustomer: TCustomer;
-    FAmount: Double;
-    FAccount: TAccount;
-    FPaidAmount: Double;
-    FCashReceipt_ID: Integer;
-  protected
-  public
-    destructor Destroy; override;
-    function LoadByCashReceipt(CashReceipt_ID: Integer): Boolean;
-    function Remain: Double;
-  published
-    property DP_No: String read FDP_No write FDP_No;
-    property Customer: TCustomer read FCustomer write FCustomer;
-    property Amount: Double read FAmount write FAmount;
-    property Account: TAccount read FAccount write FAccount;
-    property PaidAmount: Double read FPaidAmount write FPaidAmount;
-    property CashReceipt_ID: Integer read FCashReceipt_ID write FCashReceipt_ID;
-  end;
-
 
 
 const
@@ -777,30 +753,6 @@ begin
 //  if FSupplier <> nil then FreeAndNil(FSupplier);
 end;
 
-function TCashReceipt.AfterSaveToDB: Boolean;
-begin
-  if IsDownPayment then
-    Result := SaveDP
-  else
-    Result := SaveDP;
-end;
-
-function TCashReceipt.BeforeDeleteFromDB: Boolean;
-begin
-  if IsDownPayment then
-    Result := DeleteDP
-  else
-    Result := DeleteDP;
-end;
-
-function TCashReceipt.BeforeSaveToDB: Boolean;
-begin
-  if IsDownPayment then
-    Result := DeleteDP
-  else
-    Result := DeleteDP;
-end;
-
 function TCashReceipt.GenerateNo: String;
 var
   aDigitCount: Integer;
@@ -834,38 +786,6 @@ begin
   Result := HeaderFlag_CashReceipt;
 end;
 
-function TCashReceipt.DeleteDP: Boolean;
-var
-  S: string;
-begin
-  S := 'delete b '
-    +' from TCashReceipt a '
-    +' inner join TCashReceiptDP b on a.id = b.CashReceipt_ID '
-    +' where a.id = ' + IntToStr(Self.ID);
-
-  Result := TDBUtils.ExecuteSQL(S, False);
-end;
-
-function TCashReceipt.SaveDP: Boolean;
-var
-  lDP: TCashReceiptDP;
-begin
-  lDP                   := TCashReceiptDP.Create;
-  Try
-    lDP.ID              := 0;
-    lDP.CashReceipt_ID  := Self.ID;
-    lDP.Amount          := Self.Amount;
-    lDP.DP_No           := Self.Refno;
-    lDP.Customer        := TCustomer.CreateID(Self.DPCustomer_ID);
-    lDP.Account         := TAccount.CreateID(Self.DPAccount_ID);
-
-    Result              := lDP.SaveToDB(False);
-  Finally
-    lDP.Free;
-  End;
-
-end;
-
 function TCashReceipt.GetCodeTrans: string;
 begin
   Result := 'KM';
@@ -879,6 +799,12 @@ end;
 function TCashReceipt.IsDownPayment: Boolean;
 begin
   Result := Self.Is_DownPayment = 1;
+end;
+
+function TCashReceipt.Remain: Double;
+begin
+  Result := Amount-PaidAmount;
+  // TODO -cMM: TCashReceipt.Remain default body inserted
 end;
 
 destructor TCashTransfer.Destroy;
@@ -1868,37 +1794,6 @@ begin
   S := S + ' where id = ' + IntToStr(Self.ID);
 
   Result := TDBUtils.ExecuteSQL(S, False);
-end;
-
-destructor TCashReceiptDP.Destroy;
-begin
-  inherited;
-  if FAccount <> nil then FreeAndNil(FAccount);
-  if FCustomer <> nil then FreeAndNil(FCustomer);
-end;
-
-function TCashReceiptDP.LoadByCashReceipt(CashReceipt_ID: Integer): Boolean;
-var
-  Q: TFDQuery;
-  sSQL: string;
-begin
-  Result := False;
-  if CashReceipt_ID <= 0 then exit;
-
-  sSQL := Format(SQL_Select,['*', Self.GetTableName, 'CashReceipt_ID =' + IntToStr(CashReceipt_ID) ]);
-  Q := TDBUtils.OpenQuery(sSQL);
-  Try
-    if Q.Eof then exit;
-    Self.LoadFromDataset(Q, False);
-    if not Result then Result := True;
-  Finally
-    FreeAndNil(Q);
-  End;
-end;
-
-function TCashReceiptDP.Remain: Double;
-begin
-  Result := Amount-PaidAmount;
 end;
 
 

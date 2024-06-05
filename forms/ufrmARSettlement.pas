@@ -530,25 +530,17 @@ begin
 end;
 
 procedure TfrmARSettlement.LoadCashReceipt(aID: Integer);
-var
-  lDP: TCashReceiptDP;
 begin
   CashReceipt.LoadByID(aID);
-  lDP := TCashReceiptDP.Create;
-  Try
-    lDP.LoadByCashReceipt(aID);
-    if lDP.Customer<>nil then
-      CashReceipt.DPCustomer_ID := lDP.Customer.ID;
-    if lDP.Customer<>nil then
-      CashReceipt.DPAccount_ID := lDP.Account.ID;
 
-    edCashReceipt.Text          := CashReceipt.refno;
-    dtCashReceipt.Date          := CashReceipt.TransDate;
-    cxLookupCustomer.EditValue  := CashReceipt.DPCustomer_ID;
-    crRemain.Value              := lDP.Remain;
-  Finally
-    lDP.Free;
-  End;
+  if CashReceipt.Customer<>nil then
+    cxLookupCustomer.EditValue  := CashReceipt.Customer.ID;
+
+
+  edCashReceipt.Text          := CashReceipt.refno;
+  dtCashReceipt.Date          := CashReceipt.TransDate;
+  crRemain.Value              := CashReceipt.Remain;
+
 end;
 
 procedure TfrmARSettlement.LookupInvoice(sKey: string = '');
@@ -659,7 +651,7 @@ var
   cxLookup: TfrmCXServerLookup;
   S: string;
 begin
-  S := 'select * from VW_REMAINCASHRECEIPTDP';
+  S := 'select * from tcashreceipt ';
   cxLookup := TfrmCXServerLookup.Execute(S, 'ID');
   Try
     if cxLookup.ShowModal = mrOK then

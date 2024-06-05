@@ -56,7 +56,7 @@ implementation
 
 uses
   uDBUtils, uDXUtils, System.DateUtils,
-  ufrmCXServerLookup, uSupplier, uAccount, uVariable;
+  ufrmCXServerLookup, uSupplier, uAccount, uVariable, uCustomer;
 
 {$R *.dfm}
 
@@ -115,8 +115,6 @@ begin
 end;
 
 procedure TfrmCashReceiptDP.LoadByID(aID: Integer; IsReadOnly: Boolean = False);
-var
-  lDP: TCashReceiptDP;
 begin
   if FCashReceipt <> nil then
     FreeAndNil(FCashReceipt);
@@ -143,19 +141,11 @@ begin
     cxLookupRekening.EditValue := CashReceipt.Rekening.ID;
   end;
 
-  lDP := TCashReceiptDP.Create;
-  Try
-    lDP.LoadByCashReceipt(aID);
-    if lDP.Customer<>nil then
-      CashReceipt.DPCustomer_ID := lDP.Customer.ID;
-    if lDP.Customer<>nil then
-      CashReceipt.DPAccount_ID := lDP.Account.ID;
-  Finally
-    lDP.Free;
-  End;
+  if CashReceipt.Customer<>nil then
+    cxLookupCustomer.EditValue  := CashReceipt.Customer.ID;
+  if CashReceipt.Account<>nil then
+    cxLookupAcc.EditValue       := CashReceipt.Account.ID;
 
-  cxLookupCustomer.EditValue  := CashReceipt.DPCustomer_ID;
-  cxLookupAcc.EditValue       := CashReceipt.DPAccount_ID;
   
   btnSave.Enabled := not IsReadOnly;
 end;
@@ -170,8 +160,8 @@ begin
   CashReceipt.Notes         := edNotes.Text;
   CashReceipt.ModifiedBy    := UserLogin;
   CashReceipt.ModifiedDate  := Now();
-  CashReceipt.DPAccount_ID  := VarToInt(cxLookupAcc.EditValue);
-  CashReceipt.DPCustomer_ID := VarToInt(cxLookupCustomer.EditValue);
+  CashReceipt.Account       := TAccount.CreateID(VarToInt(cxLookupAcc.EditValue));
+  CashReceipt.Customer      := TCustomer.CreateID(VarToInt(cxLookupCustomer.EditValue));
 
   if CashReceipt.Rekening = nil then
     CashReceipt.Rekening    := TRekening.Create;
@@ -196,7 +186,7 @@ begin
   lItem.Amount          := CashReceipt.Amount;
   lItem.TransDate       := CashReceipt.TransDate;
   lItem.Notes           := CashReceipt.Notes;
-  lItem.Account         := TAccount.CreateID(CashReceipt.DPAccount_ID);
+  lItem.Account         := TAccount.CreateID(VarToInt(cxLookupAcc.EditValue));
   CashReceipt.Items.Add(lItem);
 
 
