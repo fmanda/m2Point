@@ -127,6 +127,7 @@ type
     function GetHeaderFlag: Integer; override;
     function IsDownPayment: Boolean;
     function Remain: Double;
+    function UpdateRemain(aDate: TDateTime = 0; AddedPaidAmt: Double = 0): Boolean;
   published
     property Account: TAccount read FAccount write FAccount;
     property Rekening: TRekening read FRekening write FRekening;
@@ -169,6 +170,7 @@ type
     class function CreateOrGetFromRetur(aSalesRetur: TSalesRetur): TARSettlement;
     function GenerateNo: string; override;
     function UpdateRemain(aIsRevert: Boolean = False): Boolean;
+    function UpdateRemainCR(aIsRevert: Boolean = False): Boolean;
   published
     property Customer: TCustomer read FCustomer write FCustomer;
     property CashReceipt: TCashReceipt read FCashReceipt write FCashReceipt;
@@ -809,6 +811,28 @@ begin
   // TODO -cMM: TCashReceipt.Remain default body inserted
 end;
 
+function TCashReceipt.UpdateRemain(aDate: TDateTime = 0; AddedPaidAmt: Double =
+    0): Boolean;
+var
+  S: string;
+begin
+  if aDate = 0 then aDate := Now();
+
+  Self.PaidAmount := Self.PaidAmount + AddedPaidAmt;   //utk update / revert remain dari collection
+
+  S := 'Update TCashReceipt set PaidAmount = ' + FloatToStr(Self.PaidAmount);
+
+  if (Self.Amount - Self.PaidAmount) <=  AppVariable.Toleransi_Piutang then
+    S := S + ',PaidOff = 1, PaidOffDate = ' + TAppUtils.QuotD(aDate)
+  else
+    S := S + ',PaidOff = 0, PaidOffDate = NULL';
+
+
+  S := S + ' where id = ' + IntToStr(Self.ID);
+
+  Result := TDBUtils.ExecuteSQL(S, False);
+end;
+
 destructor TCashTransfer.Destroy;
 begin
   inherited;
@@ -984,6 +1008,23 @@ begin
         lItem.SalesRetur.UpdateRemain(iFactor*lItem.ReturAmt);
       end;
     end;
+  end;
+
+  Self.UpdateRemainCR(aIsRevert);
+end;
+
+function TARSettlement.UpdateRemainCR(aIsRevert: Boolean = False): Boolean;
+var
+  lItem: TFinancialTransaction;
+  iFactor: Integer;
+begin
+  Result := True;
+  iFactor := 1;
+  if aIsRevert then iFactor := -1;
+
+  if Self.CashReceipt<>nil then
+  begin
+    Self.CashReceipt.UpdateRemain(self.TransDate, iFactor*Self.Amount);
   end;
 end;
 
