@@ -137,7 +137,9 @@ uses
   ufrmBrowseSalesInvoice in 'forms\ufrmBrowseSalesInvoice.pas' {frmBrowseSalesInvoice},
   ufrmPurchaseInvoice in 'forms\ufrmPurchaseInvoice.pas' {frmPurchaseInvoice},
   ufrmBrowseCashReceipt in 'forms\ufrmBrowseCashReceipt.pas' {frmBrowseCashReceipt},
-  ufrmCashReceipt in 'forms\ufrmCashReceipt.pas' {frmCashReceipt};
+  ufrmCashReceipt in 'forms\ufrmCashReceipt.pas' {frmCashReceipt},
+  ufrmPostingJournal in 'forms\ufrmPostingJournal.pas' {frmPostingJournal},
+  ufrmJournalListing in 'forms\ufrmJournalListing.pas' {frmJournalListing};
 
 {$R *.res}
 

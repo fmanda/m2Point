@@ -140,7 +140,6 @@ type
   private
     FRekening: TRekening;
     FTahunZakat: Integer;
-    function UpdateFee(aIsRevert: Boolean = False): Boolean;
   protected
     function AfterSaveToDB: Boolean; override;
     function BeforeDeleteFromDB: Boolean; override;
@@ -642,16 +641,12 @@ end;
 
 function TCashPayment.AfterSaveToDB: Boolean;
 begin
-  Result := Self.UpdateFee;
-  if Result then
-    Result := Self.UpdateRemain;
+  Result := Self.UpdateRemain;
 end;
 
 function TCashPayment.BeforeDeleteFromDB: Boolean;
 begin
-  Result := Self.UpdateFee(True);
-  if Result then
-    Result := Self.UpdateRemain(True);
+  Result := Self.UpdateRemain(True);
 end;
 
 function TCashPayment.BeforeSaveToDB: Boolean;
@@ -666,7 +661,6 @@ begin
     lOldPayment.LoadByID(Self.ID);
 
     lOldPayment.UpdateRemain(True);
-    lOldPayment.UpdateFee(True);
   Finally
     lOldPayment.Free;
   End;
@@ -710,24 +704,6 @@ end;
 function TCashPayment.GetHeaderFlag: Integer;
 begin
   Result := HeaderFlag_CashPayment;
-end;
-
-function TCashPayment.UpdateFee(aIsRevert: Boolean = False): Boolean;
-var
-  iStatus: Integer;
-  S: string;
-begin
-  Result := True;
-  if Self.ID = 0 then exit;
-
-  iStatus := 2;
-  if aIsRevert then iStatus := 1;
-  S := 'UPDATE C SET C.STATUS = ' + IntToStr(iStatus)
-      +' FROM TCASHPAYMENT A'
-      +' INNER JOIN TFEEPAYMENTITEM B ON A.ID = B.CASHPAYMENT_ID'
-      +' INNER JOIN TSALESFEE C ON C.ID = B.SALESFEE_ID'
-      +' WHERE A.ID = ' + IntToStr(Self.ID);
-  TDBUtils.ExecuteSQL(S, False);
 end;
 
 function TCashPayment.UpdateRemain(aIsRevert: Boolean = False): Boolean;

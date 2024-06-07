@@ -129,7 +129,7 @@ implementation
 
 uses
   uDXUtils, uDBUtils, uAppUtils, ufrmCXServerLookup, uCustomer, cxDataUtils,
-  uWarehouse, uMekanik, uSalesman, uVariable, uAccount, uSettingFee,
+  uWarehouse, uSalesman, uVariable, uAccount, uSettingFee,
   ufrmDialogPayment, uPrintStruk, ufrmAuthUser, uStockCheck, ufrmLookupItem;
 
 {$R *.dfm}

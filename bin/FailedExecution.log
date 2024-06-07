@@ -1,3 +1,1 @@
-SET NOCOUNT ON
-Insert Into TARSettlement(Customer_ID,CashReceipt_ID,ReturAmount,Amount,TransDate,Closed,ModifiedBy,ModifiedDate,Refno,DueDate,Notes) values(1,2,0,1000000,'2024-06-06 14:28:42',0,'FMANDA','2024-06-06 14:29:01','12.SP2406.00001','2024-06-06 14:28:42','test');
-Select Scope_Identity() as ID
+UPDATE C SET C.STATUS = 2 FROM TCASHPAYMENT A INNER JOIN TFEEPAYMENTITEM B ON A.ID = B.CASHPAYMENT_ID INNER JOIN TSALESFEE C ON C.ID = B.SALESFEE_ID WHERE A.ID = 1

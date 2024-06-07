@@ -4,7 +4,7 @@ interface
 
 uses
   CRUDObject, uDBUtils, Sysutils, uItem, System.Generics.Collections,
-  uWarehouse, uSupplier, uCustomer, uSalesman, uAccount, uMekanik, uSettingFee,
+  uWarehouse, uSupplier, uCustomer, uSalesman, uAccount, uSettingFee,
   uVariable, Dateutils;
 
 type
@@ -1763,8 +1763,8 @@ class procedure TDeliveryOrder.PrintData(aSalesInvoiceID: Integer);
 var
   S: string;
 begin
-  S := 'SELECT * FROM FN_SLIP_SALESINVOICE(' + IntToStr(aSalesInvoiceID) + ')';
-  DMReport.ExecuteReport('SlipSalesInvoice', S);
+  S := 'SELECT * FROM [FN_SLIP_DELIVERYORDER](' + IntToStr(aSalesInvoiceID) + ')';
+  DMReport.ExecuteReport('SlipDeliveryOrder', S);
 end;
 
 procedure TDeliveryOrder.SetGenerateNo;

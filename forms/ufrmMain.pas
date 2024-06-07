@@ -16,7 +16,8 @@ uses
   Data.DB, FireDAC.Comp.Client, Vcl.StdCtrls, dxRibbonBackstageView,
   cxImageList, dxNavBarOfficeNavigationBar, Vcl.Menus, cxButtons,
   ufrmLapStockOpname, FireDAC.Stan.StorageJSON, uTransDetail,
-  Datasnap.DBClient, ufrmUangMukaZakat, ufrmBrowsePurchaseInvoice;
+  Datasnap.DBClient, ufrmUangMukaZakat, ufrmBrowsePurchaseInvoice,
+  ufrmPostingJournal;
 
 type
   TfrmMain = class(TForm)
@@ -235,6 +236,13 @@ type
     dxBarButton107: TdxBarButton;
     actCashReceiptDP: TAction;
     dxBarButton108: TdxBarButton;
+    dxBarManagerBar15: TdxBar;
+    actPostingJournal: TAction;
+    actJournalListing: TAction;
+    actBukuBesar: TAction;
+    dxBarButton109: TdxBarButton;
+    dxBarButton110: TdxBarButton;
+    dxBarButton111: TdxBarButton;
     procedure actAccountExecute(Sender: TObject);
     procedure actAgingARExecute(Sender: TObject);
     procedure actAgingStockExecute(Sender: TObject);
@@ -255,6 +263,7 @@ type
     procedure actItemExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure actItemGroupExecute(Sender: TObject);
+    procedure actJournalListingExecute(Sender: TObject);
     procedure actKartuStockExecute(Sender: TObject);
     procedure actKKSOExecute(Sender: TObject);
     procedure actLabaRugiExecute(Sender: TObject);
@@ -270,6 +279,7 @@ type
     procedure actMutasiKasExecute(Sender: TObject);
     procedure actPiutangReturExecute(Sender: TObject);
     procedure actPostAllExecute(Sender: TObject);
+    procedure actPostingJournalExecute(Sender: TObject);
     procedure actPrintTrfReqFileExecute(Sender: TObject);
     procedure actPurchaseInvoiceExecute(Sender: TObject);
     procedure actPurchaseInvoiceHistoryExecute(Sender: TObject);
@@ -341,7 +351,8 @@ uses
   ufrmLapPenjualan, ufrmGantiPassword, ufrmPiutangRetur, ufrmHutangRetur,
   ufrmBrowseKKSO, ufrmExportData, ufrmImportData, ufrmBrowseTransferRequest,
   System.IOUtils, CRUDObject, System.JSON, ufrmDeleteEOD,
-  ufrmBrowseUangMukaZakat, ufrmBrowseDeliveryOrder, ufrmBrowseCashReceiptDP;
+  ufrmBrowseUangMukaZakat, ufrmBrowseDeliveryOrder, ufrmBrowseCashReceiptDP,
+  ufrmJournalListing;
 
 {$R *.dfm}
 
@@ -499,6 +510,11 @@ begin
   ShowForm(TfrmBrowseItemGroup);
 end;
 
+procedure TfrmMain.actJournalListingExecute(Sender: TObject);
+begin
+  ShowForm(TfrmJournalListing);
+end;
+
 procedure TfrmMain.actKartuStockExecute(Sender: TObject);
 begin
   ShowForm(TfrmKartuStock);
@@ -586,6 +602,11 @@ begin
     end;
   End;
 
+end;
+
+procedure TfrmMain.actPostingJournalExecute(Sender: TObject);
+begin
+  ShowForm(TfrmPostingJournal);
 end;
 
 procedure TfrmMain.actPrintTrfReqFileExecute(Sender: TObject);
