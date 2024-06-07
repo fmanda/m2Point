@@ -70,7 +70,8 @@ begin
 
   FCDS := TDBUtils.OpenDataset(S, Self);
   cxGrdMain.LoadFromCDS(CDS);
-//  cxGrdMain.SetSummaryByColumns(['SUBTOTAL']);
+  cxGrdMain.SetSummaryByColumns(['DEBET']);
+  cxGrdMain.SetSummaryByColumns(['CREDIT']);
   cxGrdMain.EnableFiltering();
 
 end;
