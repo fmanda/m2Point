@@ -28,11 +28,10 @@ inherited frmPostingJournal: TfrmPostingJournal
       Align = alClient
       Caption = '&Process'
       OptionsImage.ImageIndex = 4
-      Visible = False
       OnClick = btnSaveClick
       ExplicitLeft = 5
-      ExplicitTop = 6
-      ExplicitWidth = 185
+      ExplicitTop = 3
+      ExplicitWidth = 206
       ExplicitHeight = 46
     end
   end

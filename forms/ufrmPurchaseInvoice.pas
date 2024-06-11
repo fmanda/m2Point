@@ -847,9 +847,11 @@ begin
 
       CDS.FieldByName('PurchaseReceive').AsInteger := lPR.ID;
       CDS.FieldByName('RecNo').AsString   := lPR.RecNo;
+      CDS.FieldByName('TransDetail_ID').AsInteger   := lItem.ID;
 
       if lItem.Item <> nil  then
       begin
+
         CDS.FieldByName('Item').AsInteger := lItem.Item.ID;
         lItem.Item.ReLoad();
         CDS.FieldByName('Kode').AsString  := lItem.Item.Kode;

@@ -840,10 +840,10 @@ begin
 
       CDS.FieldByName('DeliveryOrder').AsInteger := lDO.ID;
       CDS.FieldByName('DONO').AsString   := lDO.DONO;
+      CDS.FieldByName('TransDetail_ID').AsInteger   := lItem.ID;
 
       if lItem.Item <> nil  then
       begin
-        CDS.FieldByName('TransDetail_ID').AsInteger   := lItem.ID;
         CDS.FieldByName('Item').AsInteger     := lItem.Item.ID;
         lItem.Item.ReLoad();
         CDS.FieldByName('Kode').AsString      := lItem.Item.Kode;

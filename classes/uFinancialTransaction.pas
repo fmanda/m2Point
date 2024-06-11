@@ -310,6 +310,7 @@ type
     FQty: Double;
     FKonversi: Double;
     FTotal: Double;
+    FTransDetail_ID: Integer;
     FUOM: TUOM;
   published
     property Discount: Double read FDiscount write FDiscount;
@@ -324,6 +325,7 @@ type
     property Qty: Double read FQty write FQty;
     property Konversi: Double read FKonversi write FKonversi;
     property Total: Double read FTotal write FTotal;
+    property TransDetail_ID: Integer read FTransDetail_ID write FTransDetail_ID;
     property UOM: TUOM read FUOM write FUOM;
   end;
 
@@ -1635,8 +1637,8 @@ class procedure TSalesInvoice.PrintData(aInvoiceID: Integer);
 var
   S: string;
 begin
-  S := 'SELECT * FROM FN_SLIP_PURCHASEINVOICE(' + IntToStr(aInvoiceID) + ')';
-  DMReport.ExecuteReport('SlipPurchaseInvoice', S);
+  S := 'SELECT * FROM FN_SLIP_SALESINVOICE(' + IntToStr(aInvoiceID) + ')';
+  DMReport.ExecuteReport('SlipSalesInvoice', S);
 end;
 
 function TSalesInvoice.UpdateRemain(aDate: TDateTime = 0; AddedPaidAmt:

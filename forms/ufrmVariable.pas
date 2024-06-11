@@ -30,6 +30,14 @@ type
     colToleransiPiutang: TcxEditorRow;
     colCheckStock: TcxEditorRow;
     colCheckCreditLimit: TcxEditorRow;
+    colCOAInventory: TcxEditorRow;
+    colCOACOGS: TcxEditorRow;
+    colCOAAR: TcxEditorRow;
+    colCOAAP: TcxEditorRow;
+    colCOADP: TcxEditorRow;
+    colCOATempAP: TcxEditorRow;
+    colCOAStockAdjustment: TcxEditorRow;
+    cxVertGridCategoryRow3: TcxCategoryRow;
     procedure FormCreate(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
     procedure colDefCustUmumEditPropertiesButtonClick(Sender: TObject;
@@ -45,6 +53,20 @@ type
     procedure colCOAPengeluaranEditPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
     procedure colCOAPendapatanEditPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure colCOAInventoryEditPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure colCOACOGSEditPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure colCOAAREditPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure colCOATempAPEditPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure colCOAAPEditPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure colCOADPEditPropertiesButtonClick(Sender: TObject;
+      AButtonIndex: Integer);
+    procedure colCOAStockAdjustmentEditPropertiesButtonClick(Sender: TObject;
       AButtonIndex: Integer);
   private
     procedure LoadVariable;
@@ -68,6 +90,41 @@ uses
 
 {$R *.dfm}
 
+procedure TfrmVariable.colCOAAPEditPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+  inherited;
+  LookupAccount(colCOATempAP);
+end;
+
+procedure TfrmVariable.colCOAAREditPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+  inherited;
+  LookupAccount(colCOAAR);
+end;
+
+procedure TfrmVariable.colCOACOGSEditPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+  inherited;
+  LookupAccount(colCOACOGS);
+end;
+
+procedure TfrmVariable.colCOADPEditPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+  inherited;
+  LookupAccount(colCOADP);
+end;
+
+procedure TfrmVariable.colCOAInventoryEditPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+  inherited;
+  LookupAccount(colCOAInventory);
+end;
+
 procedure TfrmVariable.colCOAPendapatanEditPropertiesButtonClick(
   Sender: TObject; AButtonIndex: Integer);
 begin
@@ -80,6 +137,20 @@ procedure TfrmVariable.colCOAPengeluaranEditPropertiesButtonClick(
 begin
   inherited;
   LookupAccount(colCOAPengeluaran);
+end;
+
+procedure TfrmVariable.colCOAStockAdjustmentEditPropertiesButtonClick(
+  Sender: TObject; AButtonIndex: Integer);
+begin
+  inherited;
+  LookupAccount(colCOAStockAdjustment);
+end;
+
+procedure TfrmVariable.colCOATempAPEditPropertiesButtonClick(Sender: TObject;
+  AButtonIndex: Integer);
+begin
+  inherited;
+  LookupAccount(colCOAAP);
 end;
 
 procedure TfrmVariable.colDefCustBengkelEditPropertiesButtonClick(
@@ -142,6 +213,15 @@ begin
   AppVariable.Toleransi_Piutang := colToleransiPiutang.Properties.Value;
   AppVariable.Check_Stock := colCheckStock.Properties.Value;
   AppVariable.Check_CreditLimit := colCheckCreditLimit.Properties.Value;
+  AppVariable.Account_Inventory := colCOAInventory.Properties.Value;
+  AppVariable.Account_COGS := colCOACOGS.Properties.Value;
+  AppVariable.Account_AR := colCOAAR.Properties.Value;
+  AppVariable.Account_AP := colCOAAP.Properties.Value;
+  AppVariable.Account_DP := colCOADP.Properties.Value;
+  AppVariable.Account_TempAP := colCOATempAP.Properties.Value;
+  AppVariable.Account_StockAdjustment := colCOAStockAdjustment.Properties.Value;
+
+
 
   if AppVariable.UpdateVariable then
     TAppUtils.Information('Variable Berhasil Diupdate');
@@ -166,6 +246,14 @@ begin
   colCOAPengeluaran.Properties.Value := AppVariable.Account_Expense;
   colCOAPendapatan.Properties.Value := AppVariable.Account_OtherIncome;
   colToleransiPiutang.Properties.Value := AppVariable.Toleransi_Piutang;
+
+  colCOAInventory.Properties.Value := AppVariable.Account_Inventory;
+  colCOACOGS.Properties.Value := AppVariable.Account_COGS;
+  colCOAAR.Properties.Value := AppVariable.Account_AR;
+  colCOAAP.Properties.Value := AppVariable.Account_AP;
+  colCOADP.Properties.Value := AppVariable.Account_DP;
+  colCOATempAP.Properties.Value := AppVariable.Account_TempAP;
+  colCOAStockAdjustment.Properties.Value := AppVariable.Account_StockAdjustment;
 
   colCheckStock.Properties.Value := AppVariable.Check_Stock;
   colCheckCreditLimit.Properties.Value := AppVariable.Check_CreditLimit;

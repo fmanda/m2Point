@@ -1,13 +1,13 @@
 inherited frmVariable: TfrmVariable
   Caption = 'Update Variable'
-  ClientHeight = 461
+  ClientHeight = 552
   ClientWidth = 555
   ExplicitWidth = 571
-  ExplicitHeight = 500
+  ExplicitHeight = 591
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxGroupBox2: TcxGroupBox
-    Top = 426
+    Top = 517
     ExplicitTop = 426
     ExplicitWidth = 555
     Width = 555
@@ -26,7 +26,7 @@ inherited frmVariable: TfrmVariable
     end
   end
   inherited Panel2: TPanel
-    Top = 405
+    Top = 496
     Width = 555
     ExplicitTop = 405
     ExplicitWidth = 555
@@ -50,16 +50,17 @@ inherited frmVariable: TfrmVariable
     Left = 0
     Top = 0
     Width = 555
-    Height = 405
+    Height = 496
     Align = alClient
     OptionsView.CellAutoHeight = True
     OptionsView.CategoryExplorerStyle = True
-    OptionsView.RowHeaderWidth = 197
+    OptionsView.RowHeaderWidth = 297
     OptionsView.ShowEmptyRowImage = True
     OptionsBehavior.GoToNextCellOnEnter = True
     OptionsBehavior.GoToNextCellOnTab = True
     OptionsBehavior.FocusCellOnCycle = True
     TabOrder = 2
+    ExplicitHeight = 405
     Version = 1
     object cxVertGridCategoryRow1: TcxCategoryRow
       Properties.Caption = 'Informasi Perusahaan'
@@ -147,38 +148,6 @@ inherited frmVariable: TfrmVariable
       Index = 1
       Version = 1
     end
-    object colDefRekening: TcxEditorRow
-      Properties.Caption = 'Default : Rekening Kas'
-      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
-      Properties.EditProperties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.EditProperties.OnButtonClick = colDefRekeningEditPropertiesButtonClick
-      Properties.DataBinding.ValueType = 'String'
-      Properties.Value = ''
-      ID = 8
-      ParentID = 7
-      Index = 0
-      Version = 1
-    end
-    object colDefCustUmum: TcxEditorRow
-      Properties.Caption = 'Default : Kode Customer Umum'
-      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
-      Properties.EditProperties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.EditProperties.OnButtonClick = colDefCustUmumEditPropertiesButtonClick
-      Properties.DataBinding.ValueType = 'String'
-      Properties.Value = Null
-      ID = 9
-      ParentID = 7
-      Index = 1
-      Version = 1
-    end
     object colDefCustBengkel: TcxEditorRow
       Properties.Caption = 'Default : Kode Customer Bengkel'
       Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
@@ -193,39 +162,7 @@ inherited frmVariable: TfrmVariable
       Visible = False
       ID = 10
       ParentID = 7
-      Index = 2
-      Version = 1
-    end
-    object colCOAPengeluaran: TcxEditorRow
-      Properties.Caption = 'Induk Akun Biaya / Expense'
-      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
-      Properties.EditProperties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.EditProperties.OnButtonClick = colCOAPengeluaranEditPropertiesButtonClick
-      Properties.DataBinding.ValueType = 'String'
-      Properties.Value = Null
-      ID = 11
-      ParentID = 7
-      Index = 3
-      Version = 1
-    end
-    object colCOAPendapatan: TcxEditorRow
-      Properties.Caption = 'Induk Akun Pendapatan Lain'
-      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
-      Properties.EditProperties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      Properties.EditProperties.OnButtonClick = colCOAPendapatanEditPropertiesButtonClick
-      Properties.DataBinding.ValueType = 'String'
-      Properties.Value = Null
-      ID = 12
-      ParentID = 7
-      Index = 4
+      Index = 0
       Version = 1
     end
     object colToleransiPiutang: TcxEditorRow
@@ -236,7 +173,7 @@ inherited frmVariable: TfrmVariable
       Properties.Value = Null
       ID = 13
       ParentID = 7
-      Index = 5
+      Index = 1
       Version = 1
     end
     object colCheckStock: TcxEditorRow
@@ -257,7 +194,7 @@ inherited frmVariable: TfrmVariable
       Properties.Value = '0'
       ID = 14
       ParentID = 7
-      Index = 6
+      Index = 2
       Version = 1
     end
     object colCheckCreditLimit: TcxEditorRow
@@ -278,7 +215,190 @@ inherited frmVariable: TfrmVariable
       Properties.Value = '0'
       ID = 15
       ParentID = 7
+      Index = 3
+      Version = 1
+    end
+    object cxVertGridCategoryRow3: TcxCategoryRow
+      Properties.Caption = 'Setting Account'
+      ID = 24
+      ParentID = -1
+      Index = 2
+      Version = 1
+    end
+    object colCOAInventory: TcxEditorRow
+      Properties.Caption = 'COA Persediaan'
+      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
+      Properties.EditProperties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.EditProperties.OnButtonClick = colCOAInventoryEditPropertiesButtonClick
+      Properties.DataBinding.ValueType = 'String'
+      Properties.Value = Null
+      ID = 16
+      ParentID = 24
+      Index = 0
+      Version = 1
+    end
+    object colCOACOGS: TcxEditorRow
+      Properties.Caption = 'COA Harga Pokok Penjualan'
+      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
+      Properties.EditProperties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.EditProperties.OnButtonClick = colCOACOGSEditPropertiesButtonClick
+      Properties.DataBinding.ValueType = 'String'
+      Properties.Value = Null
+      ID = 17
+      ParentID = 24
+      Index = 1
+      Version = 1
+    end
+    object colCOAAR: TcxEditorRow
+      Properties.Caption = 'COA Piutang Dagang'
+      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
+      Properties.EditProperties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.EditProperties.OnButtonClick = colCOAAREditPropertiesButtonClick
+      Properties.DataBinding.ValueType = 'String'
+      Properties.Value = Null
+      ID = 18
+      ParentID = 24
+      Index = 2
+      Version = 1
+    end
+    object colCOATempAP: TcxEditorRow
+      Properties.Caption = 'COA Hutang Dalam Proses'
+      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
+      Properties.EditProperties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.EditProperties.OnButtonClick = colCOATempAPEditPropertiesButtonClick
+      Properties.DataBinding.ValueType = 'String'
+      Properties.Value = Null
+      ID = 21
+      ParentID = 24
+      Index = 3
+      Version = 1
+    end
+    object colCOAAP: TcxEditorRow
+      Properties.Caption = 'COA Hutang Dagang'
+      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
+      Properties.EditProperties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.EditProperties.OnButtonClick = colCOAAPEditPropertiesButtonClick
+      Properties.DataBinding.ValueType = 'String'
+      Properties.Value = Null
+      ID = 19
+      ParentID = 24
+      Index = 4
+      Version = 1
+    end
+    object colCOADP: TcxEditorRow
+      Properties.Caption = 'COA Uang Muka'
+      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
+      Properties.EditProperties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.EditProperties.OnButtonClick = colCOADPEditPropertiesButtonClick
+      Properties.DataBinding.ValueType = 'String'
+      Properties.Value = Null
+      ID = 20
+      ParentID = 24
+      Index = 5
+      Version = 1
+    end
+    object colCOAStockAdjustment: TcxEditorRow
+      Properties.Caption = 'COA Stock Adjustment'
+      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
+      Properties.EditProperties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.EditProperties.OnButtonClick = colCOAStockAdjustmentEditPropertiesButtonClick
+      Properties.DataBinding.ValueType = 'String'
+      Properties.Value = Null
+      ID = 22
+      ParentID = 24
+      Index = 6
+      Version = 1
+    end
+    object colDefRekening: TcxEditorRow
+      Properties.Caption = 'Default : Rekening Kas'
+      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
+      Properties.EditProperties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.EditProperties.OnButtonClick = colDefRekeningEditPropertiesButtonClick
+      Properties.DataBinding.ValueType = 'String'
+      Properties.Value = ''
+      ID = 8
+      ParentID = 24
       Index = 7
+      Version = 1
+    end
+    object colDefCustUmum: TcxEditorRow
+      Properties.Caption = 'Default : Kode Customer Umum'
+      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
+      Properties.EditProperties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.EditProperties.OnButtonClick = colDefCustUmumEditPropertiesButtonClick
+      Properties.DataBinding.ValueType = 'String'
+      Properties.Value = Null
+      ID = 9
+      ParentID = 24
+      Index = 8
+      Version = 1
+    end
+    object colCOAPendapatan: TcxEditorRow
+      Properties.Caption = 'Induk Akun Pendapatan Lain'
+      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
+      Properties.EditProperties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.EditProperties.OnButtonClick = colCOAPendapatanEditPropertiesButtonClick
+      Properties.DataBinding.ValueType = 'String'
+      Properties.Value = Null
+      ID = 12
+      ParentID = 24
+      Index = 9
+      Version = 1
+    end
+    object colCOAPengeluaran: TcxEditorRow
+      Properties.Caption = 'Induk Akun Biaya / Expense'
+      Properties.EditPropertiesClassName = 'TcxButtonEditProperties'
+      Properties.EditProperties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.EditProperties.OnButtonClick = colCOAPengeluaranEditPropertiesButtonClick
+      Properties.DataBinding.ValueType = 'String'
+      Properties.Value = Null
+      ID = 11
+      ParentID = 24
+      Index = 10
       Version = 1
     end
   end

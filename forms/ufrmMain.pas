@@ -606,7 +606,7 @@ end;
 
 procedure TfrmMain.actPostingJournalExecute(Sender: TObject);
 begin
-  ShowForm(TfrmPostingJournal);
+  ShowForm(TfrmPostingJournal).ShowModal;
 end;
 
 procedure TfrmMain.actPrintTrfReqFileExecute(Sender: TObject);
