@@ -1,49 +1,49 @@
 inherited frmAccount: TfrmAccount
   Caption = 'Data Account COA'
-  ClientHeight = 237
-  ClientWidth = 475
-  ExplicitWidth = 491
-  ExplicitHeight = 276
+  ClientHeight = 375
+  ClientWidth = 474
+  ExplicitWidth = 490
+  ExplicitHeight = 414
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxGroupBox2: TcxGroupBox
-    Top = 202
+    Top = 340
     TabOrder = 7
     ExplicitTop = 202
     ExplicitWidth = 475
-    Width = 475
+    Width = 474
     inherited btnCancel: TcxButton
-      Left = 390
+      Left = 389
       ExplicitLeft = 390
     end
     inherited btnPrint: TcxButton
-      Left = 304
+      Left = 303
       ExplicitLeft = 304
     end
     inherited btnSave: TcxButton
-      Left = 218
+      Left = 217
       OnClick = btnSaveClick
       ExplicitLeft = 218
     end
   end
   inherited Panel2: TPanel
-    Top = 181
-    Width = 475
+    Top = 319
+    Width = 474
     TabOrder = 8
     ExplicitTop = 181
     ExplicitWidth = 475
     inherited lbEscape: TLabel
-      Left = 395
+      Left = 394
       Height = 17
       ExplicitLeft = 395
     end
     inherited lgndSave: TLabel
-      Left = 230
+      Left = 229
       Height = 17
       ExplicitLeft = 230
     end
     inherited lgndPrint: TLabel
-      Left = 317
+      Left = 316
       Height = 17
       ExplicitLeft = 317
     end
@@ -106,7 +106,7 @@ inherited frmAccount: TfrmAccount
   end
   object rbJenis: TcxRadioGroup [11]
     Left = 77
-    Top = 133
+    Top = 117
     Caption = ' Tipe Akun '
     Properties.Items = <
       item
@@ -124,7 +124,7 @@ inherited frmAccount: TfrmAccount
     ItemIndex = 0
     TabOrder = 6
     Visible = False
-    Height = 36
+    Height = 92
     Width = 292
   end
   inherited styleRepo: TcxStyleRepository
