@@ -458,6 +458,33 @@ type
     property Warehouse: TWarehouse read FWarehouse write FWarehouse;
   end;
 
+  TJournal = class(TCRUDObject)
+  private
+    FRefNo: String;
+    FTransDate: TDateTime;
+    FDescription: String;
+    FAccountCode: String;
+    FCostCenter: String;
+    FDebet: Double;
+    FCredit: Double;
+    FFlagNo: Integer;
+    FIs_Memorial: Integer;
+    FModiifiedDate: TDateTime;
+    FModiifiedBy: string;
+  published
+    property RefNo: String read FRefNo write FRefNo;
+    property TransDate: TDateTime read FTransDate write FTransDate;
+    property Description: String read FDescription write FDescription;
+    property AccountCode: String read FAccountCode write FAccountCode;
+    property CostCenter: String read FCostCenter write FCostCenter;
+    property Debet: Double read FDebet write FDebet;
+    property Credit: Double read FCredit write FCredit;
+    property FlagNo: Integer read FFlagNo write FFlagNo;
+    property Is_Memorial: Integer read FIs_Memorial write FIs_Memorial;
+    property ModiifiedDate: TDateTime read FModiifiedDate write FModiifiedDate;
+    property ModiifiedBy: string read FModiifiedBy write FModiifiedBy;
+  end;
+
 
 
 const
