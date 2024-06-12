@@ -631,7 +631,7 @@ end;
 procedure TFinancialTransaction.SetToCredit;
 begin
   Self.DebetAmt   := 0;
-  Self.CreditAmt  := Self.CreditAmt;
+  Self.CreditAmt  := Self.Amount;
 end;
 
 destructor TCashPayment.Destroy;
@@ -1608,7 +1608,7 @@ end;
 
 function TSalesInvoice.GetHeaderFlag: Integer;
 begin
-  Result := HeaderFlag_PurchaseInvoice;
+  Result := HeaderFlag_SalesInvoice;
 end;
 
 function TSalesInvoice.GetRefno: String;

@@ -113,7 +113,8 @@ end;
 
 function TfrmBrowseRekening.GetSQL: string;
 begin
-  Result := 'select * from trekening';
+  Result := 'select a.id, a.kode, a.nama, b.kode as accountcode, b.nama as accountname'
+  +' from trekening a left join taccount b on a.account_id = b.id';
 end;
 
 end.

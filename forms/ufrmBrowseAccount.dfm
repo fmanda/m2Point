@@ -86,6 +86,7 @@ inherited frmBrowseAccount: TfrmBrowseAccount
       TabOrder = 4
       Visible = False
       OnClick = btnLihatClick
+      ExplicitTop = 6
     end
     object btnBaru: TcxButton
       AlignWithMargins = True

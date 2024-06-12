@@ -14,7 +14,7 @@ uses
   cxGridCustomView, cxGrid, cxLookupEdit, cxDBLookupEdit, cxDBExtLookupComboBox,
   cxDropDownEdit, cxMaskEdit, cxMemo, cxTextEdit, cxLabel,
   uFinancialTransaction, Datasnap.DBClient, uTransDetail,
-  cxGridDBDataDefinitions, uItem, cxDataUtils, uAppUtils, cxSpinEdit;
+  cxGridDBDataDefinitions, uItem, cxDataUtils, uAppUtils, cxSpinEdit, uVariable;
 type
   TfrmCashReceiptDP = class(TfrmDefaultInput)
     cxGroupBox1: TcxGroupBox;
@@ -37,10 +37,16 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     FCashReceipt: TCashReceipt;
+    FCDSAccount: TClientDataset;
+    FDefaultAccountID: Integer;
     function GetCashReceipt: TCashReceipt;
+    function GetCDSAccount: TClientDataset;
     procedure InitView;
     procedure UpdateData;
     function ValidateData: Boolean;
+    property CDSAccount: TClientDataset read GetCDSAccount write FCDSAccount;
+    property DefaultAccountID: Integer read FDefaultAccountID write
+        FDefaultAccountID;
     { Private declarations }
   public
     function GetGroupName: string; override;
@@ -56,7 +62,7 @@ implementation
 
 uses
   uDBUtils, uDXUtils, System.DateUtils,
-  ufrmCXServerLookup, uSupplier, uAccount, uVariable, uCustomer;
+  ufrmCXServerLookup, uSupplier, uAccount, uCustomer;
 
 {$R *.dfm}
 
@@ -98,6 +104,15 @@ begin
   Result := FCashReceipt;
 end;
 
+function TfrmCashReceiptDP.GetCDSAccount: TClientDataset;
+begin
+  if FCDSAccount = nil then
+  begin
+    FCDSAccount := TDBUtils.OpenDataset('select id, kode, nama from taccount',Self);
+  end;
+  Result := FCDSAccount;
+end;
+
 function TfrmCashReceiptDP.GetGroupName: string;
 begin
   Result := 'Penjualan & Kas';
@@ -112,6 +127,10 @@ begin
 
   cxLookupAcc.Properties.LoadFromSQL(Self,
     'select id, kode +'' - '' + nama as account from taccount','account');
+
+  if CDSAccount.Locate('kode', AppVariable.Account_DP, [loCaseInsensitive]) then
+    DefaultAccountID := CDSAccount.FieldByName('id').AsInteger;
+
 end;
 
 procedure TfrmCashReceiptDP.LoadByID(aID: Integer; IsReadOnly: Boolean = False);
@@ -124,6 +143,7 @@ begin
   begin
     CashReceipt.TransDate := Now();
     CashReceipt.Refno     := CashReceipt.GenerateNo;
+
   end;
   if (aID <> 0) and (not IsReadOnly) then
   begin
@@ -145,7 +165,9 @@ begin
   if CashReceipt.Customer<>nil then
     cxLookupCustomer.EditValue  := CashReceipt.Customer.ID;
   if CashReceipt.Account<>nil then
-    cxLookupAcc.EditValue       := CashReceipt.Account.ID;
+    cxLookupAcc.EditValue       := CashReceipt.Account.ID
+  else
+    cxLookupAcc.EditValue       := DefaultAccountID;
 
   
   btnSave.Enabled := not IsReadOnly;

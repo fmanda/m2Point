@@ -169,6 +169,7 @@ inherited frmCashReceiptDP: TfrmCashReceiptDP
     object cxLookupAcc: TcxExtLookupComboBox
       Left = 107
       Top = 197
+      Enabled = False
       Properties.ImmediatePost = True
       TabOrder = 13
       Width = 259

@@ -1,56 +1,71 @@
 inherited frmPostingJournal: TfrmPostingJournal
   Caption = 'Posting Journal'
-  ClientHeight = 242
-  ClientWidth = 388
-  ExplicitWidth = 404
-  ExplicitHeight = 281
+  ClientHeight = 536
+  ClientWidth = 794
+  ExplicitWidth = 810
+  ExplicitHeight = 575
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxGroupBox2: TcxGroupBox
-    Top = 186
-    ExplicitTop = 228
-    ExplicitWidth = 483
+    Top = 480
+    ExplicitTop = 186
+    ExplicitWidth = 388
     ExplicitHeight = 56
     Height = 56
-    Width = 388
+    Width = 794
     inherited btnCancel: TcxButton
-      Left = 303
+      Left = 709
       Height = 46
+      ExplicitLeft = 303
+      ExplicitHeight = 46
     end
     inherited btnPrint: TcxButton
-      Left = 217
+      Left = 5
+      Width = 132
       Height = 46
+      Align = alLeft
+      Caption = 'Preview'
+      Visible = True
+      OnClick = btnPrintClick
+      ExplicitLeft = 5
+      ExplicitWidth = 132
+      ExplicitHeight = 46
     end
     inherited btnSave: TcxButton
-      Left = 5
-      Width = 206
+      Left = 143
+      Width = 560
       Height = 46
       Align = alClient
       Caption = '&Process'
       OptionsImage.ImageIndex = 4
       OnClick = btnSaveClick
-      ExplicitLeft = 5
-      ExplicitTop = 3
-      ExplicitWidth = 206
+      ExplicitLeft = 430
+      ExplicitTop = 6
+      ExplicitWidth = 273
       ExplicitHeight = 46
     end
   end
   inherited Panel2: TPanel
-    Top = 165
-    Width = 388
+    Top = 459
+    Width = 794
     Visible = False
+    ExplicitTop = 165
+    ExplicitWidth = 388
     inherited lbEscape: TLabel
-      Left = 308
+      Left = 714
       Height = 17
+      ExplicitLeft = 308
     end
     inherited lgndSave: TLabel
-      Left = 143
+      Left = 549
       Height = 17
       Visible = False
+      ExplicitLeft = 143
     end
     inherited lgndPrint: TLabel
-      Left = 230
+      Left = 636
       Height = 17
+      ExplicitLeft = 230
     end
   end
   object cxGroupBox1: TcxGroupBox [2]
@@ -60,14 +75,12 @@ inherited frmPostingJournal: TfrmPostingJournal
     Margins.Left = 0
     Margins.Right = 0
     Margins.Bottom = 0
-    Align = alClient
+    Align = alTop
     Caption = ' Periode '
     Style.TextStyle = [fsBold]
     TabOrder = 2
-    ExplicitWidth = 415
-    ExplicitHeight = 110
-    Height = 162
-    Width = 388
+    Height = 94
+    Width = 794
     object cbMonth: TcxComboBox
       Left = 79
       Top = 32
@@ -133,7 +146,41 @@ inherited frmPostingJournal: TfrmPostingJournal
       Width = 98
     end
   end
+  object cxGrid: TcxGrid [3]
+    Left = 0
+    Top = 97
+    Width = 794
+    Height = 362
+    Align = alClient
+    TabOrder = 3
+    ExplicitTop = 34
+    ExplicitWidth = 641
+    ExplicitHeight = 370
+    object cxGrdMain: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsData.CancelOnExit = False
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsView.GroupByBox = False
+    end
+    object cxGridLevel1: TcxGridLevel
+      GridView = cxGrdMain
+    end
+  end
   inherited styleRepo: TcxStyleRepository
+    Left = 672
+    Top = 32
     PixelsPerInch = 96
+  end
+  object cxPropertiesStore1: TcxPropertiesStore
+    Components = <>
+    StorageName = 'cxPropertiesStore1'
+    Left = 688
+    Top = 304
   end
 end

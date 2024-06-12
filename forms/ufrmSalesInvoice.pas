@@ -240,8 +240,8 @@ begin
     CDSCloneOth.First;
     while not CDSCloneOth.Eof do
     begin
-      dOth := dOth +  CDSCloneOth.FieldByName('DebetAmt').AsFloat
-        - CDSCloneOth.FieldByName('CreditAmt').AsFloat;
+      dOth := dOth +  CDSCloneOth.FieldByName('CreditAmt').AsFloat
+        - CDSCloneOth.FieldByName('DebetAmt').AsFloat;
       CDSCloneOth.Next;
     end;
 

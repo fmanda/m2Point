@@ -8,7 +8,12 @@ uses
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
   Vcl.Menus, cxStyles, cxClasses, Vcl.StdCtrls, Vcl.ExtCtrls, cxButtons,
   cxGroupBox, Vcl.ComCtrls, dxCore, cxDateUtils, cxDropDownEdit, cxCalendar,
-  cxLabel, cxSpinEdit, cxTextEdit, cxMaskEdit, DateUtils, uDBUtils;
+  cxLabel, cxSpinEdit, cxTextEdit, cxMaskEdit, DateUtils, uDBUtils,
+  cxCustomData, cxFilter, cxData, cxDataStorage, cxNavigator,
+  cxDataControllerConditionalFormattingRulesManagerDialog, cxGridLevel,
+  cxGridCustomView, cxGridCustomTableView, cxGridTableView,
+  cxGridServerModeTableView, cxGrid, uDXUtils, Data.DB, cxDBData,
+  cxGridDBTableView, cxPropertiesStore;
 
 type
   TfrmPostingJournal = class(TfrmDefaultInput)
@@ -20,13 +25,19 @@ type
     dtStart: TcxDateEdit;
     cxLabel1: TcxLabel;
     dtEnd: TcxDateEdit;
+    cxGrid: TcxGrid;
+    cxGridLevel1: TcxGridLevel;
+    cxPropertiesStore1: TcxPropertiesStore;
+    cxGrdMain: TcxGridDBTableView;
     procedure FormCreate(Sender: TObject);
     procedure cbBulanClick(Sender: TObject);
     procedure cbMonthPropertiesChange(Sender: TObject);
     procedure spYearPropertiesChange(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
+    procedure btnPrintClick(Sender: TObject);
   private
     procedure PostingJournal;
+    procedure PreviewData;
     procedure SetDefaultPeriod;
     { Private declarations }
   public
@@ -61,6 +72,12 @@ begin
   SetDefaultPeriod;
 end;
 
+procedure TfrmPostingJournal.btnPrintClick(Sender: TObject);
+begin
+  inherited;
+  PreviewData;
+end;
+
 procedure TfrmPostingJournal.btnSaveClick(Sender: TObject);
 begin
   inherited;
@@ -85,6 +102,22 @@ begin
       + ',' + TAppUtils.QuotD(dtEnd.Date);
   if TDBUtils.ExecuteSQL(S) then
     TAppUtils.Information('Berhasil Posting Journal');
+end;
+
+procedure TfrmPostingJournal.PreviewData;
+var
+  S: string;
+begin
+  S := 'SELECT A.TRANSDATE, A.REFNO, A.DESCRIPTION, '
+      +' A.ACCOUNTCODE, B.NAMA AS ACCOUNTNAME, A.DEBET, A.CREDIT, '
+      +' A.COSTCENTER, A.TRANSTYPE, A.MODIFIEDDATE, A.MODIFIEDBY, A.FLAGNO '
+      +' FROM [FN_JOURNAL_ALL](' + TAppUtils.QuotD(dtStart.Date)
+      + ', ' + TAppUtils.QuotD(dtEnd.Date) +') A  '
+      +' INNER JOIN TACCOUNT B ON A.ACCOUNTCODE = B.KODE  '
+      +' ORDER BY A.TRANSDATE,  A.REFNO,  A.FLAGNO ' ;
+
+  cxGrdMain.LoadFromSQL(S);
+  cxGrdMain.SetSummaryByColumns(['debet','credit']);
 end;
 
 procedure TfrmPostingJournal.SetDefaultPeriod;

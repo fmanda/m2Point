@@ -3,10 +3,9 @@ inherited frmBrowseARSettlement: TfrmBrowseARSettlement
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxGrid: TcxGrid
-    ExplicitHeight = 343
+    ExplicitTop = 34
   end
   inherited cxGroupBox2: TcxGroupBox
-    ExplicitTop = 378
     inherited btnHapus: TcxButton
       OnClick = btnHapusClick
     end
