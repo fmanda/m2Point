@@ -604,6 +604,12 @@ begin
   begin
     if not IsValidTransDate(SalesInv.TransDate) then
       IsReadOnly := True;
+
+    if not SalesInv.ValidateUpdate then
+    begin
+      TAppUtils.Warning('Invoice Sudah ada Settlement, Tidak bisa edit/hapus data');
+      IsReadOnly := True;
+    end;
   end;
 
   //def uom

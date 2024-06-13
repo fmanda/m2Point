@@ -91,6 +91,12 @@ begin
 //        exit;
 //      end;
 
+      if not ValidateUpdate then
+      begin
+        TAppUtils.Warning('DO ini sudah dibuatkan invoice, tidak bisa dilakukan edit/hapus. Silahkan hapus DO dari invoice terlebih dahulu');
+        exit;
+      end;
+
       if DeleteFromDB then
       begin
         TAppUtils.Information('Berhasil menghapus data');

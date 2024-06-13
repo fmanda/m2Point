@@ -452,6 +452,13 @@ begin
   begin
     if not IsValidTransDate(PurcRec.TransDate) then
       IsReadOnly := True;
+
+    if not PurcRec.ValidateUpdate then
+    begin
+      TAppUtils.Warning('BTB ini sudah dibuatkan invoice, tidak bisa dilakukan edit/hapus. Silahkan hapus BTB dari invoice terlebih dahulu');
+      IsReadOnly := True;
+    end;
+
   end;
 
   //def uom

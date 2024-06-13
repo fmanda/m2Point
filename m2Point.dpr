@@ -139,7 +139,8 @@ uses
   ufrmBrowseCashReceipt in 'forms\ufrmBrowseCashReceipt.pas' {frmBrowseCashReceipt},
   ufrmCashReceipt in 'forms\ufrmCashReceipt.pas' {frmCashReceipt},
   ufrmPostingJournal in 'forms\ufrmPostingJournal.pas' {frmPostingJournal},
-  ufrmJournalListing in 'forms\ufrmJournalListing.pas' {frmJournalListing};
+  ufrmJournalListing in 'forms\ufrmJournalListing.pas' {frmJournalListing},
+  ufrmCashReceiptReport in 'forms\ufrmCashReceiptReport.pas' {frmCashReceiptReport};
 
 {$R *.res}
 

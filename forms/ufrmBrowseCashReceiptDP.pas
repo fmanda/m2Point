@@ -80,6 +80,14 @@ begin
     if LoadByID(Self.cxGrdMain.GetID) then
     begin
       if not IsValidTransDate(TransDate) then exit;
+
+      if not ValidateUpdate then
+      begin
+        TAppUtils.Warning('CR sudah dilakukan settlement');
+        exit;
+      end;
+
+
       if DeleteFromDB then
       begin
         TAppUtils.Information('Berhasil menghapus data');

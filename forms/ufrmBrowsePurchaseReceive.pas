@@ -92,6 +92,12 @@ begin
     begin
 //      if not IsValidTransDate(TransDate) then exit;
 
+      if not ValidateUpdate then
+      begin
+        TAppUtils.Warning('BTB ini sudah dibuatkan invoice, tidak bisa dilakukan edit/hapus. Silahkan hapus BTB dari invoice terlebih dahulu');
+        exit;
+      end;
+
       if DeleteFromDB then
       begin
         TAppUtils.Information('Berhasil menghapus data');

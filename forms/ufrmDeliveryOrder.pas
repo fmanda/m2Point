@@ -589,6 +589,14 @@ begin
   if (aID <> 0) and (not IsReadOnly) then
   begin
     IsReadOnly := not IsValidTransDate(DevOrder.TransDate);
+
+    if not DevOrder.ValidateUpdate then
+    begin
+      TAppUtils.Warning('DO ini sudah dibuatkan invoice, tidak bisa dilakukan edit/hapus. Silahkan hapus DO dari invoice terlebih dahulu');
+      IsReadOnly := True;
+    end;
+
+
   end;
 
   edNoDO.Text := DevOrder.DONo;

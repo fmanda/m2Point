@@ -128,6 +128,7 @@ type
     function IsDownPayment: Boolean;
     function Remain: Double;
     function UpdateRemain(aDate: TDateTime = 0; AddedPaidAmt: Double = 0): Boolean;
+    function ValidateUpdate: Boolean;
   published
     property Account: TAccount read FAccount write FAccount;
     property Rekening: TRekening read FRekening write FRekening;
@@ -239,6 +240,7 @@ type
     class procedure PrintData(aInvoiceID: Integer);
     function UpdateRemain(aDate: TDateTime = 0; AddedPaidAmt: Double = 0;
         AddedReturAmt: Double = 0): Boolean;
+    function ValidateUpdate: Boolean;
     property InvItems: TObjectList<TPurchaseInvoiceItem> read GetInvItems write
         FInvItems;
   published
@@ -396,6 +398,7 @@ type
     class procedure PrintData(aInvoiceID: Integer);
     function UpdateRemain(aDate: TDateTime = 0; AddedPaidAmt: Double = 0;
         AddedReturAmt: Double = 0): Boolean;
+    function ValidateUpdate: Boolean;
     property InvItems: TObjectList<TSalesInvoiceItem> read GetInvItems write
         FInvItems;
   published
@@ -708,10 +711,10 @@ var
 begin
   lNum := 0;
   aDigitCount := 5;
-  aPrefix := Cabang + '.KK' + FormatDateTime('yymm',Now()) + '.';
+  aPrefix := Cabang + '.BKK' + FormatDateTime('yymm',Now()) + '.';
 
-  if Self.TahunZakat > 2000 then
-    aPrefix := Cabang + '.ZKT' + FormatDateTime('yymm',Now()) + '.';
+//  if Self.TahunZakat > 2000 then
+//    aPrefix := Cabang + '.ZKT' + FormatDateTime('yymm',Now()) + '.';
 
 
   S := 'SELECT MAX(RefNo) FROM TCashPayment where Refno LIKE ' + QuotedStr(aPrefix + '%');
@@ -797,10 +800,10 @@ end;
 
 function TCashReceipt.GetCodeTrans: string;
 begin
-  Result := 'KM';
+  Result := 'BKM';
 
   if Self.IsDownPayment then
-    Result := 'DP';
+    Result := 'CR';
 
   // TODO -cMM: TCashReceipt.GetCodeTrans default body inserted
 end;
@@ -838,6 +841,30 @@ begin
   Result := TDBUtils.ExecuteSQL(S, False);
 end;
 
+function TCashReceipt.ValidateUpdate: Boolean;
+var
+  lQ: TFDQUery;
+  S: string;
+begin
+  Result := True;
+
+  if Self.ID = 0 then exit;
+
+
+  S := 'select b.REFNO, b.AMOUNT '
+      +' from TCASHRECEIPT a '
+      +' inner join TARSETTLEMENT b on a.id = b.CASHRECEIPT_ID '
+      +' where a.id = ' + IntToStr(Self.ID);
+
+  lQ := TDBUtils.OpenQuery(S);
+  Try
+    Result := lQ.eof;
+  Finally
+    lQ.Free;
+  End;
+
+end;
+
 destructor TCashTransfer.Destroy;
 begin
   inherited;
@@ -853,7 +880,7 @@ var
 begin
   lNum := 0;
   aDigitCount := 5;
-  aPrefix := Cabang + '.TK' + FormatDateTime('yymm',Now()) + '.';
+  aPrefix := Cabang + '.TF' + FormatDateTime('yymm',Now()) + '.';
 
 
   S := 'SELECT MAX(Refno) FROM TCashTransfer where Refno LIKE ' + QuotedStr(aPrefix + '%');
@@ -960,7 +987,7 @@ var
 begin
   lNum := 0;
   aDigitCount := 5;
-  aPrefix := Cabang + '.SP' + FormatDateTime('yymm',Now()) + '.';
+  aPrefix := Cabang + '.ARS' + FormatDateTime('yymm',Now()) + '.';
 
 
   S := 'SELECT MAX(Refno) FROM TARSettlement where Refno LIKE ' + QuotedStr(aPrefix + '%');
@@ -1391,6 +1418,31 @@ begin
   Result := TDBUtils.ExecuteSQL(S, False);
 end;
 
+function TPurchaseInvoice.ValidateUpdate: Boolean;
+var
+  lQ: TFDQUery;
+  S: string;
+begin
+  Result := True;
+
+  if Self.ID = 0 then exit;
+
+
+  S := 'select b.refno, b.amount '
+      +' from TPurchaseInvoice a'
+      +' inner join TFINANCIALTRANSACTION b on a.id = b.purchaseinvoice_id '
+      +' and b.HEADER_FLAG =  ' + IntToStr(HeaderFlag_PurchasePayment)
+      +' where a.id = ' + IntToStr(Self.ID);
+
+  lQ := TDBUtils.OpenQuery(S);
+  Try
+    Result := lQ.eof;
+  Finally
+    lQ.Free;
+  End;
+
+end;
+
 destructor TPurchaseRetur.Destroy;
 begin
   inherited;
@@ -1471,7 +1523,7 @@ var
 begin
   lNum := 0;
   aDigitCount := 5;
-  aPrefix := Cabang + '.RB' + FormatDateTime('yymm',Now()) + '.';
+  aPrefix := Cabang + '.RS' + FormatDateTime('yymm',Now()) + '.';
 
 
   S := 'SELECT MAX(Refno) FROM TPurchaseRetur where Refno LIKE ' + QuotedStr(aPrefix + '%');
@@ -1605,7 +1657,7 @@ var
 begin
   lNum := 0;
   aDigitCount := 5;
-  aPrefix := Cabang + '.FB' + FormatDateTime('yymm',Now()) + '.';
+  aPrefix := Cabang + '.INV' + FormatDateTime('yymm',Now()) + '.';
 
 
   S := 'SELECT MAX(InvoiceNo) FROM TSalesInvoice where InvoiceNo LIKE ' + QuotedStr(aPrefix + '%');
@@ -1705,6 +1757,31 @@ begin
   Result := TDBUtils.ExecuteSQL(S, False);
 end;
 
+function TSalesInvoice.ValidateUpdate: Boolean;
+var
+  lQ: TFDQUery;
+  S: string;
+begin
+  Result := True;
+
+  if Self.ID = 0 then exit;
+
+
+  S := 'select b.refno, b.amount '
+      +' from tsalesinvoice a'
+      +' inner join TFINANCIALTRANSACTION b on a.id = b.SALESINVOICE_ID '
+      +' and b.HEADER_FLAG =  ' + IntToStr(HeaderFlag_ARSettlement)
+      +' where a.id = ' + IntToStr(Self.ID);
+
+  lQ := TDBUtils.OpenQuery(S);
+  Try
+    Result := lQ.eof;
+  Finally
+    lQ.Free;
+  End;
+
+end;
+
 function TSalesRetur.AfterSaveToDB: Boolean;
 var
   lSalesPayment: TARSettlement;
@@ -1778,7 +1855,7 @@ var
 begin
   lNum := 0;
   aDigitCount := 5;
-  aPrefix := Cabang + '.RP' + FormatDateTime('yymm',Now()) + '.';
+  aPrefix := Cabang + '.RC' + FormatDateTime('yymm',Now()) + '.';
 
 
   S := 'SELECT MAX(Refno) FROM TSalesRetur where Refno LIKE ' + QuotedStr(aPrefix + '%');

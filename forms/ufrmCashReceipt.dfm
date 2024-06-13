@@ -1,5 +1,5 @@
 inherited frmCashReceipt: TfrmCashReceipt
-  Caption = 'Cash Receipt - Penerimaan Kas/Bank'
+  Caption = 'Penerimaan Lain-lain'
   ClientHeight = 507
   ClientWidth = 710
   KeyPreview = True
@@ -16,16 +16,16 @@ inherited frmCashReceipt: TfrmCashReceipt
     Width = 710
     inherited btnCancel: TcxButton
       Left = 625
-      ExplicitLeft = 650
+      ExplicitLeft = 625
     end
     inherited btnPrint: TcxButton
       Left = 539
-      ExplicitLeft = 564
+      ExplicitLeft = 539
     end
     inherited btnSave: TcxButton
       Left = 453
       OnClick = btnSaveClick
-      ExplicitLeft = 478
+      ExplicitLeft = 453
     end
   end
   inherited Panel2: TPanel
@@ -33,17 +33,20 @@ inherited frmCashReceipt: TfrmCashReceipt
     Width = 710
     TabOrder = 3
     ExplicitTop = 451
-    ExplicitWidth = 735
+    ExplicitWidth = 710
     inherited lbEscape: TLabel
       Left = 630
+      Height = 17
       ExplicitLeft = 630
     end
     inherited lgndSave: TLabel
       Left = 465
+      Height = 17
       ExplicitLeft = 465
     end
     inherited lgndPrint: TLabel
       Left = 552
+      Height = 17
       ExplicitLeft = 552
     end
   end
@@ -131,7 +134,6 @@ inherited frmCashReceipt: TfrmCashReceipt
       Style.Font.Style = []
       Style.IsFontAssigned = True
       TabOrder = 4
-      ExplicitLeft = 548
       Width = 170
     end
     object lbRekening: TcxLabel
@@ -157,9 +159,6 @@ inherited frmCashReceipt: TfrmCashReceipt
     Align = alClient
     TabOrder = 1
     RootLevelOptions.DetailTabsPosition = dtpTop
-    ExplicitTop = 115
-    ExplicitWidth = 735
-    ExplicitHeight = 336
     object cxGrdMain: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.Summary.DefaultGroupSummaryItems = <>

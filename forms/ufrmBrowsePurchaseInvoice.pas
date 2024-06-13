@@ -90,7 +90,15 @@ begin
   begin
     if LoadByID(Self.cxGrdMain.GetID) then
     begin
-//      if not IsValidTransDate(TransDate) then exit;
+      if not IsValidTransDate(TransDate) then exit;
+
+
+      if not ValidateUpdate then
+      begin
+        TAppUtils.Warning('Invoice Sudah ada Pembayaran, Tidak bisa edit/hapus data');
+        exit;
+      end;
+
 
       if DeleteFromDB then
       begin

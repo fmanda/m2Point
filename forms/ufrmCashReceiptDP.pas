@@ -148,6 +148,15 @@ begin
   if (aID <> 0) and (not IsReadOnly) then
   begin
     IsReadOnly := not IsValidTransDate(CashReceipt.TransDate);
+
+
+    if not CashReceipt.ValidateUpdate then
+    begin
+      TAppUtils.Warning('CR sudah dilakukan settlement');
+      IsReadOnly := True;
+    end;
+
+
   end;
 
   crCash.Value        := CashReceipt.Amount;

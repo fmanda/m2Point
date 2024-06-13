@@ -1,10 +1,10 @@
 inherited frmCashReceiptDP: TfrmCashReceiptDP
-  Caption = 'Penerimaan Uang Muka Customer'
+  Caption = 'Cash Receipt / Uang Muka Customer'
   ClientHeight = 340
-  ClientWidth = 464
+  ClientWidth = 447
   KeyPreview = True
   OnKeyDown = FormKeyDown
-  ExplicitWidth = 480
+  ExplicitWidth = 463
   ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
@@ -13,39 +13,39 @@ inherited frmCashReceiptDP: TfrmCashReceiptDP
     TabOrder = 1
     ExplicitTop = 305
     ExplicitWidth = 464
-    Width = 464
+    Width = 447
     inherited btnCancel: TcxButton
-      Left = 379
+      Left = 362
       ExplicitLeft = 379
     end
     inherited btnPrint: TcxButton
-      Left = 293
+      Left = 276
       ExplicitLeft = 293
     end
     inherited btnSave: TcxButton
-      Left = 207
+      Left = 190
       OnClick = btnSaveClick
       ExplicitLeft = 207
     end
   end
   inherited Panel2: TPanel
     Top = 284
-    Width = 464
+    Width = 447
     TabOrder = 2
     ExplicitTop = 284
     ExplicitWidth = 464
     inherited lbEscape: TLabel
-      Left = 384
+      Left = 367
       Height = 17
       ExplicitLeft = 384
     end
     inherited lgndSave: TLabel
-      Left = 219
+      Left = 202
       Height = 17
       ExplicitLeft = 219
     end
     inherited lgndPrint: TLabel
-      Left = 306
+      Left = 289
       Height = 17
       ExplicitLeft = 306
     end
@@ -56,8 +56,9 @@ inherited frmCashReceiptDP: TfrmCashReceiptDP
     Align = alClient
     Caption = '  Data  [F1] '
     TabOrder = 0
+    ExplicitWidth = 464
     Height = 284
-    Width = 464
+    Width = 447
     object cxLabel1: TcxLabel
       Left = 60
       Top = 55

@@ -401,6 +401,7 @@ type
     function GetHeaderFlag: Integer; override;
     class procedure PrintData(aInvoiceID: Integer);
     procedure SetGenerateNo; override;
+    function ValidateUpdate: Boolean;
     property AvgCostItems: TObjectList<TAvgCostUpdate> read GetAvgCostItems write
         FAvgCostItems;
   published
@@ -431,6 +432,7 @@ type
     function GetHeaderFlag: Integer; override;
     class procedure PrintData(aSalesInvoiceID: Integer);
     procedure SetGenerateNo; override;
+    function ValidateUpdate: Boolean;
   published
     [AttributeOfCode]
     property DONo: string read FDONo write FDONo;
@@ -477,7 +479,8 @@ implementation
 
 uses
   System.StrUtils, uAppUtils, uSalesFee, uDMReport,
-  Datasnap.DBClient, Data.DB, uFinancialTransaction;
+  Datasnap.DBClient, Data.DB, uFinancialTransaction,
+  FireDAC.Comp.Client;
 
 destructor TCRUDTransDetail.Destroy;
 begin
@@ -1153,7 +1156,7 @@ var
 begin
   lNum := 0;
   aDigitCount := 5;
-  aPrefix := Cabang + '.SA' + FormatDateTime('yymm',Now()) + '.';
+  aPrefix := Cabang + '.ADJ' + FormatDateTime('yymm',Now()) + '.';
 
 
   S := 'SELECT MAX(Refno) FROM TStockAdjustment where Refno LIKE ' + QuotedStr(aPrefix + '%');
@@ -1592,7 +1595,7 @@ var
 begin
   lNum := 0;
   aDigitCount := 5;
-  aPrefix := Cabang + '.RC' + FormatDateTime('yymm',Now()) + '.';
+  aPrefix := Cabang + '.BTB' + FormatDateTime('yymm',Now()) + '.';
 
 
   S := 'SELECT MAX(RecNo) FROM TPurchaseReceive where RecNo LIKE ' + QuotedStr(aPrefix + '%');
@@ -1687,6 +1690,30 @@ begin
   if Self.ID = 0 then Self.RecNo := Self.GenerateNo;
 end;
 
+function TPurchaseReceive.ValidateUpdate: Boolean;
+var
+  lQ: TFDQUery;
+  S: string;
+begin
+  Result := True;
+
+  if Self.ID = 0 then exit;
+
+
+  S := 'select b.QTY'
+      +' from TPURCHASERECEIVE a'
+      +' inner join TPURCHASEINVOICEITEM b on a.id = b.PURCHASERECEIVE_ID '
+      +' where a.id = ' + IntToStr(Self.ID);
+
+  lQ := TDBUtils.OpenQuery(S);
+  Try
+    Result := lQ.eof;
+  Finally
+    lQ.Free;
+  End;
+
+end;
+
 constructor TDeliveryOrder.Create;
 begin
   inherited;
@@ -1770,6 +1797,30 @@ end;
 procedure TDeliveryOrder.SetGenerateNo;
 begin
   if Self.ID = 0 then Self.DONo := Self.GenerateNo();
+end;
+
+function TDeliveryOrder.ValidateUpdate: Boolean;
+var
+  lQ: TFDQUery;
+  S: string;
+begin
+  Result := True;
+
+  if Self.ID = 0 then exit;
+
+
+  S := 'select b.QTY'
+      +' from TDeliveryOrder a'
+      +' inner join TSALESINVOICEITEM b on a.id = b.DELIVERYORDER_ID '
+      +' where a.id = ' + IntToStr(Self.ID);
+
+  lQ := TDBUtils.OpenQuery(S);
+  Try
+    Result := lQ.eof;
+  Finally
+    lQ.Free;
+  End;
+
 end;
 
 end.

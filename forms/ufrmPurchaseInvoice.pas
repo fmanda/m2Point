@@ -610,6 +610,13 @@ begin
   begin
     if not IsValidTransDate(PurchInv.TransDate) then
       IsReadOnly := True;
+
+    if not PurchInv.ValidateUpdate then
+    begin
+      TAppUtils.Warning('Invoice Sudah ada Pembayaran, Tidak bisa edit/hapus data');
+      IsReadOnly := True;
+    end;
+
   end;
 
   //def uom

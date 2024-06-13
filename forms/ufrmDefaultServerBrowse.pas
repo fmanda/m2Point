@@ -97,10 +97,10 @@ begin
   inherited;
   lblTitle.Caption := Self.Caption;
 
-  StartDate.Date  := (Now());
-  EndDate.Date    := (Now());
-//  StartDate.Date  := StartOfTheYear(Now());
-//  EndDate.Date    := EndOfTheMonth(Now());
+//  StartDate.Date  := (Now());
+//  EndDate.Date    := (Now());
+  StartDate.Date  := StartOfTheMonth(Now());
+  EndDate.Date    := EndOfTheMonth(Now());
   if AutoRefresh then RefreshData;
 end;
 

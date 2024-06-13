@@ -22,6 +22,8 @@ inherited frmBrowsePurchaseReceive: TfrmBrowsePurchaseReceive
   end
   inherited cxGroupBox1: TcxGroupBox
     inherited cxLabel1: TcxLabel
+      ExplicitLeft = 257
+      ExplicitTop = -2
       AnchorY = 18
     end
     inherited cxLabel2: TcxLabel

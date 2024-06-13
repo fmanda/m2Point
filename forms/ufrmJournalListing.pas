@@ -61,9 +61,15 @@ var
   S: string;
 begin
   inherited;
-  S := 'SELECT * FROM TJOURNAL A'
+    S := 'SELECT A.TRANSDATE, A.REFNO, A.DESCRIPTION, '
+      +' A.ACCOUNTCODE, B.NAMA AS ACCOUNTNAME, A.DEBET, A.CREDIT, '
+      +' A.COSTCENTER, A.TRANSTYPE, A.MODIFIEDDATE, A.MODIFIEDBY, A.FLAGNO '
+      +' FROM TJOURNAL A'
+      +' INNER JOIN TACCOUNT B ON A.ACCOUNTCODE = B.KODE  '
       +' WHERE A.TRANSDATE BETWEEN ' + TAppUtils.QuotD(dtStart.Date)
-      +' and ' + TAppUtils.QuotD(dtEnd.Date);
+      +' and ' + TAppUtils.QuotD(dtEnd.Date)
+      +' ORDER BY A.TRANSDATE,  A.REFNO,  A.FLAGNO ' ;
+
 
   if FCDS <> nil then
     FreeAndNil(FCDS);

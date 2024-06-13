@@ -85,6 +85,13 @@ begin
     begin
       if not IsValidTransDate(TransDate) then exit;
 
+      if not ValidateUpdate then
+      begin
+        TAppUtils.Warning('Invoice Sudah ada Settlement, Tidak bisa edit/hapus data');
+        exit;
+      end;
+
+
       if not TfrmAuthUser.Authorize('Autorisasi Hapus Faktur', InvoiceNo, TransDate ) then
       begin
         TAppUtils.Warning('User tidak mendapatkan autorisasi hapus faktur');
